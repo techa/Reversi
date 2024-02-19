@@ -23,7 +23,7 @@ var whiteScore = document.getElementById('white-score')
 ///////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-var addTile = function (event) {
+function addTile(event) {
 	if (event instanceof Element) {
 		event.target = event
 	}
@@ -112,7 +112,7 @@ var addTile = function (event) {
 	}
 }
 
-var checkSlots = function (sym) {
+function checkSlots(sym) {
 	let emptySlots = 0
 	let roughtCount = 0
 	for (var y = 0; y < boardLength; y++) {
@@ -129,7 +129,7 @@ var checkSlots = function (sym) {
 	return { empty: emptySlots, movable: roughtCount }
 }
 
-var tilesCounting = function () {
+function tilesCounting() {
 	var whiteCount = 0
 	var blackCount = 0
 	for (var i = 0; i < boardLength; i++) {
@@ -142,7 +142,7 @@ var tilesCounting = function () {
 	whiteScore.innerHTML = whiteCount
 }
 
-var predictionDots = function (sym) {
+function predictionDots(sym) {
 	predictorArray = []
 	for (var y = 0; y < boardLength; y++) {
 		for (var x = 0; x < boardLength; x++) {
@@ -162,36 +162,36 @@ var predictionDots = function (sym) {
 	}
 }
 
-var runATile = function (something) {
+function runATile(something) {
 	console.log(something.parentNode)
 	addTile(something.parentNode)
 }
 
-var removePredictionDots = function (sym) {
+function removePredictionDots(sym) {
 	for (var i = 0; i < predictorArray.length; i++) {
 		var target = document.getElementById(predictorArray[i])
 		target.removeChild(target.firstChild)
 	}
 }
 
-var startGlow1 = function () {
+function startGlow1() {
 	document.getElementById('glow-1').style.visibility = 'visible'
 }
 
-var startGlow2 = function () {
+function startGlow2() {
 	document.getElementById('glow-2').style.visibility = 'visible'
 }
 
-var stopGlow1 = function () {
+function stopGlow1() {
 	document.getElementById('glow-1').style.visibility = 'hidden'
 }
 
-var stopGlow2 = function () {
+function stopGlow2() {
 	document.getElementById('glow-2').style.visibility = 'hidden'
 }
 
 //change glow
-var glowchange = function (sym) {
+function glowchange(sym) {
 	if (sym === 'W') {
 		stopGlow1()
 		startGlow2()
@@ -201,7 +201,7 @@ var glowchange = function (sym) {
 	}
 }
 
-var createBoardArray = function () {
+function createBoardArray() {
 	boardArray = []
 	for (var i = 0; i < boardLength; i++) {
 		var anArray = []
@@ -212,7 +212,7 @@ var createBoardArray = function () {
 	}
 }
 
-var initialize = function () {
+function initialize() {
 	var firstTileId = (boardLength / 2 - 1) * boardLength + (boardLength / 2 - 1)
 	var secondTileId = (boardLength / 2) * boardLength + boardLength / 2
 	var aCounter = 0
@@ -253,7 +253,7 @@ var initialize = function () {
 	}
 }
 
-var checkOKtoPlace = function (sym, x, y) {
+function checkOKtoPlace(sym, x, y) {
 	var arr = [
 		checkTopLeft(sym, x, y),
 		checkTop(sym, x, y),
@@ -275,7 +275,7 @@ var checkOKtoPlace = function (sym, x, y) {
 }
 
 //check top left
-var checkTopLeft = function (sym, x, y) {
+function checkTopLeft(sym, x, y) {
 	if (x < 2 || y < 2) {
 		return false
 	} else {
@@ -300,7 +300,7 @@ var checkTopLeft = function (sym, x, y) {
 	}
 }
 //check top
-var checkTop = function (sym, x, y) {
+function checkTop(sym, x, y) {
 	if (y < 2) {
 		return false
 	} else {
@@ -325,7 +325,7 @@ var checkTop = function (sym, x, y) {
 	}
 }
 //check top right
-var checkTopRight = function (sym, x, y) {
+function checkTopRight(sym, x, y) {
 	if (y < 2 || x > boardLength - 3) {
 		return false
 	} else {
@@ -350,7 +350,7 @@ var checkTopRight = function (sym, x, y) {
 	}
 }
 //check right
-var checkRight = function (sym, x, y) {
+function checkRight(sym, x, y) {
 	if (x > boardLength - 3) {
 		return false
 	} else {
@@ -376,7 +376,7 @@ var checkRight = function (sym, x, y) {
 }
 
 //check bottom right
-var checkBottomRight = function (sym, x, y) {
+function checkBottomRight(sym, x, y) {
 	if (x > boardLength - 3 || y > boardLength - 3) {
 		return false
 	} else {
@@ -401,7 +401,7 @@ var checkBottomRight = function (sym, x, y) {
 	}
 }
 //check bottom
-var checkBottom = function (sym, x, y) {
+function checkBottom(sym, x, y) {
 	if (y > boardLength - 3) {
 		return false
 	} else {
@@ -427,7 +427,7 @@ var checkBottom = function (sym, x, y) {
 }
 
 //check bottom left
-var checkBottomLeft = function (sym, x, y) {
+function checkBottomLeft(sym, x, y) {
 	if (y > boardLength - 3 || x < 2) {
 		return false
 	} else {
@@ -453,7 +453,7 @@ var checkBottomLeft = function (sym, x, y) {
 }
 
 //check left
-var checkLeft = function (sym, x, y) {
+function checkLeft(sym, x, y) {
 	if (x < 2) {
 		return false
 	} else {
@@ -478,7 +478,7 @@ var checkLeft = function (sym, x, y) {
 	}
 }
 
-var changeRespectiveTiles = function (target, sym, x, y) {
+function changeRespectiveTiles(target, sym, x, y) {
 	var topLeftSettle = false
 	var topSettle = false
 	var topRightSettle = false
@@ -693,7 +693,7 @@ var changeRespectiveTiles = function (target, sym, x, y) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
-var aiTurn = function () {
+function aiTurn() {
 	if (botMode) {
 		var getSym = counter % 2 === 0 ? 'W' : 'B'
 		var objArray = []
@@ -810,11 +810,11 @@ var aiTurn = function () {
 	}
 }
 
-var stopDualBotMode = function () {
+function stopDualBotMode() {
 	clearInterval(dualBotMode)
 }
 
-var accumulator = function (arr, sym, x, y) {
+function accumulator(arr, sym, x, y) {
 	var topLeftSettle = false
 	var topSettle = false
 	var topRightSettle = false
@@ -965,7 +965,7 @@ var accumulator = function (arr, sym, x, y) {
 	})
 }
 
-var allBoardInitialisation = function (noclick = false) {
+function allBoardInitialisation(noclick = false) {
 	createBoard()
 	takePutSettingsButton()
 	var k = 0
@@ -994,11 +994,11 @@ var allBoardInitialisation = function (noclick = false) {
 	}
 }
 
-var tilePlaceSound = function () {
+function tilePlaceSound() {
 	place.play()
 }
 
-var createBoard = function () {
+function createBoard() {
 	var container = document.querySelector('.main-container')
 	var boardContainer = document.createElement('div')
 	boardContainer.setAttribute('class', 'main-board')
@@ -1051,14 +1051,14 @@ var createBoard = function () {
 	lastMoveDisplayCreator()
 }
 
-var lastMoveDisplayCreator = function () {
+function lastMoveDisplayCreator() {
 	var mainContainer = document.querySelector('.main-container')
 	var createContainer = document.createElement('div')
 	createContainer.setAttribute('class', 'last-move-display-container')
 	mainContainer.appendChild(createContainer)
 }
 
-var updateLastMove = function (sym, x, y) {
+function updateLastMove(sym, x, y) {
 	var getLastMoveContainer = document.querySelector(
 		'.last-move-display-container'
 	)
@@ -1080,7 +1080,7 @@ var updateLastMove = function (sym, x, y) {
 	getLastMoveContainer.insertBefore(newMove, getLastMoveContainer.childNodes[0])
 }
 
-var askPlayerInfoContainer = function (mode) {
+function askPlayerInfoContainer(mode) {
 	var mainPageContainer = document.querySelector('.main-page-container')
 
 	var player1 = document.createElement('div')
@@ -1124,21 +1124,21 @@ var askPlayerInfoContainer = function (mode) {
 	mainPageContainer.appendChild(startGameButton)
 }
 
-var clearMainPageContainer = function () {
+function clearMainPageContainer() {
 	var mainPageContainer = document.querySelector('.main-page-container')
 	while (mainPageContainer.firstChild) {
 		mainPageContainer.removeChild(mainPageContainer.firstChild)
 	}
 }
 
-var removeMainPageContainer = function () {
+function removeMainPageContainer() {
 	var mainContainer = document.querySelector('.main-container')
 	while (mainContainer.firstChild) {
 		mainContainer.removeChild(mainContainer.firstChild)
 	}
 }
 
-var preStartGame = function (mode) {
+function preStartGame(mode) {
 	return function () {
 		takeOffShroud()
 		if (mode === 'single') {
@@ -1197,7 +1197,7 @@ var preStartGame = function (mode) {
 	}
 }
 
-var tempStopAllClicks = function () {
+function tempStopAllClicks() {
 	for (var y = 0; y < boardLength; y++) {
 		for (var x = 0; x < boardLength; x++) {
 			if (boardArray[y][x] === null) {
@@ -1209,7 +1209,7 @@ var tempStopAllClicks = function () {
 	}
 }
 
-var startBackAllClicks = function () {
+function startBackAllClicks() {
 	for (var y = 0; y < boardLength; y++) {
 		for (var x = 0; x < boardLength; x++) {
 			if (boardArray[y][x] === null) {
@@ -1221,7 +1221,7 @@ var startBackAllClicks = function () {
 	}
 }
 
-var checkWin = function () {
+function checkWin() {
 	var getWinDisplay = document.querySelector('.win-lose-draw')
 
 	var getResultContainer = document.querySelector('.resultContainer')
@@ -1246,7 +1246,7 @@ var checkWin = function () {
 	}
 }
 
-var startAnimations = function () {
+function startAnimations() {
 	var getDarkShroud = document.querySelector('.dark-shroud')
 	var getWinDisplay = document.querySelector('.win-lose-draw')
 
@@ -1260,7 +1260,7 @@ var startAnimations = function () {
 	}, 2000)
 }
 
-var takeOffShroud = function () {
+function takeOffShroud() {
 	document.querySelector('.dark-shroud').style.visibility = 'hidden'
 	document.querySelector('.dark-shroud').style.opacity = '0'
 	document.querySelector('.dark-shroud').style.animation = null
@@ -1276,7 +1276,7 @@ var takeOffShroud = function () {
 //////////////////////                                       ////////////////////
 /////////////////////////////////////////////////////////////////////////////////
 
-var restart = function () {
+function restart() {
 	takeOffShroud()
 	if (demo) {
 		stopDualBotMode()
@@ -1311,7 +1311,7 @@ var restart = function () {
 	}
 }
 
-var initAllBackToMainPage = function () {
+function initAllBackToMainPage() {
 	takeOutSettingsButton()
 	takeOffShroud()
 	stopGlow1()
@@ -1380,15 +1380,15 @@ var initAllBackToMainPage = function () {
 	})
 }
 
-var takePutSettingsButton = function () {
+function takePutSettingsButton() {
 	document.querySelector('.settings').style.visibility = 'visible'
 }
 
-var takeOutSettingsButton = function () {
+function takeOutSettingsButton() {
 	document.querySelector('.settings').style.visibility = 'hidden'
 }
 
-var takeOutSettings = function () {
+function takeOutSettings() {
 	var getDarkShroud = document.querySelector('.dark-shroud')
 
 	getDarkShroud.style.visibility = 'visible'
