@@ -1013,7 +1013,7 @@ function createBoard() {
 		var boardHMarkers = document.createElement('div')
 		boardHMarkers.setAttribute('class', 'h-markers')
 		boardHMarkersContainer.appendChild(boardHMarkers)
-		boardHMarkers.innerHTML = i + 1
+		boardHMarkers.innerHTML = String.fromCharCode(65 + i)
 	}
 
 	var boardVMarkersContainer = document.createElement('div')
@@ -1023,7 +1023,7 @@ function createBoard() {
 		var boardVMarkers = document.createElement('div')
 		boardVMarkers.setAttribute('class', 'v-markers')
 		boardVMarkersContainer.appendChild(boardVMarkers)
-		boardVMarkers.innerHTML = String.fromCharCode(65 + i)
+		boardVMarkers.innerHTML = i + 1
 	}
 
 	var squareColorCounter = 0
@@ -1073,7 +1073,7 @@ function updateLastMove(sym, x, y) {
 	newMove.appendChild(lastMoveTile)
 	var lastMovePosition = document.createElement('div')
 	lastMovePosition.setAttribute('class', 'last-move-number')
-	lastMovePosition.innerHTML = String.fromCharCode(65 + y) + (x + 1)
+	lastMovePosition.innerHTML = String.fromCharCode(65 + x) + (y + 1)
 	newMove.appendChild(lastMovePosition)
 
 	// getLastMoveContainer.appendChild(newMove);
