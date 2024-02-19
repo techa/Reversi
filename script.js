@@ -1,3 +1,4 @@
+'use strict'
 console.log('Hello  ')
 var boardLength = 8
 var counter = 1
@@ -202,9 +203,9 @@ var glowchange = function (sym) {
 
 var createBoardArray = function () {
 	boardArray = []
-	for (i = 0; i < boardLength; i++) {
+	for (var i = 0; i < boardLength; i++) {
 		var anArray = []
-		for (j = 0; j < boardLength; j++) {
+		for (var j = 0; j < boardLength; j++) {
 			anArray.push(null)
 		}
 		boardArray.push(anArray)
@@ -281,7 +282,7 @@ var checkTopLeft = function (sym, x, y) {
 		if (boardArray[y - 1][x - 1] !== null) {
 			if (boardArray[y - 1][x - 1] !== sym) {
 				var minCount = Math.min(x, y) + 1
-				for (i = 2; i < minCount; i++) {
+				for (var i = 2; i < minCount; i++) {
 					if (boardArray[y - i][x - i] === sym) {
 						return true
 					} else if (boardArray[y - i][x - i] === null) {
@@ -306,7 +307,7 @@ var checkTop = function (sym, x, y) {
 		if (boardArray[y - 1][x] !== null) {
 			if (boardArray[y - 1][x] !== sym) {
 				var minCount = y + 1
-				for (i = 2; i < minCount; i++) {
+				for (var i = 2; i < minCount; i++) {
 					if (boardArray[y - i][x] === sym) {
 						return true
 					} else if (boardArray[y - i][x] === null) {
@@ -331,7 +332,7 @@ var checkTopRight = function (sym, x, y) {
 		if (boardArray[y - 1][x + 1] !== null) {
 			if (boardArray[y - 1][x + 1] !== sym) {
 				var minCount = Math.min(boardLength - x - 1, y) + 1
-				for (i = 2; i < minCount; i++) {
+				for (var i = 2; i < minCount; i++) {
 					if (boardArray[y - i][x + i] === sym) {
 						return true
 					} else if (boardArray[y - i][x + i] === null) {
@@ -356,7 +357,7 @@ var checkRight = function (sym, x, y) {
 		if (boardArray[y][x + 1] !== null) {
 			if (boardArray[y][x + 1] !== sym) {
 				var minCount = boardLength - x
-				for (i = 2; i < boardLength; i++) {
+				for (var i = 2; i < boardLength; i++) {
 					if (boardArray[y][x + i] === sym) {
 						return true
 					} else if (boardArray[y][x + i] === null) {
@@ -382,7 +383,7 @@ var checkBottomRight = function (sym, x, y) {
 		if (boardArray[y + 1][x + 1] !== null) {
 			if (boardArray[y + 1][x + 1] !== sym) {
 				var minCount = Math.min(boardLength - x, boardLength - y)
-				for (i = 2; i < minCount; i++) {
+				for (var i = 2; i < minCount; i++) {
 					if (boardArray[y + i][x + i] === sym) {
 						return true
 					} else if (boardArray[y + i][x + i] === null) {
@@ -407,7 +408,7 @@ var checkBottom = function (sym, x, y) {
 		if (boardArray[y + 1][x] !== null) {
 			if (boardArray[y + 1][x] !== sym) {
 				var minCount = boardLength - y
-				for (i = 2; i < minCount; i++) {
+				for (var i = 2; i < minCount; i++) {
 					if (boardArray[y + i][x] === sym) {
 						return true
 					} else if (boardArray[y + i][x] === null) {
@@ -433,7 +434,7 @@ var checkBottomLeft = function (sym, x, y) {
 		if (boardArray[y + 1][x - 1] !== null) {
 			if (boardArray[y + 1][x - 1] !== sym) {
 				var minCount = Math.min(boardLength - y - 1, x) + 1
-				for (i = 2; i < minCount; i++) {
+				for (var i = 2; i < minCount; i++) {
 					if (boardArray[y + i][x - i] === sym) {
 						return true
 					} else if (boardArray[y + i][x - i] === null) {
@@ -459,7 +460,7 @@ var checkLeft = function (sym, x, y) {
 		if (boardArray[y][x - 1] !== null) {
 			if (boardArray[y][x - 1] !== sym) {
 				var minCount = x + 1
-				for (i = 2; i < minCount; i++) {
+				for (var i = 2; i < minCount; i++) {
 					if (boardArray[y][x - i] === sym) {
 						return true
 					} else if (boardArray[y][x - i] === null) {
@@ -487,7 +488,7 @@ var changeRespectiveTiles = function (target, sym, x, y) {
 	var bottomLeftSettle = false
 	var leftSettle = false
 
-	for (i = 0; i < boardLength; i++) {
+	for (var i = 0; i < boardLength; i++) {
 		switch (i) {
 			case 0:
 				if (directionToGo[i]) {
@@ -712,7 +713,7 @@ var aiTurn = function () {
 			}
 		}
 		//check which square gives max change
-		for (i = 0; i < objArray.length; i++) {
+		for (var i = 0; i < objArray.length; i++) {
 			if (objArray[i].total >= maxChanged) {
 				maxChanged = objArray[i].total
 			}
@@ -720,7 +721,7 @@ var aiTurn = function () {
 
 		//take x and y axis of max change
 		var randomArray = []
-		for (j = 0; j < objArray.length; j++) {
+		for (var j = 0; j < objArray.length; j++) {
 			if (objArray[j].total === maxChanged) {
 				randomArray.push(objArray[j])
 			}
@@ -824,7 +825,7 @@ var accumulator = function (arr, sym, x, y) {
 	var leftSettle = false
 	var totalChanged = 0
 
-	for (i = 0; i < boardLength; i++) {
+	for (var i = 0; i < boardLength; i++) {
 		switch (i) {
 			case 0:
 				if (directionToGo[i]) {
@@ -969,8 +970,8 @@ var allBoardInitialisation = function (noclick = false) {
 	takePutSettingsButton()
 	var k = 0
 	var getSquares = document.querySelectorAll('.col')
-	for (i = 0; i < boardLength; i++) {
-		for (j = 0; j < boardLength; j++) {
+	for (var i = 0; i < boardLength; i++) {
+		for (var j = 0; j < boardLength; j++) {
 			getSquares[k].setAttribute('x-axis', j)
 			getSquares[k].setAttribute('y-axis', i)
 			getSquares[k].setAttribute('id', k)
