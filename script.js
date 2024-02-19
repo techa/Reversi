@@ -1,6 +1,7 @@
 'use strict'
 console.log('Hello  ')
 var boardLength = 8
+var initialPlacement = 'cross' // 'cross' or 'parallel'
 var counter = 1
 var boardArray = []
 var directionToGo = []
@@ -212,43 +213,47 @@ function createBoardArray() {
 	}
 }
 
+function setTile(index, side) {
+	const getSquare = document.getElementById(index)
+	const getX = parseInt(getSquare.getAttribute('x-axis'))
+	const getY = parseInt(getSquare.getAttribute('y-axis'))
+	const aTile = document.createElement('div')
+	const _class = side === 'W' ? 'white-tiles' : 'black-tiles'
+
+	aTile.setAttribute('class', _class)
+	boardArray[getY][getX] = side
+
+	getSquare.appendChild(aTile)
+	getSquare.removeEventListener('click', addTile)
+	// getSquare.removeEventListener("click", tilePlaceSound);
+}
+
 function initialize() {
 	var firstTileId = (boardLength / 2 - 1) * boardLength + (boardLength / 2 - 1)
 	var secondTileId = (boardLength / 2) * boardLength + boardLength / 2
 	var aCounter = 0
 	for (var i = firstTileId; i < firstTileId + 2; i++) {
-		var getSquare = document.getElementById(i)
-		var getX = parseInt(getSquare.getAttribute('x-axis'))
-		var getY = parseInt(getSquare.getAttribute('y-axis'))
-		var aTile = document.createElement('div')
-
-		if (aCounter % 2 === 0) {
-			aTile.setAttribute('class', 'white-tiles')
-			boardArray[getY][getX] = 'W'
-		} else {
-			aTile.setAttribute('class', 'black-tiles')
-			boardArray[getY][getX] = 'B'
+		if (initialPlacement === 'parallel') {
+			setTile(i, 'W')
+		} /* initialPlacement==='cross' */ else {
+			if (aCounter % 2 === 0) {
+				setTile(i, 'W')
+			} else {
+				setTile(i, 'B')
+			}
 		}
-		getSquare.appendChild(aTile)
-		getSquare.removeEventListener('click', addTile)
-		// getSquare.removeEventListener("click", tilePlaceSound);
 		aCounter++
 	}
 	for (var i = secondTileId; i > secondTileId - 2; i--) {
-		var getSquare = document.getElementById(i)
-		var getX = getSquare.getAttribute('x-axis')
-		var getY = getSquare.getAttribute('y-axis')
-		var aTile = document.createElement('div')
-		if (aCounter % 2 === 0) {
-			aTile.setAttribute('class', 'white-tiles')
-			boardArray[getY][getX] = 'W'
-		} else {
-			aTile.setAttribute('class', 'black-tiles')
-			boardArray[getY][getX] = 'B'
+		if (initialPlacement === 'parallel') {
+			setTile(i, 'B')
+		} /* initialPlacement==='cross' */ else {
+			if (aCounter % 2 === 0) {
+				setTile(i, 'W')
+			} else {
+				setTile(i, 'B')
+			}
 		}
-		getSquare.appendChild(aTile)
-		getSquare.removeEventListener('click', addTile)
-		// getSquare.removeEventListener("click", tilePlaceSound);
 		aCounter++
 	}
 }
