@@ -373,6 +373,8 @@ function changeRespectiveTiles(sym, x, y) {
 						boardArray[pY][pX] = sym
 						changeTileClassByNum(boardLength * pY + pX, sym)
 						a++
+						pX = x + dX * a
+						pY = y + dY * a
 					}
 					settle = true
 				} else {
