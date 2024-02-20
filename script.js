@@ -486,7 +486,7 @@ function changeRespectiveTiles(target, sym, x, y) {
 	var bottomLeftSettle = false
 	var leftSettle = false
 
-	for (var i = 0; i < boardLength; i++) {
+	for (var i = 0; i < 8; i++) {
 		switch (i) {
 			case 0:
 				if (directionToGo[i]) {
@@ -823,7 +823,7 @@ function accumulator(arr, sym, x, y) {
 	var leftSettle = false
 	var totalChanged = 0
 
-	for (var i = 0; i < boardLength; i++) {
+	for (var i = 0; i < 8; i++) {
 		switch (i) {
 			case 0:
 				if (directionToGo[i]) {
