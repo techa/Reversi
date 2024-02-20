@@ -58,7 +58,7 @@ function addTile(event) {
 		boardArray[getY][getX] = getSym
 		updateLastMove(getSym, getX, getY)
 
-		changeRespectiveTiles(event.target, getSym, getX, getY)
+		changeRespectiveTiles(getSym, getX, getY)
 		tilePlaceSound()
 		counter++
 		event.target.appendChild(aTile)
@@ -491,7 +491,7 @@ function checkLeft(sym, x, y) {
 	}
 }
 
-function changeRespectiveTiles(target, sym, x, y) {
+function changeRespectiveTiles(sym, x, y) {
 	var topLeftSettle = false
 	var topSettle = false
 	var topRightSettle = false
@@ -702,7 +702,7 @@ function aiTurn() {
 		boardArray[getY][getX] = getSym
 		updateLastMove(getSym, getX, getY)
 
-		changeRespectiveTiles(getTarget, getSym, getX, getY)
+		changeRespectiveTiles(getSym, getX, getY)
 		tilePlaceSound()
 		counter++
 		getTarget.appendChild(aTile)
