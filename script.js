@@ -705,7 +705,12 @@ function aiTurn() {
 			for (var x = 0; x < boardLength; x++) {
 				if (boardArray[y][x] === null) {
 					if (checkOKtoPlace(getSym, x, y)) {
-						accumulator(objArray, getSym, x, y)
+						var total = accumulator(getSym, x, y)
+						objArray.push({
+							'x-axis': x,
+							'y-axis': y,
+							total: total,
+						})
 					}
 				}
 			}
@@ -812,7 +817,13 @@ function stopDualBotMode() {
 	clearInterval(dualBotMode)
 }
 
-function accumulator(arr, sym, x, y) {
+/**
+ * @param {'W'|'B'} sym
+ * @param {number} x
+ * @param {number} y
+ * @returns {number} total reverse count
+ */
+function accumulator(sym, x, y) {
 	var topLeftSettle = false
 	var topSettle = false
 	var topRightSettle = false
@@ -956,11 +967,7 @@ function accumulator(arr, sym, x, y) {
 		}
 	}
 
-	arr.push({
-		'x-axis': x,
-		'y-axis': y,
-		total: totalChanged,
-	})
+	return totalChanged
 }
 
 function allBoardInitialisation(noclick = false) {
