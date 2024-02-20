@@ -274,222 +274,64 @@ function initialize() {
 	}
 }
 
+var directionXYs = [
+	[-1, -1], // top-left
+	[0, -1], // top
+	[1, -1], // top-right
+	[1, 0], // right
+	[1, 1], // bottom-right
+	[0, 1], // bottom
+	[-1, 1], // bottom-left
+	[-1, 0], // left
+]
+
+/**
+ * @param {'W'|'B'} sym
+ * @param {number} x
+ * @param {number} y
+ */
 function checkOKtoPlace(sym, x, y) {
-	directionToGo = [
-		checkTopLeft(sym, x, y),
-		checkTop(sym, x, y),
-		checkTopRight(sym, x, y),
-		checkRight(sym, x, y),
-		checkBottomRight(sym, x, y),
-		checkBottom(sym, x, y),
-		checkBottomLeft(sym, x, y),
-		checkLeft(sym, x, y),
-	]
+	directionToGo = directionXYs.map(function (value) {
+		return checkDirection(sym, x, y, value)
+	})
 	return directionToGo.includes(true)
 }
 
-//check top left
-function checkTopLeft(sym, x, y) {
-	if (x < 2 || y < 2) {
-		return false
-	} else {
-		if (boardArray[y - 1][x - 1] !== null) {
-			if (boardArray[y - 1][x - 1] !== sym) {
-				var minCount = Math.min(x, y) + 1
-				for (var i = 2; i < minCount; i++) {
-					if (boardArray[y - i][x - i] === sym) {
-						return true
-					} else if (boardArray[y - i][x - i] === null) {
-						return false
-					} else if (boardArray[y - i][x - i] === undefined) {
-						return false
-					}
-				}
-			} else {
-				return false
-			}
-		} else {
-			return false
-		}
-	}
-}
-//check top
-function checkTop(sym, x, y) {
-	if (y < 2) {
-		return false
-	} else {
-		if (boardArray[y - 1][x] !== null) {
-			if (boardArray[y - 1][x] !== sym) {
-				var minCount = y + 1
-				for (var i = 2; i < minCount; i++) {
-					if (boardArray[y - i][x] === sym) {
-						return true
-					} else if (boardArray[y - i][x] === null) {
-						return false
-					} else if (boardArray[y - i][x] === undefined) {
-						return false
-					}
-				}
-			} else {
-				return false
-			}
-		} else {
-			return false
-		}
-	}
-}
-//check top right
-function checkTopRight(sym, x, y) {
-	if (y < 2 || x > boardLength - 3) {
-		return false
-	} else {
-		if (boardArray[y - 1][x + 1] !== null) {
-			if (boardArray[y - 1][x + 1] !== sym) {
-				var minCount = Math.min(boardLength - x - 1, y) + 1
-				for (var i = 2; i < minCount; i++) {
-					if (boardArray[y - i][x + i] === sym) {
-						return true
-					} else if (boardArray[y - i][x + i] === null) {
-						return false
-					} else if (boardArray[y - i][x + i] === undefined) {
-						return false
-					}
-				}
-			} else {
-				return false
-			}
-		} else {
-			return false
-		}
-	}
-}
-//check right
-function checkRight(sym, x, y) {
-	if (x > boardLength - 3) {
-		return false
-	} else {
-		if (boardArray[y][x + 1] !== null) {
-			if (boardArray[y][x + 1] !== sym) {
-				var minCount = boardLength - x
-				for (var i = 2; i < boardLength; i++) {
-					if (boardArray[y][x + i] === sym) {
-						return true
-					} else if (boardArray[y][x + i] === null) {
-						return false
-					} else if (boardArray[y][x + i] === undefined) {
-						return false
-					}
-				}
-			} else {
-				return false
-			}
-		} else {
-			return false
-		}
-	}
-}
+/**
+ * @param {'W'|'B'} sym
+ * @param {number} x
+ * @param {number} y
+ * @param {directionXYs} dir
+ */
+function checkDirection(sym, x, y, dir) {
+	var dX = dir[0]
+	var dY = dir[1]
+	//              x-1,     x,  x+1
+	var xCheck = [x < 2, false, x > boardLength - 3][dX + 1]
+	//              y-1,     y,  y+1
+	var yCheck = [y < 2, false, y > boardLength - 3][dY + 1]
 
-//check bottom right
-function checkBottomRight(sym, x, y) {
-	if (x > boardLength - 3 || y > boardLength - 3) {
-		return false
-	} else {
-		if (boardArray[y + 1][x + 1] !== null) {
-			if (boardArray[y + 1][x + 1] !== sym) {
-				var minCount = Math.min(boardLength - x, boardLength - y)
-				for (var i = 2; i < minCount; i++) {
-					if (boardArray[y + i][x + i] === sym) {
-						return true
-					} else if (boardArray[y + i][x + i] === null) {
-						return false
-					} else if (boardArray[y + i][x + i] === undefined) {
-						return false
-					}
+	if (!(xCheck || yCheck)) {
+		if (
+			boardArray[y + dY][x + dX] !== null &&
+			boardArray[y + dY][x + dX] !== sym
+		) {
+			var minX = dX < 0 ? x : boardLength - x - 1
+			var minY = dY < 0 ? y : boardLength - y - 1
+			var minCount =
+				(dX && dY ? Math.min(minX, minY) : dX ? minX : dY ? minY : 0) +
+				1
+			for (var i = 2; i < minCount; i++) {
+				var tileSym = boardArray[y + i * dY][x + i * dX]
+				if (tileSym === sym) {
+					return true
+				} else if (tileSym == null) {
+					return false
 				}
-			} else {
-				return false
 			}
-		} else {
-			return false
 		}
 	}
-}
-//check bottom
-function checkBottom(sym, x, y) {
-	if (y > boardLength - 3) {
-		return false
-	} else {
-		if (boardArray[y + 1][x] !== null) {
-			if (boardArray[y + 1][x] !== sym) {
-				var minCount = boardLength - y
-				for (var i = 2; i < minCount; i++) {
-					if (boardArray[y + i][x] === sym) {
-						return true
-					} else if (boardArray[y + i][x] === null) {
-						return false
-					} else if (boardArray[y + i][x] === undefined) {
-						return false
-					}
-				}
-			} else {
-				return false
-			}
-		} else {
-			return false
-		}
-	}
-}
-
-//check bottom left
-function checkBottomLeft(sym, x, y) {
-	if (y > boardLength - 3 || x < 2) {
-		return false
-	} else {
-		if (boardArray[y + 1][x - 1] !== null) {
-			if (boardArray[y + 1][x - 1] !== sym) {
-				var minCount = Math.min(boardLength - y - 1, x) + 1
-				for (var i = 2; i < minCount; i++) {
-					if (boardArray[y + i][x - i] === sym) {
-						return true
-					} else if (boardArray[y + i][x - i] === null) {
-						return false
-					} else if (boardArray[y + i][x - i] === undefined) {
-						return false
-					}
-				}
-			} else {
-				return false
-			}
-		} else {
-			return false
-		}
-	}
-}
-
-//check left
-function checkLeft(sym, x, y) {
-	if (x < 2) {
-		return false
-	} else {
-		if (boardArray[y][x - 1] !== null) {
-			if (boardArray[y][x - 1] !== sym) {
-				var minCount = x + 1
-				for (var i = 2; i < minCount; i++) {
-					if (boardArray[y][x - i] === sym) {
-						return true
-					} else if (boardArray[y][x - i] === null) {
-						return false
-					} else if (boardArray[y][x - i] === undefined) {
-						return false
-					}
-				}
-			} else {
-				return false
-			}
-		} else {
-			return false
-		}
-	}
+	return false
 }
 
 function changeRespectiveTiles(sym, x, y) {
