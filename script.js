@@ -40,84 +40,116 @@ function changeTileClassByNum(idNum, sym) {
 ///////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-function addTile(event) {
-	if (event instanceof Element) {
-		event.target = event
-	}
-	var getX = parseInt(event.target.getAttribute('x-axis'))
-	var getY = parseInt(event.target.getAttribute('y-axis'))
-	var getSym = counter % 2 === 0 ? 'W' : 'B'
+/**
+ * @param {'W'|'B'} sym
+ * @param {number} x
+ * @param {number} y
+ * @param {boolean} ai
+ */
+function doTheMove(sym, x, y, ai) {
+	var el = document.getElementById(y * boardLength + x)
+	var aTile = document.createElement('div')
+	el.classList.add('test')
 
-	if (checkOKtoPlace(getSym, getX, getY)) {
-		removePredictionDots()
+	changeTileClass(aTile, sym)
+	boardArray[y][x] = sym
+	updateLastMove(sym, x, y)
 
-		var aTile = document.createElement('div')
-		event.target.classList.add('test')
+	changeRespectiveTiles(sym, x, y)
+	tilePlaceSound()
+	counter++
+	el.appendChild(aTile)
+	el.removeEventListener('click', addTile)
+	el.removeEventListener('click', tilePlaceSound)
 
-		changeTileClass(aTile, getSym)
-		boardArray[getY][getX] = getSym
-		updateLastMove(getSym, getX, getY)
+	/////////////////////////////////
+	/////   Do Tiles Counting  //////
+	/////////////////////////////////
+	tilesCounting()
 
-		changeRespectiveTiles(getSym, getX, getY)
-		tilePlaceSound()
-		counter++
-		event.target.appendChild(aTile)
-		event.target.removeEventListener('click', addTile)
-		// event.target.removeEventListener("click", tilePlaceSound);
+	/////////Check anymore playable empty square
+	//check any move left///////////////////////////
+	//updated getSym as next sym to play//////////
+	sym = counter % 2 === 0 ? 'W' : 'B'
+	console.log(sym + 'turn')
+	var slots = checkSlots(sym)
 
-		////////////////////////////////////////////////////////////
-		///////////     Do Tiles Counting           ///////////////
-		////////////////////////////////////////////////////////////
-		tilesCounting()
-		////////////////////////////////////////////////////////
+	if (slots.empty > 0) {
+		if (slots.movable > 0) {
+			console.log(sym + 'still can')
+			glowchange(sym)
 
-		//check any move left///////////////////////////
-		//updated getSym as next sym to play//////////
-		getSym = counter % 2 === 0 ? 'W' : 'B'
-		console.log(getSym + 'turn')
-		var slots = checkSlots(getSym)
-
-		if (slots.empty > 0) {
-			if (slots.movable > 0) {
-				console.log(getSym + 'still can')
-				glowchange(getSym)
-
+			if (ai) {
+				if (singlePlayerMode) {
+					startBackAllClicks()
+					predictionDots(sym)
+				}
+			} else {
 				if (singlePlayerMode) {
 					tempStopAllClicks()
 				} else {
-					predictionDots(getSym)
+					predictionDots(sym)
 				}
 				if (botMode) {
 					setTimeout(aiTurn, 2000)
 				}
-			} else {
-				console.log(getSym + 'no place to move, pass')
-				counter++
-				getSym = counter % 2 === 0 ? 'W' : 'B'
-				console.log(getSym + 'turn')
-				var slots = checkSlots(getSym)
-				if (slots.movable > 0) {
-					predictionDots(getSym)
-				} else {
-					console.log(getSym + 'also cannot, end game ')
-					stopGlow1()
-					stopGlow2()
-					botMode = false
-					tempStopAllClicks()
-					checkWin()
-				}
 			}
 		} else {
-			console.log(getSym + 'cannot d')
-			stopGlow1()
-			stopGlow2()
-			botMode = false
-			tempStopAllClicks()
-			checkWin()
+			console.log(sym + 'no place to move, pass')
+			counter++
+			sym = counter % 2 === 0 ? 'W' : 'B'
+			console.log(sym + 'turn')
+			var slots = checkSlots(sym)
+			if (slots.movable > 0) {
+				if (ai) {
+					console.log(sym + 'still can')
+					if (singlePlayerMode) {
+						setTimeout(aiTurn, 2000)
+					}
+				} else {
+					predictionDots(sym)
+				}
+			} else {
+				console.log(sym + 'also cannot, end game ')
+				stopGlow1()
+				stopGlow2()
+				botMode = false
+				if (!ai) {
+					tempStopAllClicks()
+				}
+				checkWin()
+			}
 		}
+	} else {
+		console.log(sym + 'cannot d')
+		stopGlow1()
+		stopGlow2()
+		botMode = false
+		if (!ai) {
+			tempStopAllClicks()
+		}
+		checkWin()
+	}
+}
 
-		///////////////////////////////////////////////////
+/**
+ * @param {Event} event
+ */
+function addTile(event) {
+	_addTile(event.target)
+}
 
+/**
+ * @param {Element} el
+ */
+function _addTile(el) {
+	var getX = parseInt(el.getAttribute('x-axis'))
+	var getY = parseInt(el.getAttribute('y-axis'))
+	var getSym = counter % 2 === 0 ? 'W' : 'B'
+
+	if (checkOKtoPlace(getSym, getX, getY)) {
+		removePredictionDots()
+		doTheMove(getSym, getX, getY)
 		//bot mode on and off
 	} else {
 		console.log('Invalid Move')
@@ -175,9 +207,12 @@ function predictionDots(sym) {
 	}
 }
 
+/**
+ * @param {Element} something
+ */
 function runATile(something) {
 	console.log(something.parentNode)
-	addTile(something.parentNode)
+	_addTile(something.parentNode)
 }
 
 function removePredictionDots(sym) {
@@ -561,69 +596,7 @@ function aiTurn() {
 
 		////////////do the move///////////////////////////////////////////////////
 		checkOKtoPlace(getSym, getX, getY)
-		var getTarget = document.getElementById(getY * boardLength + getX)
-		var aTile = document.createElement('div')
-		getTarget.classList.add('test')
-
-		changeTileClass(aTile, getSym)
-		boardArray[getY][getX] = getSym
-		updateLastMove(getSym, getX, getY)
-
-		changeRespectiveTiles(getSym, getX, getY)
-		tilePlaceSound()
-		counter++
-		getTarget.appendChild(aTile)
-		getTarget.removeEventListener('click', addTile)
-		getTarget.removeEventListener('click', tilePlaceSound)
-		////////////////////////////////////////////////////////////////////////////
-
-		/////////////Count whole board and update tiles
-		////////////////////////////////////////////////
-		tilesCounting()
-
-		/////////Check anymore playable empty square
-		getSym = counter % 2 === 0 ? 'W' : 'B'
-		console.log(getSym + 'turn')
-		var slots = checkSlots(getSym)
-
-		if (slots.empty > 0) {
-			if (slots.movable > 0) {
-				console.log(getSym + 'still can')
-				glowchange(getSym)
-
-				if (singlePlayerMode) {
-					startBackAllClicks()
-					predictionDots(getSym)
-				}
-			} else {
-				console.log(getSym + 'no place to move, pass')
-				counter++
-				getSym = counter % 2 === 0 ? 'W' : 'B'
-				console.log(getSym + 'turn')
-				var slots = checkSlots(getSym)
-				if (slots.movable > 0) {
-					console.log(getSym + 'still can')
-					if (singlePlayerMode) {
-						setTimeout(aiTurn, 2000)
-					}
-				} else {
-					console.log(getSym + 'also cannot, end game ')
-					stopGlow1()
-					stopGlow2()
-					botMode = false
-					checkWin()
-				}
-			}
-		} else {
-			console.log(getSym + 'cannot d')
-			stopGlow1()
-			stopGlow2()
-			botMode = false
-			checkWin()
-		}
-
-		////////////////////////////////////////////////////////
-
+		doTheMove(getSym, getX, getY, true)
 		//check any move left///////////////////////////
 		//updated getSym as next sym to play//////////
 	} else {
