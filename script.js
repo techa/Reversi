@@ -244,7 +244,8 @@ function setTile(index, sym) {
 }
 
 function initialize() {
-	var firstTileId = (boardLength / 2 - 1) * boardLength + (boardLength / 2 - 1)
+	var firstTileId =
+		(boardLength / 2 - 1) * boardLength + (boardLength / 2 - 1)
 	var secondTileId = (boardLength / 2) * boardLength + boardLength / 2
 	var aCounter = 0
 	for (var i = firstTileId; i < firstTileId + 2; i++) {
@@ -510,7 +511,10 @@ function changeRespectiveTiles(sym, x, y) {
 							var a = 1
 							while (boardArray[y - a][x - a] !== sym) {
 								boardArray[y - a][x - a] = sym
-								changeTileClassByNum(boardLength * (y - a) + (x - a), sym)
+								changeTileClassByNum(
+									boardLength * (y - a) + (x - a),
+									sym
+								)
 								a++
 							}
 							topLeftSettle = true
@@ -527,7 +531,10 @@ function changeRespectiveTiles(sym, x, y) {
 							var a = 1
 							while (boardArray[y - a][x] !== sym) {
 								boardArray[y - a][x] = sym
-								changeTileClassByNum(boardLength * (y - a) + x, sym)
+								changeTileClassByNum(
+									boardLength * (y - a) + x,
+									sym
+								)
 								a++
 							}
 							topSettle = true
@@ -544,7 +551,10 @@ function changeRespectiveTiles(sym, x, y) {
 							var a = 1
 							while (boardArray[y - a][x + a] !== sym) {
 								boardArray[y - a][x + a] = sym
-								changeTileClassByNum(boardLength * (y - a) + (x + a), sym)
+								changeTileClassByNum(
+									boardLength * (y - a) + (x + a),
+									sym
+								)
 								a++
 							}
 
@@ -562,7 +572,10 @@ function changeRespectiveTiles(sym, x, y) {
 							var a = 1
 							while (boardArray[y][x + a] !== sym) {
 								boardArray[y][x + a] = sym
-								changeTileClassByNum(boardLength * y + (x + a), sym)
+								changeTileClassByNum(
+									boardLength * y + (x + a),
+									sym
+								)
 								a++
 							}
 							rightSettle = true
@@ -579,7 +592,10 @@ function changeRespectiveTiles(sym, x, y) {
 							var a = 1
 							while (boardArray[y + a][x + a] !== sym) {
 								boardArray[y + a][x + a] = sym
-								changeTileClassByNum(boardLength * (y + a) + (x + a), sym)
+								changeTileClassByNum(
+									boardLength * (y + a) + (x + a),
+									sym
+								)
 								a++
 							}
 							bottomRightSettle = true
@@ -596,7 +612,10 @@ function changeRespectiveTiles(sym, x, y) {
 							var a = 1
 							while (boardArray[y + a][x] !== sym) {
 								boardArray[y + a][x] = sym
-								changeTileClassByNum(boardLength * (y + a) + x, sym)
+								changeTileClassByNum(
+									boardLength * (y + a) + x,
+									sym
+								)
 								a++
 							}
 							bottomSettle = true
@@ -613,7 +632,10 @@ function changeRespectiveTiles(sym, x, y) {
 							var a = 1
 							while (boardArray[y + a][x - a] !== sym) {
 								boardArray[y + a][x - a] = sym
-								changeTileClassByNum(boardLength * (y + a) + (x - a), sym)
+								changeTileClassByNum(
+									boardLength * (y + a) + (x - a),
+									sym
+								)
 								a++
 							}
 							bottomLeftSettle = true
@@ -630,7 +652,10 @@ function changeRespectiveTiles(sym, x, y) {
 							var a = 1
 							while (boardArray[y][x - a] !== sym) {
 								boardArray[y][x - a] = sym
-								changeTileClassByNum(boardLength * y + (x - a), sym)
+								changeTileClassByNum(
+									boardLength * y + (x - a),
+									sym
+								)
 								a++
 							}
 							leftSettle = true
@@ -1038,7 +1063,10 @@ function updateLastMove(sym, x, y) {
 	newMove.appendChild(lastMovePosition)
 
 	// getLastMoveContainer.appendChild(newMove);
-	getLastMoveContainer.insertBefore(newMove, getLastMoveContainer.childNodes[0])
+	getLastMoveContainer.insertBefore(
+		newMove,
+		getLastMoveContainer.childNodes[0]
+	)
 }
 
 function askPlayerInfoContainer(mode) {
@@ -1086,7 +1114,8 @@ function askPlayerInfoContainer(mode) {
 }
 
 function clearMainPageContainer() {
-	document.querySelector('.settings-from-container').style.visibility = 'hidden'
+	document.querySelector('.settings-from-container').style.visibility =
+		'hidden'
 	var mainPageContainer = document.querySelector('.main-page-container')
 	while (mainPageContainer.firstChild) {
 		mainPageContainer.removeChild(mainPageContainer.firstChild)
@@ -1200,7 +1229,9 @@ function checkWin() {
 		startAnimations()
 		// getWinDisplay.style.animation = "fadein 2s";
 		// getResultContainer.style.animation ="fadein 2s 2s forwards";
-	} else if (parseInt(blackScore.innerHTML) < parseInt(whiteScore.innerHTML)) {
+	} else if (
+		parseInt(blackScore.innerHTML) < parseInt(whiteScore.innerHTML)
+	) {
 		getWinDisplay.innerHTML = `${player2Name} Win!`
 		startAnimations()
 		// getWinDisplay.style.animation = "fadein 2s";
