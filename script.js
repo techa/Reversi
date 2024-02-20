@@ -667,15 +667,12 @@ function preStartGame(mode) {
 		if (mode === 'single') {
 			singlePlayerMode = true
 
-			var takeName1 = document.getElementById('player-1-input').value
+			var takeName1 =
+				document.getElementById('player-1-input').value || 'Guest-1'
 
-			if (takeName1 === '') {
-				document.getElementById('player-name').innerHTML = 'Guest-1'
-				player1Name = 'Guest-1'
-			} else {
-				document.getElementById('player-name').innerHTML = takeName1
-				player1Name = takeName1
-			}
+			document.getElementById('player-name').innerHTML = takeName1
+			player1Name = takeName1
+
 			botMode = true
 			removeMainPageContainer()
 			allBoardInitialisation()
@@ -684,24 +681,16 @@ function preStartGame(mode) {
 			stopGlow2()
 			predictionDots(getSym)
 		} else if (mode === '2') {
-			var takeName1 = document.getElementById('player-1-input').value
-			var takeName2 = document.getElementById('player-2-input').value
+			var takeName1 =
+				document.getElementById('player-1-input').value || 'Guest-1'
+			var takeName2 =
+				document.getElementById('player-2-input').value || 'Guest-2'
 
-			if (takeName1 === '') {
-				document.getElementById('player-name').innerHTML = 'Guest-1'
-				player1Name = 'Guest-1'
-			} else {
-				document.getElementById('player-name').innerHTML = takeName1
-				player1Name = takeName1
-			}
+			document.getElementById('player-name').innerHTML = takeName1
+			player1Name = takeName1
+			document.getElementById('bot-name').innerHTML = takeName2
+			player2Name = takeName2
 
-			if (takeName2 === '') {
-				document.getElementById('bot-name').innerHTML = 'Guest-2'
-				player2Name = 'Guest-2'
-			} else {
-				document.getElementById('bot-name').innerHTML = takeName2
-				player2Name = takeName2
-			}
 			removeMainPageContainer()
 			allBoardInitialisation()
 			startGlow1()
