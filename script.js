@@ -50,21 +50,13 @@ function changeTileClassByNum(idNum, sym) {
  * @param {boolean} ai
  */
 function doTheMove(sym, x, y, ai) {
-	var el = document.getElementById(y * boardLength + x)
-	el.classList.add('test')
-	var aTile = document.createElement('div')
-	changeTileClass(aTile, sym)
+	setTile(sym, x, y)
 
-	boardArray[y][x] = sym
-	
 	updateLastMove(sym, x, y)
 
 	changeRespectiveTiles(sym, x, y)
 	tilePlaceSound()
 	counter++
-	el.appendChild(aTile)
-	el.removeEventListener('click', addTile)
-	el.removeEventListener('click', tilePlaceSound)
 
 	/////////////////////////////////
 	/////   Do Tiles Counting  //////
