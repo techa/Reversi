@@ -154,8 +154,8 @@ function _addTile(el) {
 }
 
 function checkSlots(sym) {
-	let emptySlots = 0
-	let roughtCount = 0
+	var emptySlots = 0
+	var roughtCount = 0
 	for (var y = 0; y < boardLength; y++) {
 		for (var x = 0; x < boardLength; x++) {
 			if (boardArray[y][x] === null) {
@@ -270,16 +270,16 @@ function setTile(sym, x, y) {
 
 function initialize() {
 	const center = ((boardLength / 2) | 0) - 1
-	for (let i = 0; i < 4; i++) {
-		let x = center
-		let y = center
+	for (var i = 0; i < 4; i++) {
+		var x = center
+		var y = center
 		if (i === 2 || i === 3) {
 			y += 1
 		}
 		if (i === 1 || i === 3) {
 			x += 1
 		}
-		let sym = 'B'
+		var sym = 'B'
 		if (
 			(initialPlacement === 'cross' && (!i || i === 3)) ||
 			(initialPlacement === 'parallel' && i < 2)
