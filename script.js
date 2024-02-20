@@ -256,9 +256,9 @@ function createBoardArray() {
  * @param {number} y
  */
 function setTile(sym, x, y) {
-	const index = y * boardLength + x
-	const getSquare = document.getElementById(index)
-	const aTile = document.createElement('div')
+	var index = y * boardLength + x
+	var getSquare = document.getElementById(index)
+	var aTile = document.createElement('div')
 
 	changeTileClass(aTile, sym)
 	boardArray[y][x] = sym
@@ -269,7 +269,7 @@ function setTile(sym, x, y) {
 }
 
 function initialize() {
-	const center = ((boardLength / 2) | 0) - 1
+	var center = ((boardLength / 2) | 0) - 1
 	for (var i = 0; i < 4; i++) {
 		var x = center
 		var y = center
