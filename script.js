@@ -259,7 +259,7 @@ function initialize() {
 }
 
 function checkOKtoPlace(sym, x, y) {
-	var arr = [
+	directionToGo = [
 		checkTopLeft(sym, x, y),
 		checkTop(sym, x, y),
 		checkTopRight(sym, x, y),
@@ -269,14 +269,7 @@ function checkOKtoPlace(sym, x, y) {
 		checkBottomLeft(sym, x, y),
 		checkLeft(sym, x, y),
 	]
-
-	directionToGo = arr
-
-	if (arr.includes(true)) {
-		return true
-	} else {
-		return false
-	}
+	return directionToGo.includes(true)
 }
 
 //check top left
