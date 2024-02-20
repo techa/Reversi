@@ -265,17 +265,17 @@ function createBoardArray() {
 }
 
 /**
- * @param {number} index
  * @param {'W'|'B'} sym
+ * @param {number} x
+ * @param {number} y
  */
-function setTile(index, sym) {
+function setTile(sym, x, y) {
+	const index = y * boardLength + x
 	const getSquare = document.getElementById(index)
-	const getX = parseInt(getSquare.getAttribute('x-axis'))
-	const getY = parseInt(getSquare.getAttribute('y-axis'))
 	const aTile = document.createElement('div')
 
 	changeTileClass(aTile, sym)
-	boardArray[getY][getX] = sym
+	boardArray[y][x] = sym
 
 	getSquare.appendChild(aTile)
 	getSquare.removeEventListener('click', addTile)
@@ -283,33 +283,25 @@ function setTile(index, sym) {
 }
 
 function initialize() {
-	var firstTileId =
-		(boardLength / 2 - 1) * boardLength + (boardLength / 2 - 1)
-	var secondTileId = (boardLength / 2) * boardLength + boardLength / 2
-	var aCounter = 0
-	for (var i = firstTileId; i < firstTileId + 2; i++) {
-		if (initialPlacement === 'parallel') {
-			setTile(i, 'W')
-		} /* initialPlacement==='cross' */ else {
-			if (aCounter % 2 === 0) {
-				setTile(i, 'W')
-			} else {
-				setTile(i, 'B')
-			}
+	const center = ((boardLength / 2) | 0) - 1
+	for (let i = 0; i < 4; i++) {
+		let x = center
+		let y = center
+		if (i === 2 || i === 3) {
+			y += 1
 		}
-		aCounter++
-	}
-	for (var i = secondTileId; i > secondTileId - 2; i--) {
-		if (initialPlacement === 'parallel') {
-			setTile(i, 'B')
-		} /* initialPlacement==='cross' */ else {
-			if (aCounter % 2 === 0) {
-				setTile(i, 'W')
-			} else {
-				setTile(i, 'B')
-			}
+		if (i === 1 || i === 3) {
+			x += 1
 		}
-		aCounter++
+		let sym = 'B'
+		if (
+			(initialPlacement === 'cross' && (!i || i === 3)) ||
+			(initialPlacement === 'parallel' && i < 2)
+		) {
+			sym = 'W'
+		}
+
+		setTile(sym, x, y)
 	}
 }
 
