@@ -920,28 +920,7 @@ function initAllBackToMainPage() {
 
 	mainContainer.appendChild(mainPageContainer)
 
-	document
-		.getElementById('single-player')
-		.addEventListener('click', function () {
-			getSettings()
-			clearMainPageContainer()
-			mode = 'single'
-			askPlayerInfoContainer(mode)
-		})
-
-	document.getElementById('2-players').addEventListener('click', function () {
-		getSettings()
-		clearMainPageContainer()
-		mode = '2'
-		askPlayerInfoContainer(mode)
-	})
-
-	document.getElementById('demo').addEventListener('click', function () {
-		getSettings()
-		clearMainPageContainer()
-		mode = 'demo'
-		setTimeout(preStartGame(mode), 100)
-	})
+	addEventToStart()
 }
 
 function takePutSettingsButton() {
@@ -962,7 +941,7 @@ function takeOutSettings() {
 	getResultContainer.style.opacity = '1'
 }
 
-document.addEventListener('DOMContentLoaded', function () {
+function addEventToStart() {
 	document
 		.getElementById('single-player')
 		.addEventListener('click', function () {
@@ -985,4 +964,6 @@ document.addEventListener('DOMContentLoaded', function () {
 		mode = 'demo'
 		setTimeout(preStartGame(mode), 100)
 	})
-})
+}
+
+document.addEventListener('DOMContentLoaded', addEventToStart)
