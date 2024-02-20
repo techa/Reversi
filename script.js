@@ -51,11 +51,12 @@ function changeTileClassByNum(idNum, sym) {
  */
 function doTheMove(sym, x, y, ai) {
 	var el = document.getElementById(y * boardLength + x)
-	var aTile = document.createElement('div')
 	el.classList.add('test')
-
+	var aTile = document.createElement('div')
 	changeTileClass(aTile, sym)
+
 	boardArray[y][x] = sym
+	
 	updateLastMove(sym, x, y)
 
 	changeRespectiveTiles(sym, x, y)
