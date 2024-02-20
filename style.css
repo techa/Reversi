@@ -116,19 +116,20 @@ button {
 
 .score-container {
 	display: flex;
-	width: 70%;
-	margin: 0 auto;
+	width: 100%;
 	height: 175px;
 
 	margin-top: 10px;
 	min-width: 650px;
 	visibility: hidden;
+
+	justify-content: center;
 }
 
 .score-inner-container {
-	width: 50%;
 	height: 100%;
 	position: relative;
+	margin: 20px;
 }
 
 .score-tile {
@@ -430,6 +431,7 @@ button {
 	background-color: rgba(0, 0, 0, 0.8);
 	border: 1px solid black;
 	width: 100%;
+	height: 100%;
 	top: 0;
 	left: 0;
 	padding-bottom: 100%;
