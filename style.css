@@ -88,9 +88,11 @@
 }
 
 body {
-	background-image: url('https://wallpaper-gallery.net/images/wood-background-wallpaper/wood-background-wallpaper-24.jpg');
+	background-color: darkslategray;
 	background-size: cover;
 	min-width: 650px;
+	width: 100%;
+	position: fixed;
 	font-family: 'Archivo Black', sans-serif;
 }
 
@@ -278,6 +280,7 @@ button {
 }
 
 .settings-from-container {
+	color: aliceblue;
 	width: 100%;
 	display: flex;
 	justify-content: center;
@@ -363,7 +366,7 @@ button {
 	display: block;
 	padding: 14px;
 	font-size: 30px;
-	color: black;
+	color: aliceblue;
 	box-sizing: border-box;
 	outline: none;
 	background: none;
@@ -387,7 +390,7 @@ button {
 	display: block;
 	padding: 14px;
 	font-size: 30px;
-	color: black;
+	color: aliceblue;
 	box-sizing: border-box;
 	outline: none;
 	background: none;
@@ -511,7 +514,7 @@ button {
 	line-height: 30px;
 	position: absolute;
 	display: flex;
-	width: 360px;
+	width: 355px;
 	box-sizing: border-box;
 	height: 30px;
 	top: 0;
@@ -532,7 +535,7 @@ button {
 	display: flex;
 	width: 32px;
 	box-sizing: border-box;
-	height: 363px;
+	height: 355px;
 	top: 29px;
 	left: -1px;
 	flex-direction: column;
