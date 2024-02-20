@@ -477,149 +477,28 @@ function stopDualBotMode() {
  * @returns {number} total reverse count
  */
 function accumulator(sym, x, y) {
-	var topLeftSettle = false
-	var topSettle = false
-	var topRightSettle = false
-	var rightSettle = false
-	var bottomRightSettle = false
-	var bottomSettle = false
-	var bottomLeftSettle = false
-	var leftSettle = false
 	var totalChanged = 0
-
 	for (var i = 0; i < 8; i++) {
-		switch (i) {
-			case 0:
-				if (directionToGo[i]) {
-					while (!topLeftSettle) {
-						if (boardArray[y - 1][x - 1] !== null) {
-							var i = 1
-							while (boardArray[y - i][x - i] !== sym) {
-								totalChanged++
-								i++
-							}
-							topLeftSettle = true
-						} else {
-							topLeftSettle = true
-						}
+		if (directionToGo[i]) {
+			var settle = false
+			var dir = directionXYs[i]
+			var dX = dir[0]
+			var dY = dir[1]
+
+			while (!settle) {
+				if (boardArray[y + dY][x + dX] !== null) {
+					var a = 1
+					while (boardArray[y + dY * a][x + dX * a] !== sym) {
+						totalChanged++
+						a++
 					}
+					settle = true
+				} else {
+					settle = true
 				}
-				break
-			case 1:
-				if (directionToGo[i]) {
-					while (!topSettle) {
-						if (boardArray[y - 1][x] !== null) {
-							var i = 1
-							while (boardArray[y - i][x] !== sym) {
-								totalChanged++
-								i++
-							}
-							topSettle = true
-						} else {
-							topSettle = true
-						}
-					}
-				}
-				break
-			case 2:
-				if (directionToGo[i]) {
-					while (!topRightSettle) {
-						if (boardArray[y - 1][x + 1] !== null) {
-							var i = 1
-							while (boardArray[y - i][x + i] !== sym) {
-								totalChanged++
-								i++
-							}
-							topRightSettle = true
-						} else {
-							topRightSettle = true
-						}
-					}
-				}
-				break
-			case 3:
-				if (directionToGo[i]) {
-					while (!rightSettle) {
-						if (boardArray[y][x + 1] !== null) {
-							var i = 1
-							while (boardArray[y][x + i] !== sym) {
-								totalChanged++
-								i++
-							}
-							rightSettle = true
-						} else {
-							rightSettle = true
-						}
-					}
-				}
-				break
-			case 4:
-				if (directionToGo[i]) {
-					while (!bottomRightSettle) {
-						if (boardArray[y + 1][x + 1] !== null) {
-							var i = 1
-							while (boardArray[y + i][x + i] !== sym) {
-								totalChanged++
-								i++
-							}
-							bottomRightSettle = true
-						} else {
-							bottomRightSettle = true
-						}
-					}
-				}
-				break
-			case 5:
-				if (directionToGo[i]) {
-					while (!bottomSettle) {
-						if (boardArray[y + 1][x] !== null) {
-							var i = 1
-							while (boardArray[y + i][x] !== sym) {
-								totalChanged++
-								i++
-							}
-							bottomSettle = true
-						} else {
-							bottomSettle = true
-						}
-					}
-				}
-				break
-			case 6:
-				if (directionToGo[i]) {
-					while (!bottomLeftSettle) {
-						if (boardArray[y + 1][x - 1] !== null) {
-							var i = 1
-							while (boardArray[y + i][x - i] !== sym) {
-								totalChanged++
-								i++
-							}
-							bottomLeftSettle = true
-						} else {
-							bottomLeftSettle = true
-						}
-					}
-				}
-				break
-			case 7:
-				if (directionToGo[i]) {
-					while (!leftSettle) {
-						if (boardArray[y][x - 1] !== null) {
-							var i = 1
-							while (boardArray[y][x - i] !== sym) {
-								totalChanged++
-								i++
-							}
-							leftSettle = true
-						} else {
-							leftSettle = true
-						}
-					}
-				}
-				break
+			}
 		}
 	}
-
 	return totalChanged
 }
 
