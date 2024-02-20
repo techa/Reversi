@@ -4,6 +4,9 @@ var boardLength = 8
 var initialPlacement = 'cross' // 'cross' or 'parallel'
 var counter = 1
 var boardArray = []
+/**
+ * @type {boolean[]}
+ */
 var directionToGo = []
 var botMode = false
 var demo = false
@@ -369,182 +372,38 @@ function checkDirection(sym, x, y, dir) {
 	return false
 }
 
+/**
+ * @param {'W'|'B'} sym
+ * @param {number} x
+ * @param {number} y
+ */
 function changeRespectiveTiles(sym, x, y) {
-	var topLeftSettle = false
-	var topSettle = false
-	var topRightSettle = false
-	var rightSettle = false
-	var bottomRightSettle = false
-	var bottomSettle = false
-	var bottomLeftSettle = false
-	var leftSettle = false
-
 	for (var i = 0; i < 8; i++) {
-		switch (i) {
-			case 0:
-				if (directionToGo[i]) {
-					while (!topLeftSettle) {
-						if (boardArray[y - 1][x - 1] !== null) {
-							var a = 1
-							while (boardArray[y - a][x - a] !== sym) {
-								boardArray[y - a][x - a] = sym
-								changeTileClassByNum(
-									boardLength * (y - a) + (x - a),
-									sym
-								)
-								a++
-							}
-							topLeftSettle = true
-						} else {
-							topLeftSettle = true
-						}
-					}
-				}
-				break
-			case 1:
-				if (directionToGo[i]) {
-					while (!topSettle) {
-						if (boardArray[y - 1][x] !== null) {
-							var a = 1
-							while (boardArray[y - a][x] !== sym) {
-								boardArray[y - a][x] = sym
-								changeTileClassByNum(
-									boardLength * (y - a) + x,
-									sym
-								)
-								a++
-							}
-							topSettle = true
-						} else {
-							topSettle = true
-						}
-					}
-				}
-				break
-			case 2:
-				if (directionToGo[i]) {
-					while (!topRightSettle) {
-						if (boardArray[y - 1][x + 1] !== null) {
-							var a = 1
-							while (boardArray[y - a][x + a] !== sym) {
-								boardArray[y - a][x + a] = sym
-								changeTileClassByNum(
-									boardLength * (y - a) + (x + a),
-									sym
-								)
-								a++
-							}
+		if (directionToGo[i]) {
+			var settle = false
+			var dir = directionXYs[i]
+			var dX = dir[0]
+			var dY = dir[1]
 
-							topRightSettle = true
-						} else {
-							topRightSettle = true
-						}
+			while (!settle) {
+				if (boardArray[y + dY][x + dX] !== null) {
+					var a = 1
+					var pX = x + dX * a
+					var pY = y + dY * a
+					while (boardArray[pY][pX] !== sym) {
+						boardArray[pY][pX] = sym
+						changeTileClassByNum(boardLength * pY + pX, sym)
+						a++
 					}
+					settle = true
+				} else {
+					settle = true
 				}
-				break
-			case 3:
-				if (directionToGo[i]) {
-					while (!rightSettle) {
-						if (boardArray[y][x + 1] !== null) {
-							var a = 1
-							while (boardArray[y][x + a] !== sym) {
-								boardArray[y][x + a] = sym
-								changeTileClassByNum(
-									boardLength * y + (x + a),
-									sym
-								)
-								a++
-							}
-							rightSettle = true
-						} else {
-							rightSettle = true
-						}
-					}
-				}
-				break
-			case 4:
-				if (directionToGo[i]) {
-					while (!bottomRightSettle) {
-						if (boardArray[y + 1][x + 1] !== null) {
-							var a = 1
-							while (boardArray[y + a][x + a] !== sym) {
-								boardArray[y + a][x + a] = sym
-								changeTileClassByNum(
-									boardLength * (y + a) + (x + a),
-									sym
-								)
-								a++
-							}
-							bottomRightSettle = true
-						} else {
-							bottomRightSettle = true
-						}
-					}
-				}
-				break
-			case 5:
-				if (directionToGo[i]) {
-					while (!bottomSettle) {
-						if (boardArray[y + 1][x] !== null) {
-							var a = 1
-							while (boardArray[y + a][x] !== sym) {
-								boardArray[y + a][x] = sym
-								changeTileClassByNum(
-									boardLength * (y + a) + x,
-									sym
-								)
-								a++
-							}
-							bottomSettle = true
-						} else {
-							bottomSettle = true
-						}
-					}
-				}
-				break
-			case 6:
-				if (directionToGo[i]) {
-					while (!bottomLeftSettle) {
-						if (boardArray[y + 1][x - 1] !== null) {
-							var a = 1
-							while (boardArray[y + a][x - a] !== sym) {
-								boardArray[y + a][x - a] = sym
-								changeTileClassByNum(
-									boardLength * (y + a) + (x - a),
-									sym
-								)
-								a++
-							}
-							bottomLeftSettle = true
-						} else {
-							bottomLeftSettle = true
-						}
-					}
-				}
-				break
-			case 7:
-				if (directionToGo[i]) {
-					while (!leftSettle) {
-						if (boardArray[y][x - 1] !== null) {
-							var a = 1
-							while (boardArray[y][x - a] !== sym) {
-								boardArray[y][x - a] = sym
-								changeTileClassByNum(
-									boardLength * y + (x - a),
-									sym
-								)
-								a++
-							}
-							leftSettle = true
-						} else {
-							leftSettle = true
-						}
-					}
-				}
-				break
+			}
 		}
 	}
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //////                AI Mode
