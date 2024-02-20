@@ -1029,10 +1029,12 @@ function createBoard() {
 	for (var i = 0; i < boardLength; i++) {
 		var row = document.createElement('div')
 		row.setAttribute('class', 'row')
+		row.style.height = 100 / boardLength + '%'
 		squareColorCounter++
 		for (var j = 0; j < boardLength; j++) {
 			var square = document.createElement('div')
 			square.setAttribute('class', 'col square')
+			square.style.width = 100 / boardLength + '%'
 			if (squareColorCounter % 2 === 1) {
 				square.style.backgroundColor = '#86B50F'
 			}
