@@ -1130,6 +1130,7 @@ function askPlayerInfoContainer(mode) {
 }
 
 function clearMainPageContainer() {
+	document.querySelector('.settings-from-container').style.visibility = 'hidden'
 	var mainPageContainer = document.querySelector('.main-page-container')
 	while (mainPageContainer.firstChild) {
 		mainPageContainer.removeChild(mainPageContainer.firstChild)
@@ -1275,6 +1276,17 @@ function takeOffShroud() {
 	document.querySelector('.result-container').style.opacity = '0'
 }
 
+function getSettings() {
+	var boardLengthInput = document.getElementById('boardLength')
+	boardLength = boardLengthInput ? parseInt(boardLengthInput.value) : 8
+
+	var parallel = document.getElementById('parallel')
+	initialPlacement = parallel && parallel.checked ? 'parallel' : 'cross'
+
+	console.log('boardLength = ', boardLength)
+	console.log('initialPlacement = ', initialPlacement)
+}
+
 /////////////////////////////////////////////////////////////////////////////////
 //////////////////////                                      /////////////////////
 //////////////////////    DOCUMENT ON LOAD                   ////////////////////
@@ -1340,6 +1352,10 @@ function initAllBackToMainPage() {
 
 	var mainPageContainer = document.createElement('div')
 	mainPageContainer.setAttribute('class', 'main-page-container')
+
+	document.querySelector('.settings-from-container').style.visibility =
+		'visible'
+
 	var button1 = document.createElement('button')
 	button1.setAttribute('class', 'selections')
 	button1.setAttribute('onmousedown', 'beep.play()')
@@ -1367,18 +1383,21 @@ function initAllBackToMainPage() {
 	document
 		.getElementById('single-player')
 		.addEventListener('click', function () {
+			getSettings()
 			clearMainPageContainer()
 			mode = 'single'
 			askPlayerInfoContainer(mode)
 		})
 
 	document.getElementById('2-players').addEventListener('click', function () {
+		getSettings()
 		clearMainPageContainer()
 		mode = '2'
 		askPlayerInfoContainer(mode)
 	})
 
 	document.getElementById('demo').addEventListener('click', function () {
+		getSettings()
 		clearMainPageContainer()
 		mode = 'demo'
 		setTimeout(preStartGame(mode), 100)
@@ -1407,18 +1426,21 @@ document.addEventListener('DOMContentLoaded', function () {
 	document
 		.getElementById('single-player')
 		.addEventListener('click', function () {
+			getSettings()
 			clearMainPageContainer()
 			mode = 'single'
 			askPlayerInfoContainer(mode)
 		})
 
 	document.getElementById('2-players').addEventListener('click', function () {
+		getSettings()
 		clearMainPageContainer()
 		mode = '2'
 		askPlayerInfoContainer(mode)
 	})
 
 	document.getElementById('demo').addEventListener('click', function () {
+		getSettings()
 		clearMainPageContainer()
 		mode = 'demo'
 		setTimeout(preStartGame(mode), 100)

@@ -48,6 +48,43 @@
 			><span class="black-letter">R</span><span class="white-letter">S</span
 			><span class="black-letter">I</span>
 		</div>
+
+		<div class="settings-from-container">
+			<div>
+				<label>
+					Board Size:
+					<input
+						type="number"
+						name="boardLength"
+						id="boardLength"
+						value="8"
+						min="4"
+						max="12"
+					/>
+				</label>
+				<div>
+					Initial Placement:
+					<label>
+						<input
+							type="radio"
+							name="initialPlacement"
+							value="cross"
+							id="cross"
+							checked
+						/>cross
+					</label>
+					<label>
+						<input
+							type="radio"
+							name="initialPlacement"
+							value="parallel"
+							id="parallel"
+						/>parallel
+					</label>
+				</div>
+			</div>
+		</div>
+
 		<div class="main-container">
 			<div class="main-page-container">
 				<button class="selections" onmousedown="beep.play()" id="single-player">
