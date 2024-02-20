@@ -193,22 +193,16 @@ function predictionDots(sym) {
 					createPredictor.setAttribute('class', 'predictor')
 					createPredictor.setAttribute('x-axis', x)
 					createPredictor.setAttribute('y-axis', y)
-					createPredictor.setAttribute('onclick', 'runATile(this)')
 					var id = y * boardLength + x
-					document.getElementById(id).appendChild(createPredictor)
+					document
+						.getElementById(id)
+						.appendChild(createPredictor)
+						.addEventListener('click', addTile)
 					predictorArray.push(id)
 				}
 			}
 		}
 	}
-}
-
-/**
- * @param {Element} something
- */
-function runATile(something) {
-	console.log(something.parentNode)
-	_addTile(something.parentNode)
 }
 
 function removePredictionDots(sym) {
