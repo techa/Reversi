@@ -18,6 +18,22 @@ var player2Name = 'AI - White'
 var blackScore = document.getElementById('black-score')
 var whiteScore = document.getElementById('white-score')
 
+/**
+ * @param {Node} el
+ * @param {'W'|'B'} sym
+ */
+function changeTileClass(el, sym) {
+	el.setAttribute('class', sym === 'W' ? 'white-tiles' : 'black-tiles')
+}
+
+/**
+ * @param {number} idNum
+ * @param {'W'|'B'} sym
+ */
+function changeTileClassByNum(idNum, sym) {
+	changeTileClass(document.getElementById(idNum).firstChild, sym)
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////
 ////                            Player Click
@@ -37,15 +53,11 @@ function addTile(event) {
 
 		var aTile = document.createElement('div')
 		event.target.classList.add('test')
-		if (getSym === 'W') {
-			aTile.setAttribute('class', 'white-tiles')
-			boardArray[getY][getX] = getSym
-			updateLastMove(getSym, getX, getY)
-		} else {
-			aTile.setAttribute('class', 'black-tiles')
-			boardArray[getY][getX] = getSym
-			updateLastMove(getSym, getX, getY)
-		}
+
+		changeTileClass(aTile, getSym)
+		boardArray[getY][getX] = getSym
+		updateLastMove(getSym, getX, getY)
+
 		changeRespectiveTiles(event.target, getSym, getX, getY)
 		tilePlaceSound()
 		counter++
@@ -213,15 +225,18 @@ function createBoardArray() {
 	}
 }
 
-function setTile(index, side) {
+/**
+ * @param {number} index
+ * @param {'W'|'B'} sym
+ */
+function setTile(index, sym) {
 	const getSquare = document.getElementById(index)
 	const getX = parseInt(getSquare.getAttribute('x-axis'))
 	const getY = parseInt(getSquare.getAttribute('y-axis'))
 	const aTile = document.createElement('div')
-	const _class = side === 'W' ? 'white-tiles' : 'black-tiles'
 
-	aTile.setAttribute('class', _class)
-	boardArray[getY][getX] = side
+	changeTileClass(aTile, sym)
+	boardArray[getY][getX] = sym
 
 	getSquare.appendChild(aTile)
 	getSquare.removeEventListener('click', addTile)
@@ -495,14 +510,7 @@ function changeRespectiveTiles(target, sym, x, y) {
 							var a = 1
 							while (boardArray[y - a][x - a] !== sym) {
 								boardArray[y - a][x - a] = sym
-								if (sym === 'W')
-									document
-										.getElementById(boardLength * (y - a) + (x - a))
-										.firstChild.setAttribute('class', 'white-tiles')
-								else
-									document
-										.getElementById(boardLength * (y - a) + (x - a))
-										.firstChild.setAttribute('class', 'black-tiles')
+								changeTileClassByNum(boardLength * (y - a) + (x - a), sym)
 								a++
 							}
 							topLeftSettle = true
@@ -519,14 +527,7 @@ function changeRespectiveTiles(target, sym, x, y) {
 							var a = 1
 							while (boardArray[y - a][x] !== sym) {
 								boardArray[y - a][x] = sym
-								if (sym === 'W')
-									document
-										.getElementById(boardLength * (y - a) + x)
-										.firstChild.setAttribute('class', 'white-tiles')
-								else
-									document
-										.getElementById(boardLength * (y - a) + x)
-										.firstChild.setAttribute('class', 'black-tiles')
+								changeTileClassByNum(boardLength * (y - a) + x, sym)
 								a++
 							}
 							topSettle = true
@@ -543,15 +544,7 @@ function changeRespectiveTiles(target, sym, x, y) {
 							var a = 1
 							while (boardArray[y - a][x + a] !== sym) {
 								boardArray[y - a][x + a] = sym
-
-								if (sym === 'W')
-									document
-										.getElementById(boardLength * (y - a) + (x + a))
-										.firstChild.setAttribute('class', 'white-tiles')
-								else
-									document
-										.getElementById(boardLength * (y - a) + (x + a))
-										.firstChild.setAttribute('class', 'black-tiles')
+								changeTileClassByNum(boardLength * (y - a) + (x + a), sym)
 								a++
 							}
 
@@ -569,14 +562,7 @@ function changeRespectiveTiles(target, sym, x, y) {
 							var a = 1
 							while (boardArray[y][x + a] !== sym) {
 								boardArray[y][x + a] = sym
-								if (sym === 'W')
-									document
-										.getElementById(boardLength * y + (x + a))
-										.firstChild.setAttribute('class', 'white-tiles')
-								else
-									document
-										.getElementById(boardLength * y + (x + a))
-										.firstChild.setAttribute('class', 'black-tiles')
+								changeTileClassByNum(boardLength * y + (x + a), sym)
 								a++
 							}
 							rightSettle = true
@@ -593,14 +579,7 @@ function changeRespectiveTiles(target, sym, x, y) {
 							var a = 1
 							while (boardArray[y + a][x + a] !== sym) {
 								boardArray[y + a][x + a] = sym
-								if (sym === 'W')
-									document
-										.getElementById(boardLength * (y + a) + (x + a))
-										.firstChild.setAttribute('class', 'white-tiles')
-								else
-									document
-										.getElementById(boardLength * (y + a) + (x + a))
-										.firstChild.setAttribute('class', 'black-tiles')
+								changeTileClassByNum(boardLength * (y + a) + (x + a), sym)
 								a++
 							}
 							bottomRightSettle = true
@@ -617,14 +596,7 @@ function changeRespectiveTiles(target, sym, x, y) {
 							var a = 1
 							while (boardArray[y + a][x] !== sym) {
 								boardArray[y + a][x] = sym
-								if (sym === 'W')
-									document
-										.getElementById(boardLength * (y + a) + x)
-										.firstChild.setAttribute('class', 'white-tiles')
-								else
-									document
-										.getElementById(boardLength * (y + a) + x)
-										.firstChild.setAttribute('class', 'black-tiles')
+								changeTileClassByNum(boardLength * (y + a) + x, sym)
 								a++
 							}
 							bottomSettle = true
@@ -641,14 +613,7 @@ function changeRespectiveTiles(target, sym, x, y) {
 							var a = 1
 							while (boardArray[y + a][x - a] !== sym) {
 								boardArray[y + a][x - a] = sym
-								if (sym === 'W')
-									document
-										.getElementById(boardLength * (y + a) + (x - a))
-										.firstChild.setAttribute('class', 'white-tiles')
-								else
-									document
-										.getElementById(boardLength * (y + a) + (x - a))
-										.firstChild.setAttribute('class', 'black-tiles')
+								changeTileClassByNum(boardLength * (y + a) + (x - a), sym)
 								a++
 							}
 							bottomLeftSettle = true
@@ -665,14 +630,7 @@ function changeRespectiveTiles(target, sym, x, y) {
 							var a = 1
 							while (boardArray[y][x - a] !== sym) {
 								boardArray[y][x - a] = sym
-								if (sym === 'W')
-									document
-										.getElementById(boardLength * y + (x - a))
-										.firstChild.setAttribute('class', 'white-tiles')
-								else
-									document
-										.getElementById(boardLength * y + (x - a))
-										.firstChild.setAttribute('class', 'black-tiles')
+								changeTileClassByNum(boardLength * y + (x - a), sym)
 								a++
 							}
 							leftSettle = true
@@ -739,15 +697,11 @@ function aiTurn() {
 		var getTarget = document.getElementById(getY * boardLength + getX)
 		var aTile = document.createElement('div')
 		getTarget.classList.add('test')
-		if (getSym === 'W') {
-			aTile.setAttribute('class', 'white-tiles')
-			boardArray[getY][getX] = getSym
-			updateLastMove(getSym, getX, getY)
-		} else {
-			aTile.setAttribute('class', 'black-tiles')
-			boardArray[getY][getX] = getSym
-			updateLastMove(getSym, getX, getY)
-		}
+
+		changeTileClass(aTile, getSym)
+		boardArray[getY][getX] = getSym
+		updateLastMove(getSym, getX, getY)
+
 		changeRespectiveTiles(getTarget, getSym, getX, getY)
 		tilePlaceSound()
 		counter++
