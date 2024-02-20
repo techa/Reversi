@@ -317,7 +317,7 @@ function checkOKtoPlace(sym, x, y) {
 	directionToGo = directionXYs.map(function (value) {
 		return checkDirection(sym, x, y, value)
 	})
-	return directionToGo.includes(true)
+	return directionToGo.indexOf(true) > -1
 }
 
 /**
