@@ -4,6 +4,8 @@ export interface Cell {
 	x: number
 	y: number
 	total: number
+	opens: number
+	opensAll: number
 }
 export type Mode = 'single' | '2' | 'demo'
 
@@ -42,6 +44,7 @@ export class Reversi {
 	}
 
 	boardArray: BoardSym[][] = []
+	opens: number[] = []
 
 	botMode = false
 	demo = false
@@ -143,16 +146,54 @@ export class Reversi {
 		return totalChanged
 	}
 
-	private _getCanTileData(sym: Sym) {
+	_opened(pX: number, pY: number, curr: number[] | false = false) {
+		const { boardLength, boardArray, opens } = this
+		directionXYs.forEach((dir) => {
+			const x = pX + dir[0]
+			const y = pY + dir[1]
+			if (
+				x >= 0 &&
+				x < boardLength &&
+				y >= 0 &&
+				y < boardLength &&
+				(!curr || curr[0] !== x || curr[1] !== y) &&
+				boardArray[y][x] === null
+			) {
+				const id = y * boardLength + x
+				if (opens.indexOf(id) === -1) {
+					opens.push(id)
+				}
+			}
+		})
+	}
+
+	_openedScore(dx: number, dy: number) {
+		this.opens = []
+		this._opened(dx, dy)
+		return this.opens.length
+	}
+
+	_openedScoreAll(sym: Sym, dx: number, dy: number) {
+		this.opens = []
+		this.directionEach(sym, dx, dy, (pX, pY) => {
+			this._opened(pX, pY, [dx, dy])
+		})
+		this._opened(dx, dy)
+		return this.opens.length
+	}
+
+	_getCanTileData(sym: Sym) {
 		const data: Cell[] = []
 		for (let y = 0; y < this.boardLength; y++) {
 			for (let x = 0; x < this.boardLength; x++) {
 				if (this.boardArray[y][x] === null) {
 					if (this.checkOKtoPlace(sym, x, y)) {
 						data.push({
-							x: x,
-							y: y,
+							x,
+							y,
 							total: this._accumulator(sym, x, y),
+							opens: this._openedScore(x, y),
+							opensAll: this._openedScoreAll(sym, x, y),
 						})
 					}
 				}
