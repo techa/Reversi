@@ -106,6 +106,7 @@ export class View {
 			mode,
 		})
 
+		this.allBoardInitialisation()
 		this.reversi.init()
 
 		this.addTile = (event: Event) => {
@@ -120,7 +121,7 @@ export class View {
 		if (mode === 'demo') {
 			setTimeout(this.preStartGame(mode), 100)
 		} else {
-			this.preStartGame(mode)
+			this.preStartGame(mode)()
 		}
 	}
 
@@ -252,7 +253,6 @@ export class View {
 	preStartGame(mode: typeof this.reversi.mode) {
 		return () => {
 			this.takeOffShroud()
-			this.allBoardInitialisation()
 			this.$startGlow1()
 			this.$stopGlow2()
 			if (mode !== 'demo') {
