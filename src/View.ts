@@ -19,19 +19,6 @@ export class View {
 
 	addTile: (event: Event) => void
 
-	get player1Name() {
-		const mode = this.reversi.mode
-		return mode === '2'
-			? 'Player 1'
-			: mode === 'demo'
-			? 'AI - Black'
-			: 'You'
-	}
-	get player2Name() {
-		const mode = this.reversi.mode
-		return mode === '2' ? 'Player 2' : 'AI - White'
-	}
-
 	predictorArray: ID[] = []
 
 	reversi: Reversi

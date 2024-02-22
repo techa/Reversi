@@ -50,8 +50,18 @@ export class Reversi {
 	demo = false
 	singlePlayerMode = false
 
-	player1Name = 'AI - Black'
-	player2Name = 'AI - White'
+	get player1Name() {
+		const mode = this.mode
+		return mode === '2'
+			? 'Player 1'
+			: mode === 'demo'
+			? 'AI - Black'
+			: 'You'
+	}
+	get player2Name() {
+		const mode = this.mode
+		return mode === '2' ? 'Player 2' : 'AI - White'
+	}
 
 	whiteCount = 0
 	blackCount = 0
