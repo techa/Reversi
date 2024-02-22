@@ -3,7 +3,7 @@ import { Reversi, type Sym } from './Reversi.js'
 type ID = number
 
 function getEl<T extends HTMLElement>(query: string | number): T {
-	query = typeof query === 'number' ? `#${query}` : query
+	query = typeof query === 'number' ? `#cell${query}` : query
 	const el = document.querySelector(query)
 	if (el) return el as T
 	else throw new TypeError(`(${query}) is invaild query`)
@@ -11,7 +11,7 @@ function getEl<T extends HTMLElement>(query: string | number): T {
 
 export class View {
 	boardLength = getEl<HTMLInputElement>('#boardLength')
-	initialPlacement = getEl<HTMLInputElement>('#initialPlacement')
+	initialPlacement = getEl<HTMLInputElement>('#parallel')
 	blackScore = getEl('#black-score')
 	whiteScore = getEl('#white-score')
 	glow1 = getEl('#glow-1')
@@ -269,7 +269,7 @@ export class View {
 			this.init('single')
 		})
 
-		getEl('#2-players').addEventListener('click', () => {
+		getEl('#two-players').addEventListener('click', () => {
 			this.init('2')
 		})
 
@@ -288,7 +288,7 @@ export class View {
 			for (let x = 0; x < boardLength; x++) {
 				getSquares[id].setAttribute('x-axis', x + '')
 				getSquares[id].setAttribute('y-axis', y + '')
-				getSquares[id].setAttribute('id', id + '')
+				getSquares[id].setAttribute('id', `cell${id}`)
 
 				if (this.reversi.demo) {
 					console.log('no clicking')
