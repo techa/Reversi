@@ -45,8 +45,6 @@ export class Reversi {
 
 	botMode = false
 	demo = false
-	dualBotMode: number
-	botTurn = false
 	singlePlayerMode = false
 
 	player1Name = 'AI - Black'
@@ -132,13 +130,11 @@ export class Reversi {
 		} else {
 			if (this.demo) {
 				this.demo = false
-				this.stopDualBotMode()
+				this.$stopDualBotMode()
 			}
 		}
 	}
-	stopDualBotMode() {
-		clearInterval(this.dualBotMode)
-	}
+	$stopDualBotMode() {}
 
 	_accumulator(sym: Sym, x: number, y: number) {
 		let totalChanged = 0
@@ -268,6 +264,8 @@ export class Reversi {
 					if (this.singlePlayerMode) {
 						this.$startBackAllClicks()
 						this.$predictionDots()
+					} else {
+						this.$aiTurn()
 					}
 				} else {
 					if (this.singlePlayerMode) {
@@ -287,9 +285,7 @@ export class Reversi {
 				if (slots.movable > 0) {
 					if (ai) {
 						console.log(this.sym + 'still can')
-						if (this.singlePlayerMode) {
-							this.$aiTurn()
-						}
+						this.$aiTurn()
 					} else {
 						this.$predictionDots()
 					}

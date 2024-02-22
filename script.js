@@ -79,6 +79,8 @@ function doTheMove(sym, x, y, ai) {
 				if (singlePlayerMode) {
 					startBackAllClicks()
 					predictionDots(sym)
+				} else {
+					$aiTurn()
 				}
 			} else {
 				if (singlePlayerMode) {
@@ -87,7 +89,7 @@ function doTheMove(sym, x, y, ai) {
 					predictionDots(sym)
 				}
 				if (botMode) {
-					setTimeout(aiTurn, 2000)
+					$aiTurn()
 				}
 			}
 		} else {
@@ -99,9 +101,7 @@ function doTheMove(sym, x, y, ai) {
 			if (slots.movable > 0) {
 				if (ai) {
 					console.log(sym + 'still can')
-					if (singlePlayerMode) {
-						setTimeout(aiTurn, 2000)
-					}
+					$aiTurn()
 				} else {
 					predictionDots(sym)
 				}
@@ -389,6 +389,11 @@ function changeRespectiveTiles(sym, x, y) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
+function $aiTurn() {
+	clearTimeout(dualBotMode)
+	dualBotMode = setTimeout(aiTurn, 2000)
+}
+
 function aiTurn() {
 	if (botMode) {
 		var getSym = counter % 2 === 0 ? 'W' : 'B'
@@ -446,7 +451,7 @@ function aiTurn() {
 }
 
 function stopDualBotMode() {
-	clearInterval(dualBotMode)
+	clearTimeout(dualBotMode)
 }
 
 /**
@@ -505,8 +510,8 @@ function allBoardInitialisation(noclick = false) {
 	document.querySelector('.score-container').style.visibility = 'visible'
 
 	if (demo) {
-		dualBotMode = setInterval(aiTurn, 2000)
 		botMode = true
+		$aiTurn()
 	}
 }
 
