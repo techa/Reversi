@@ -206,10 +206,8 @@ export class Reversi {
 		const yCheck = [y < 2, false, y > boardLength - 3][dY + 1]
 
 		if (!(xCheck || yCheck)) {
-			if (
-				boardArray[y + dY][x + dX] !== null &&
-				boardArray[y + dY][x + dX] !== sym
-			) {
+			const neighbour = boardArray[y + dY][x + dX]
+			if (neighbour && neighbour !== sym) {
 				const minX = dX < 0 ? x : boardLength - x - 1
 				const minY = dY < 0 ? y : boardLength - y - 1
 				const minCount =
