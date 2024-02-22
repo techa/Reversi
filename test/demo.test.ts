@@ -11,7 +11,7 @@ describe(`demo 1`, () => {
 		boardLength: 4,
 		mode: 'demo',
 		random: () => random.float(),
-	})
+	}).init()
 	it(`result`, () => {
 		expect(boardStringify(reversi.boardArray)).toBe(
 			`
@@ -31,7 +31,7 @@ describe(`demo 2`, () => {
 		boardLength: 4,
 		mode: 'demo',
 		random: () => random.float(),
-	})
+	}).init()
 	it(`result`, () => {
 		expect(boardStringify(reversi.boardArray)).toBe(
 			`

@@ -18,7 +18,7 @@ class ReversiTest extends Reversi {
 }
 
 describe(`Reversi 2 players`, () => {
-	const reversi = new ReversiTest()
+	const reversi = new ReversiTest().init()
 	it(`init`, () => {
 		expect(boardStringify(reversi.boardArray)).toStrictEqual(
 			`

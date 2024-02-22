@@ -65,9 +65,11 @@ export class Reversi {
 
 		this.mode = options.mode ?? this.mode
 		this.random = options.random ?? Math.random
+	}
 
+	init() {
 		this.initBoardArray()
-		this.initialize()
+		this.initialPieces()
 
 		if (this.mode === 'single') {
 			this.singlePlayerMode = true
@@ -80,6 +82,7 @@ export class Reversi {
 			this.botMode = true
 			this.$aiTurn()
 		}
+		return this
 	}
 
 	initBoardArray() {
@@ -93,7 +96,7 @@ export class Reversi {
 		}
 	}
 
-	initialize() {
+	initialPieces() {
 		const center = ((this.boardLength / 2) | 0) - 1
 		for (let i = 0; i < 4; i++) {
 			let x = center

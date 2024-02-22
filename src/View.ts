@@ -109,6 +109,8 @@ export class View {
 			mode,
 		})
 
+		this.reversi.init()
+
 		this.addTile = (event: Event) => {
 			const el = event.target as HTMLElement
 			const x = parseInt(el.getAttribute('x-axis')!)
