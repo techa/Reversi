@@ -87,7 +87,9 @@ export class View {
 				that.$startBackAllClicks()
 			}
 			$checkWin() {
-				that.$checkWin()
+				const message = super.$checkWin()
+				that.$checkWin(message)
+				return message
 			}
 			$predictionDots() {
 				that.$predictionDots()
@@ -192,30 +194,11 @@ export class View {
 		}
 	}
 
-	$checkWin() {
-		var getWinDisplay = getEl('.win-lose-draw')
-
-		var getResultContainer = getEl('.resultContainer')
-
-		const { blackCount, whiteCount } = this.reversi
-
-		if (blackCount > whiteCount) {
-			getWinDisplay.innerHTML = `${this.player1Name} Win!`
-			this.startAnimations()
-
-			// getWinDisplay.style.animation = "fadein 2s";
-		} else if (blackCount === whiteCount) {
-			getWinDisplay.innerHTML = 'It is a Draw!!'
-			this.startAnimations()
-			// getWinDisplay.style.animation = "fadein 2s";
-			// getResultContainer.style.animation ="fadein 2s 2s forwards";
-		} else if (blackCount < whiteCount) {
-			getWinDisplay.innerHTML = `${this.player2Name} Win!`
-			this.startAnimations()
-			// getWinDisplay.style.animation = "fadein 2s";
-			// getResultContainer.style.animation ="fadein 2s 2s forwards";
-		}
+	$checkWin(message: string) {
+		getEl('.win-lose-draw').innerHTML = message
+		this.startAnimations()
 	}
+
 	startAnimations() {
 		const getDarkShroud = getEl('.dark-shroud')
 		getDarkShroud.style.visibility = 'visible'

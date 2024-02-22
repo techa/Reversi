@@ -407,7 +407,16 @@ export class Reversi {
 
 	$startBackAllClicks() {}
 
-	$checkWin() {}
+	/**
+	 * @returns winner name
+	 */
+	$checkWin() {
+		return this.blackCount > this.whiteCount
+			? `${this.player1Name} Win!`
+			: this.blackCount < this.whiteCount
+			? `${this.player2Name} Win!`
+			: 'It is a Draw!!'
+	}
 
 	$predictionDots() {}
 	$removePredictionDots() {}
