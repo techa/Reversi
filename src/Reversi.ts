@@ -75,8 +75,8 @@ export class Reversi {
 		}
 
 		if (this.demo) {
-			this.$aiTurn()
 			this.botMode = true
+			this.$aiTurn()
 		}
 	}
 
