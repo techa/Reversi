@@ -252,12 +252,12 @@ export class Reversi {
 
 		/////////Check anymore playable empty square
 		//check any move left///////////////////////////
-		console.log(this.sym + ' turn')
+		// console.log(this.sym + ' turn')
 		const slots = this._checkSlots(this.sym)
 
 		if (slots.empty > 0) {
 			if (slots.movable > 0) {
-				console.log(this.sym + ' still can')
+				// console.log(this.sym + ' still can')
 				this._glowchange()
 
 				if (ai) {
@@ -278,19 +278,19 @@ export class Reversi {
 					}
 				}
 			} else {
-				console.log(this.sym + ' no place to move, pass')
+				// console.log(this.sym + ' no place to move, pass')
 				this.countIncr()
-				console.log(this.sym + ' turn')
+				// console.log(this.sym + ' turn')
 				const slots = this._checkSlots(this.sym)
 				if (slots.movable > 0) {
 					if (ai) {
-						console.log(this.sym + 'still can')
+						// console.log(this.sym + 'still can')
 						this.$aiTurn()
 					} else {
 						this.$predictionDots()
 					}
 				} else {
-					console.log(this.sym + ' also cannot, end game')
+					// console.log(this.sym + ' also cannot, end game')
 					this.$stopGlow1()
 					this.$stopGlow2()
 					this.botMode = false
@@ -301,7 +301,7 @@ export class Reversi {
 				}
 			}
 		} else {
-			console.log(this.sym + ' cannot d')
+			// console.log(this.sym + ' cannot d')
 			this.$stopGlow1()
 			this.$stopGlow2()
 			this.botMode = false
