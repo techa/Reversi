@@ -42,7 +42,6 @@ export class Reversi {
 	}
 
 	boardArray: BoardSym[][] = []
-	directionToGo!: boolean[]
 
 	botMode = false
 	demo = false
@@ -185,10 +184,13 @@ export class Reversi {
 	}
 
 	checkOKtoPlace(sym: Sym, x: number, y: number) {
-		this.directionToGo = directionXYs.map((value) => {
-			return this._checkDirection(sym, x, y, value)
-		})
-		return this.directionToGo.indexOf(true) > -1
+		return (
+			directionXYs
+				.map((value) => {
+					return this._checkDirection(sym, x, y, value)
+				})
+				.indexOf(true) > -1
+		)
 	}
 
 	private _checkDirection(
@@ -356,8 +358,11 @@ export class Reversi {
 		y: number,
 		callback: (x: number, y: number) => void
 	) {
+		const directionToGo = directionXYs.map((value) => {
+			return this._checkDirection(sym, x, y, value)
+		})
 		for (let i = 0; i < 8; i++) {
-			if (this.directionToGo[i]) {
+			if (directionToGo[i]) {
 				let settle = false
 				const dir = directionXYs[i]
 				const dX = dir[0]
