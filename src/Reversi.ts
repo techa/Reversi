@@ -15,6 +15,7 @@ export interface ReversiOptions {
 	boardLength: number
 	initialPlacement: 'cross' | 'parallel'
 	mode: Mode
+	random: () => number
 }
 
 const directionXYs: [number, number][] = [
@@ -53,7 +54,7 @@ export class Reversi {
 	whiteCount = 0
 	blackCount = 0
 
-	static random = Math.random
+	random: () => number
 
 	constructor(options: Partial<ReversiOptions> = {}) {
 		this.boardLength = options.boardLength ?? this.boardLength
@@ -61,6 +62,7 @@ export class Reversi {
 			options.initialPlacement ?? this.initialPlacement
 
 		this.mode = options.mode ?? this.mode
+		this.random = options.random ?? Math.random
 
 		this.initBoardArray()
 		this.initialize()
@@ -179,7 +181,7 @@ export class Reversi {
 			}
 		}
 
-		return randomArray[Math.floor(Reversi.random() * randomArray.length)]
+		return randomArray[Math.floor(this.random() * randomArray.length)]
 	}
 
 	checkOKtoPlace(sym: Sym, x: number, y: number) {
