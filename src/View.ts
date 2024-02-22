@@ -229,9 +229,9 @@ export class View {
 						// 	'runATile(this)'
 						// )
 						const id = y * boardLength + x
-						getEl(id)
-							.appendChild(createPredictor)
-							.addEventListener('click', this.addTile)
+						const cell = getEl(id)
+						cell.appendChild(createPredictor)
+						cell.addEventListener('click', this.addTile)
 						this.predictorArray.push(id)
 					}
 				}
