@@ -1,3 +1,8 @@
+/// <reference types="vite/client" />
+import Place from '../audio/button-16.mp3'
+import Beep from '../audio/button-21.mp3'
+import Invalid from '../audio/button-24.mp3'
+
 import { Reversi, type Sym } from './Reversi.js'
 
 type ID = number
@@ -23,14 +28,16 @@ export class View {
 
 	reversi: Reversi
 
-	beep = new Audio()
-	place = new Audio()
-	invalid = new Audio()
+	sounds = {
+		beep: new Audio(),
+		place: new Audio(),
+		invalid: new Audio(),
+	}
 
 	constructor() {
-		this.beep.src = 'audio/button-21.mp3'
-		this.place.src = 'audio/button-16.mp3'
-		this.invalid.src = 'audio/button-24.mp3'
+		this.sounds.beep.src = Beep
+		this.sounds.place.src = Place
+		this.sounds.invalid.src = Invalid
 	}
 
 	init(mode: typeof this.reversi.mode) {
@@ -86,7 +93,10 @@ export class View {
 			}
 			S_invalid() {
 				console.log('Invalid Move')
-				that.invalid.play()
+				that.sounds.invalid.play()
+			}
+			S_place() {
+				that.sounds.place.play()
 			}
 		})({
 			boardLength: parseInt(this.boardLength.value),
@@ -254,14 +264,17 @@ export class View {
 	addEventToStart() {
 		getEl('#single-player').addEventListener('click', () => {
 			this.init('single')
+			this.sounds.beep.play()
 		})
 
 		getEl('#two-players').addEventListener('click', () => {
 			this.init('2')
+			this.sounds.beep.play()
 		})
 
 		getEl('#demo').addEventListener('click', () => {
 			this.init('demo')
+			this.sounds.beep.play()
 		})
 	}
 

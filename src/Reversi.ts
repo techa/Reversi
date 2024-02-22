@@ -300,7 +300,7 @@ export class Reversi {
 	private _doTheMove(x: number, y: number, ai = false) {
 		this.$setTile(this.sym, x, y)
 		this._changeRespectiveTiles(this.sym, x, y)
-		// tilePlaceSound() // place.play()
+		this.S_place()
 
 		this.countIncr()
 
@@ -483,4 +483,5 @@ export class Reversi {
 	S_invalid() {
 		throw new Error(`addTile: invalid position x or y`)
 	}
+	S_place() {}
 }

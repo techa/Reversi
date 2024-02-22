@@ -19,14 +19,6 @@
 			rel="stylesheet"
 		/>
 		<link rel="stylesheet" type="text/css" href="style.css" />
-		<script>
-			var beep = new Audio()
-			var place = new Audio()
-			var invalid = new Audio()
-			beep.src = 'audio/button-21.mp3'
-			place.src = 'audio/button-16.mp3'
-			invalid.src = 'audio/button-24.mp3'
-		</script>
 	</head>
 	<body>
 		<iframe
@@ -35,12 +27,6 @@
 			id="audio"
 			style="display: none"
 		></iframe>
-		<audio id="player" autoplay loop volume="0.1">
-			<source
-				src="audio/Ryuichi Sakamoto  Merry Christmas, Mr. Lawrence (Piano Cover).mp3"
-				type="audio/mp3"
-			/>
-		</audio>
 
 		<div class="header">
 			<span class="white-letter">R</span><span class="black-letter">E</span
@@ -87,13 +73,13 @@
 
 		<div class="main-container">
 			<div class="main-page-container">
-				<button class="selections" onmousedown="beep.play()" id="single-player">
+				<button class="selections" id="single-player">
 					Single Player
 				</button>
-				<button class="selections" onmousedown="beep.play()" id="two-players">
+				<button class="selections" id="two-players">
 					2 Players
 				</button>
-				<button class="selections" onmousedown="beep.play()" id="demo">
+				<button class="selections" id="demo">
 					Demo
 				</button>
 			</div>
@@ -136,31 +122,24 @@
 				<button
 					class="name result-selections"
 					id="stay"
-					onmousedown="beep.play()"
-					onclick="takeOffShroud()"
 				>
 					Stay
 				</button>
 				<button
 					class="name result-selections"
 					id="restart"
-					onmousedown="beep.play()"
-					onclick="restart()"
 				>
 					Restart
 				</button>
 				<button
 					class="name result-selections"
 					id="menu"
-					onmousedown="beep.play()"
-					onclick="initAllBackToMainPage()"
 				>
 					Menu
 				</button>
 			</div>
 		</div>
 		<img
-			onmousedown="beep.play()"
 			class="settings"
 			src="http://icons.iconarchive.com/icons/dtafalonso/android-l/128/Settings-L-icon.png"
 			onclick="takeOutSettings()"
