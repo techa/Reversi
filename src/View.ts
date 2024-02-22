@@ -49,6 +49,9 @@ export class View {
 	init(mode: typeof this.reversi.mode) {
 		const that = this
 		this.reversi = new (class extends Reversi {
+			$aiTurn() {
+				this.dualBotMode = setInterval(this._aiTurn.bind(this), 2000)
+			}
 			$setTile(sym: Sym, x: number, y: number) {
 				super.$setTile(sym, x, y)
 				that.$setTile(sym, x, y)

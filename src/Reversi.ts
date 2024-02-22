@@ -73,7 +73,7 @@ export class Reversi {
 		}
 
 		if (this.demo) {
-			this.aiTurn()
+			this.$aiTurn()
 			this.botMode = true
 		}
 	}
@@ -116,8 +116,8 @@ export class Reversi {
 		this.boardArray[y][x] = sym
 	}
 
-	aiTurn() {
-		this.dualBotMode = setInterval(this._aiTurn.bind(this), 2000)
+	$aiTurn() {
+		this._aiTurn()
 	}
 
 	_aiTurn() {
@@ -274,7 +274,7 @@ export class Reversi {
 						this.$predictionDots()
 					}
 					if (this.botMode) {
-						this.aiTurn()
+						this.$aiTurn()
 					}
 				}
 			} else {
@@ -286,7 +286,7 @@ export class Reversi {
 					if (ai) {
 						console.log(this.sym + 'still can')
 						if (this.singlePlayerMode) {
-							this.aiTurn()
+							this.$aiTurn()
 						}
 					} else {
 						this.$predictionDots()
