@@ -55,6 +55,8 @@ export class Reversi {
 	whiteCount = 0
 	blackCount = 0
 
+	static random = Math.random
+
 	constructor(options: Partial<ReversiOptions> = {}) {
 		this.boardLength = options.boardLength ?? this.boardLength
 		this.initialPlacement =
@@ -181,7 +183,7 @@ export class Reversi {
 			}
 		}
 
-		return randomArray[Math.floor(Math.random() * randomArray.length)]
+		return randomArray[Math.floor(Reversi.random() * randomArray.length)]
 	}
 
 	checkOKtoPlace(sym: Sym, x: number, y: number) {
@@ -368,11 +370,13 @@ export class Reversi {
 				while (!settle) {
 					if (this.boardArray[y + dY][x + dX] !== null) {
 						let a = 1
-						const pX = x + dX * a
-						const pY = y + dY * a
+						let pX = x + dX * a
+						let pY = y + dY * a
 						while (this.boardArray[pY][pX] !== sym) {
 							callback(pX, pY)
 							a++
+							pX = x + dX * a
+							pY = y + dY * a
 						}
 						settle = true
 					} else {
