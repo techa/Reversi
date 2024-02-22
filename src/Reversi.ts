@@ -31,7 +31,7 @@ const directionXYs: [number, number][] = [
 export class Reversi {
 	boardLength = 8
 	initialPlacement: 'cross' | 'parallel' = 'cross'
-	mode: Mode
+	mode: Mode = '2'
 
 	counter = 1
 	sym: Sym = 'B'
