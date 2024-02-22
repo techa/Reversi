@@ -88,6 +88,7 @@ export class View {
 				that.$removePredictionDots()
 			}
 			S_invalid() {
+				console.log('Invalid Move')
 				that.invalid.play()
 			}
 		})({
@@ -99,7 +100,10 @@ export class View {
 		})
 
 		this.addTile = (event: Event) => {
-			this.reversi.addTile(event.target as HTMLElement)
+			const el = event.target as HTMLElement
+			const x = parseInt(el.getAttribute('x-axis')!)
+			const y = parseInt(el.getAttribute('y-axis')!)
+			this.reversi.addTile(x, y)
 		}
 
 		this.closeModeSelectContainer()

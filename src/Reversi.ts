@@ -233,16 +233,12 @@ export class Reversi {
 		return false
 	}
 
-	addTile(el: HTMLElement) {
-		var getX = parseInt(el.getAttribute('x-axis')!)
-		var getY = parseInt(el.getAttribute('y-axis')!)
-
-		if (this.checkOKtoPlace(this.sym, getX, getY)) {
+	addTile(x: number, y: number) {
+		if (this.checkOKtoPlace(this.sym, x, y)) {
 			this.$removePredictionDots()
-			this._doTheMove(getX, getY)
+			this._doTheMove(x, y)
 			//bot mode on and off
 		} else {
-			console.log('Invalid Move')
 			this.S_invalid()
 		}
 	}
@@ -416,5 +412,7 @@ export class Reversi {
 	$predictionDots() {}
 	$removePredictionDots() {}
 
-	S_invalid() {}
+	S_invalid() {
+		throw new Error(`addTile: invalid position x or y`)
+	}
 }
