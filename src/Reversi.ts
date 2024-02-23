@@ -127,6 +127,7 @@ export class Reversi {
 
 			this.$setTile(sym, x, y)
 		}
+		this.$tilesCounting()
 	}
 
 	$setTile(sym: Sym, x: number, y: number) {
@@ -299,6 +300,7 @@ export class Reversi {
 
 	private _doTheMove(x: number, y: number, ai = false) {
 		this.$setTile(this.sym, x, y)
+		this.$updateLastMove(this.sym, x, y)
 		this._changeRespectiveTiles(this.sym, x, y)
 		this.S_place()
 
@@ -384,6 +386,8 @@ export class Reversi {
 
 		return { empty: emptyCount, movable: roughtCount }
 	}
+
+	$updateLastMove(sym: Sym, x: number, y: number) {}
 
 	$tilesCounting() {
 		this.whiteCount = 0

@@ -17,6 +17,7 @@ function getEl<T extends HTMLElement>(query: string | number): T {
 export class View {
 	boardLength = getEl<HTMLInputElement>('#boardLength')
 	initialPlacement = getEl<HTMLInputElement>('#parallel')
+	mainContainer = getEl('.main-container')
 	blackScore = getEl('#black-score')
 	whiteScore = getEl('#white-score')
 	glow1 = getEl('#glow-1')
@@ -34,6 +35,8 @@ export class View {
 		invalid: new Audio(),
 	}
 
+	timerID: number
+
 	constructor() {
 		this.sounds.beep.src = Beep
 		this.sounds.place.src = Place
@@ -42,18 +45,22 @@ export class View {
 
 	init(mode: typeof this.reversi.mode) {
 		const that = this
+
+		clearTimeout(that.timerID)
 		this.reversi = new (class extends Reversi {
-			timerID: number
 			$aiTurn() {
-				clearTimeout(this.timerID)
-				this.timerID = setTimeout(this._aiTurn.bind(this), 2000)
+				clearTimeout(that.timerID)
+				that.timerID = setTimeout(this._aiTurn.bind(this), 2000)
 			}
 			$stopDualBotMode() {
-				clearTimeout(this.timerID)
+				clearTimeout(that.timerID)
 			}
 			$setTile(sym: Sym, x: number, y: number) {
 				super.$setTile(sym, x, y)
 				that.$setTile(sym, x, y)
+			}
+			$updateLastMove(sym: Sym, x: number, y: number) {
+				that.$updateLastMove(sym, x, y)
 			}
 			$tilesCounting() {
 				super.$tilesCounting()
@@ -118,11 +125,7 @@ export class View {
 
 		this.closeModeSelectContainer()
 
-		if (mode === 'demo') {
-			setTimeout(this.preStartGame(mode), 100)
-		} else {
-			this.preStartGame(mode)()
-		}
+		this.preStartGame(mode)()
 	}
 
 	changeTileClass(el: Element, sym: Sym) {
@@ -248,11 +251,13 @@ export class View {
 		}
 	}
 
-	closeModeSelectContainer() {}
+	closeModeSelectContainer() {
+		getEl('.settings-from-container').style.display = 'none'
+	}
 
 	preStartGame(mode: typeof this.reversi.mode) {
 		return () => {
-			this.takeOffShroud()
+			this.hideShroud()
 			this.$startGlow1()
 			this.$stopGlow2()
 			if (mode !== 'demo') {
@@ -276,6 +281,43 @@ export class View {
 			this.init('demo')
 			this.sounds.beep.play()
 		})
+
+		getEl('#stay').addEventListener('click', () => {
+			this.hideShroud()
+			this.showSettingsButton()
+			this.sounds.beep.play()
+		})
+		getEl('#restart').addEventListener('click', () => {
+			this.hideShroud()
+			this.removeBoard()
+			this.init(this.reversi.mode)
+			this.sounds.beep.play()
+		})
+		getEl('#back-to-top').addEventListener('click', () => {
+			this.hideShroud()
+			this.removeBoard()
+			this.reversi.$stopDualBotMode()
+			this.showStartPage()
+			this.$stopGlow1()
+			this.$stopGlow2()
+			this.sounds.beep.play()
+		})
+
+		getEl('#menu').addEventListener('click', () => {
+			this.hideSettingsButton()
+			this.showShroud()
+			this.sounds.beep.play()
+		})
+	}
+
+	removeBoard() {
+		const boardFrame = document.querySelector('.board-frame')
+		if (boardFrame) {
+			this.mainContainer.removeChild(boardFrame)
+			this.mainContainer.removeChild(
+				getEl('.last-move-display-container')
+			)
+		}
 	}
 
 	allBoardInitialisation() {
@@ -299,13 +341,12 @@ export class View {
 			}
 		}
 
-		getEl('.score-container').style.visibility = 'visible'
+		this.hideStartPage()
 	}
 
 	createBoard() {
 		const { boardLength } = this.reversi
 
-		const container = getEl('.main-container')
 		const boardContainer = document.createElement('div')
 		boardContainer.setAttribute('class', 'main-board')
 		const boardFrame = document.createElement('div')
@@ -354,16 +395,52 @@ export class View {
 		boardFrame.appendChild(boardContainer)
 		boardFrame.appendChild(boardHMarkersContainer)
 		boardFrame.appendChild(boardVMarkersContainer)
-		container.appendChild(boardFrame)
+		this.mainContainer.appendChild(boardFrame)
 
 		this.lastMoveDisplayCreator()
 	}
 
 	lastMoveDisplayCreator() {
-		const mainContainer = getEl('.main-container')
 		const createContainer = document.createElement('div')
 		createContainer.setAttribute('class', 'last-move-display-container')
-		mainContainer.appendChild(createContainer)
+		this.mainContainer.appendChild(createContainer)
+	}
+
+	$updateLastMove(sym: Sym, x: number, y: number) {
+		const getLastMoveContainer = getEl('.last-move-display-container')
+
+		const newMove = document.createElement('div')
+		newMove.setAttribute('class', 'last-move-slot')
+
+		const lastMoveTile = document.createElement('div')
+		const tileClass = `last-move-tile-${sym === 'W' ? 'white' : 'black'}`
+		lastMoveTile.setAttribute('class', tileClass)
+
+		newMove.appendChild(lastMoveTile)
+		const lastMovePosition = document.createElement('div')
+		lastMovePosition.setAttribute('class', 'last-move-number')
+		lastMovePosition.innerHTML = String.fromCharCode(65 + x) + (y + 1)
+		newMove.appendChild(lastMovePosition)
+
+		getLastMoveContainer.insertBefore(
+			newMove,
+			getLastMoveContainer.childNodes[0]
+		)
+	}
+
+	showStartPage() {
+		getEl('.main-page-container').style.display = 'flex'
+		getEl('.score-container').style.visibility = 'collapse'
+
+		getEl('.settings-from-container').style.display = 'flex'
+	}
+	hideStartPage() {
+		getEl('.main-page-container').style.display = 'none'
+		getEl('.score-container').style.visibility = 'visible'
+
+		// Score Name
+		getEl('#player-name').innerHTML = this.reversi.player1Name
+		getEl('#bot-name').innerHTML = this.reversi.player2Name
 	}
 
 	showSettingsButton() {
@@ -374,7 +451,17 @@ export class View {
 		getEl('.settings').style.visibility = 'hidden'
 	}
 
-	takeOffShroud() {
+	showShroud() {
+		const getDarkShroud = getEl('.dark-shroud')
+		getDarkShroud.style.visibility = 'visible'
+		getDarkShroud.style.opacity = '1'
+
+		const getResultContainer = getEl('.result-container')
+		getResultContainer.style.opacity = '1'
+		this.sounds.beep.play()
+	}
+
+	hideShroud() {
 		getEl('.dark-shroud').style.visibility = 'hidden'
 		getEl('.dark-shroud').style.opacity = '0'
 		getEl('.dark-shroud').style.animation = ''
