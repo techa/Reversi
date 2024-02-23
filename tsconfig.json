@@ -1,17 +1,18 @@
 {
     "compilerOptions": {
-        "module": "ESNext",
+        "module": "None",
         "moduleResolution": "Node",
         "target": "ES2015",
         "jsx": "react",
-		"declaration": true,
-		"emitDeclarationOnly": true,
-        "allowImportingTsExtensions": true,
+		// "declaration": true,
+		// "emitDeclarationOnly": true,
+        // "allowImportingTsExtensions": true,
         "strictNullChecks": true,
-        "strictFunctionTypes": true
+        "strictFunctionTypes": true,
+		"outDir": "dist"
     },
     "include": [
-        "**/*.ts"
+        "src/**/*.ts"
     ],
     "exclude": [
         "node_modules",
