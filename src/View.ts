@@ -281,10 +281,13 @@ export class View {
 			this.sounds.beep.play()
 		})
 
-		getEl('#stay').addEventListener('click', () => {
+		getEl('.dark-shroud').addEventListener('click', () => {
 			this.hideShroud()
 			this.showSettingsButton()
 			this.sounds.beep.play()
+		})
+		getEl('.result-container').addEventListener('click', (event) => {
+			event.stopPropagation()
 		})
 		getEl('#restart').addEventListener('click', () => {
 			this.hideShroud()

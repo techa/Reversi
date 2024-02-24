@@ -453,7 +453,6 @@ button {
 	padding: 15px 25px;
 	font-size: 24px;
 	text-align: center;
-	cursor: pointer;
 	outline: none;
 
 	background: linear-gradient(to bottom, #ff920b, #f5e49b);
@@ -466,6 +465,7 @@ button {
 	box-shadow: 6px 6px 6px black;
 	transition: all 0.05s linear;
 	border-bottom: 4px solid #035b00;
+	cursor: pointer;
 	outline: none;
 	background: linear-gradient(to bottom, #035b00, #84f280);
 }
