@@ -1,5 +1,9 @@
-export type Sym = 'W' | 'B'
-export type BoardSym = 'W' | 'B' | null
+export const enum Tile {
+	Null = 0,
+	B = 1,
+	W = 2,
+}
+export type Sym = Tile.B | Tile.W
 export interface Cell {
 	x: number
 	y: number
@@ -20,7 +24,7 @@ export interface ReversiOptions {
 	random: () => number
 }
 
-const directionXYs: [number, number][] = [
+export const directionXYs: [number, number][] = [
 	[-1, -1], // top-left
 	[0, -1], // top
 	[1, -1], // top-right
@@ -37,13 +41,13 @@ export class Reversi {
 	mode: Mode = '2'
 
 	counter = 1
-	sym: Sym = 'B'
+	sym: Sym = Tile.B
 	countIncr() {
 		this.counter++
-		this.sym = this.counter % 2 === 0 ? 'W' : 'B'
+		this.sym = this.counter % 2 === 0 ? Tile.W : Tile.B
 	}
 
-	boardArray: BoardSym[][] = []
+	tiles: Tile[] = []
 	opens: number[] = []
 
 	botMode = false
@@ -96,13 +100,9 @@ export class Reversi {
 	}
 
 	initBoardArray() {
-		this.boardArray = []
-		for (let i = 0; i < this.boardLength; i++) {
-			const anArray: BoardSym[] = []
-			for (let j = 0; j < this.boardLength; j++) {
-				anArray.push(null)
-			}
-			this.boardArray.push(anArray)
+		this.tiles = []
+		for (let i = 0; i < this.boardLength ** 2; i++) {
+			this.tiles.push(Tile.Null)
 		}
 	}
 
@@ -117,12 +117,12 @@ export class Reversi {
 			if (i === 1 || i === 3) {
 				x += 1
 			}
-			let sym: Sym = 'B'
+			let sym = Tile.B
 			if (
 				(this.initialPlacement === 'cross' && (!i || i === 3)) ||
 				(this.initialPlacement === 'parallel' && i < 2)
 			) {
-				sym = 'W'
+				sym = Tile.W
 			}
 
 			this.$setTile(sym, x, y)
@@ -130,8 +130,14 @@ export class Reversi {
 		this.$tilesCounting()
 	}
 
+	isTileEmpty(x: number, y: number) {
+		return this.tiles[y * this.boardLength + x] === Tile.Null
+	}
+	getTile(x: number, y: number) {
+		return this.tiles[y * this.boardLength + x]
+	}
 	$setTile(sym: Sym, x: number, y: number) {
-		this.boardArray[y][x] = sym
+		this.tiles[y * this.boardLength + x] = sym
 	}
 
 	$aiTurn() {
@@ -161,7 +167,7 @@ export class Reversi {
 	}
 
 	_opened(pX: number, pY: number, curr: number[] | false = false) {
-		const { boardLength, boardArray, opens } = this
+		const { boardLength } = this
 		directionXYs.forEach((dir) => {
 			const x = pX + dir[0]
 			const y = pY + dir[1]
@@ -171,11 +177,11 @@ export class Reversi {
 				y >= 0 &&
 				y < boardLength &&
 				(!curr || curr[0] !== x || curr[1] !== y) &&
-				boardArray[y][x] === null
+				this.isTileEmpty(x, y)
 			) {
 				const id = y * boardLength + x
-				if (opens.indexOf(id) === -1) {
-					opens.push(id)
+				if (this.opens.indexOf(id) === -1) {
+					this.opens.push(id)
 				}
 			}
 		})
@@ -198,18 +204,19 @@ export class Reversi {
 
 	_getCanTileData(sym: Sym) {
 		const data: Cell[] = []
-		for (let y = 0; y < this.boardLength; y++) {
-			for (let x = 0; x < this.boardLength; x++) {
-				if (this.boardArray[y][x] === null) {
-					if (this.checkOKtoPlace(sym, x, y)) {
-						data.push({
-							x,
-							y,
-							total: this._accumulator(sym, x, y),
-							opens: this._openedScore(x, y),
-							opensAll: this._openedScoreAll(sym, x, y),
-						})
-					}
+		for (let index = 0; index < this.boardLength ** 2; index++) {
+			const x = index % this.boardLength
+			const y = (index / this.boardLength) | 0
+
+			if (this.isTileEmpty(x, y)) {
+				if (this.checkOKtoPlace(sym, x, y)) {
+					data.push({
+						x,
+						y,
+						total: this._accumulator(sym, x, y),
+						opens: this._openedScore(x, y),
+						opensAll: this._openedScoreAll(sym, x, y),
+					})
 				}
 			}
 		}
@@ -254,7 +261,7 @@ export class Reversi {
 		y: number,
 		dir: [number, number]
 	) {
-		const { boardLength, boardArray } = this
+		const { boardLength } = this
 		const dX = dir[0]
 		const dY = dir[1]
 		//              x-1,     x,  x+1
@@ -263,7 +270,7 @@ export class Reversi {
 		const yCheck = [y < 2, false, y > boardLength - 3][dY + 1]
 
 		if (!(xCheck || yCheck)) {
-			const neighbour = boardArray[y + dY][x + dX]
+			const neighbour = this.getTile(x + dX, y + dY)
 			if (neighbour && neighbour !== sym) {
 				const minX = dX < 0 ? x : boardLength - x - 1
 				const minY = dY < 0 ? y : boardLength - y - 1
@@ -276,10 +283,10 @@ export class Reversi {
 						? minY
 						: 0) + 1
 				for (let i = 2; i < minCount; i++) {
-					const tileSym = boardArray[y + i * dY][x + i * dX]
+					const tileSym = this.getTile(x + i * dX, y + i * dY)
 					if (tileSym === sym) {
 						return true
-					} else if (tileSym == null) {
+					} else if (!tileSym) {
 						return false
 					}
 				}
@@ -375,7 +382,7 @@ export class Reversi {
 		let roughtCount = 0
 		for (let y = 0; y < this.boardLength; y++) {
 			for (let x = 0; x < this.boardLength; x++) {
-				if (this.boardArray[y][x] === null) {
+				if (this.isTileEmpty(x, y)) {
 					emptyCount++
 					if (this.checkOKtoPlace(sym, x, y)) {
 						roughtCount++
@@ -392,18 +399,15 @@ export class Reversi {
 	$tilesCounting() {
 		this.whiteCount = 0
 		this.blackCount = 0
-		for (let i = 0; i < this.boardLength; i++) {
-			for (let j = 0; j < this.boardLength; j++) {
-				const val = this.boardArray[i][j]
-				if (val === 'W') this.whiteCount += 1
-				if (val === 'B') this.blackCount += 1
-			}
+		for (const val of this.tiles) {
+			if (val === Tile.W) this.whiteCount += 1
+			if (val === Tile.B) this.blackCount += 1
 		}
 	}
 
 	private _changeRespectiveTiles(sym: Sym, x: number, y: number) {
 		this.directionEach(sym, x, y, (pX, pY) => {
-			this.boardArray[pY][pX] = sym
+			this.tiles[pY * this.boardLength + pX] = sym
 			this.$changeTileClassByNum(this.boardLength * pY + pX, sym)
 		})
 	}
@@ -427,11 +431,11 @@ export class Reversi {
 				const dY = dir[1]
 
 				while (!settle) {
-					if (this.boardArray[y + dY][x + dX] !== null) {
+					if (!this.isTileEmpty(x + dX, y + dY)) {
 						let a = 1
 						let pX = x + dX * a
 						let pY = y + dY * a
-						while (this.boardArray[pY][pX] !== sym) {
+						while (this.getTile(pX, pY) !== sym) {
 							callback(pX, pY)
 							a++
 							pX = x + dX * a
@@ -457,7 +461,7 @@ export class Reversi {
 	$stopGlow2() {}
 
 	private _glowchange() {
-		if (this.sym === 'W') {
+		if (this.sym === Tile.W) {
 			this.$stopGlow1()
 			this.$startGlow2()
 		} else {

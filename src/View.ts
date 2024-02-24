@@ -3,7 +3,7 @@ import Place from '../audio/button-16.mp3'
 import Beep from '../audio/button-21.mp3'
 import Invalid from '../audio/button-24.mp3'
 
-import { Reversi, type Sym } from './Reversi.js'
+import { Reversi, type Sym, Tile } from './Reversi.js'
 
 type ID = number
 
@@ -129,7 +129,7 @@ export class View {
 	}
 
 	changeTileClass(el: Element, sym: Sym) {
-		el.setAttribute('class', sym === 'W' ? 'white-tiles' : 'black-tiles')
+		el.setAttribute('class', sym === Tile.W ? 'white-tiles' : 'black-tiles')
 	}
 	$changeTileClassByNum(id: number, sym: Sym) {
 		this.changeTileClass(getEl(id).firstChild as Element, sym)
@@ -170,10 +170,10 @@ export class View {
 	}
 
 	$tempStopAllClicks() {
-		const { boardArray, boardLength } = this.reversi
+		const { boardLength } = this.reversi
 		for (var y = 0; y < boardLength; y++) {
 			for (var x = 0; x < boardLength; x++) {
-				if (boardArray[y][x] === null) {
+				if (this.reversi.isTileEmpty(x, y)) {
 					getEl(y * boardLength + x).removeEventListener(
 						'click',
 						this.addTile
@@ -184,10 +184,10 @@ export class View {
 	}
 
 	$startBackAllClicks() {
-		const { boardArray, boardLength } = this.reversi
+		const { boardLength } = this.reversi
 		for (var y = 0; y < boardLength; y++) {
 			for (var x = 0; x < boardLength; x++) {
-				if (boardArray[y][x] === null) {
+				if (this.reversi.isTileEmpty(x, y)) {
 					getEl(y * boardLength + x).addEventListener(
 						'click',
 						this.addTile
@@ -217,12 +217,12 @@ export class View {
 	}
 
 	$predictionDots() {
-		const { boardArray, boardLength, sym } = this.reversi
+		const { boardLength, sym } = this.reversi
 		this.predictorArray = []
 
 		for (let y = 0; y < boardLength; y++) {
 			for (let x = 0; x < boardLength; x++) {
-				if (boardArray[y][x] === null) {
+				if (this.reversi.isTileEmpty(x, y)) {
 					if (this.reversi.checkOKtoPlace(sym, x, y)) {
 						const createPredictor = document.createElement('div')
 						createPredictor.setAttribute('class', 'predictor')
@@ -413,7 +413,7 @@ export class View {
 		newMove.setAttribute('class', 'last-move-slot')
 
 		const lastMoveTile = document.createElement('div')
-		const tileClass = `last-move-tile-${sym === 'W' ? 'white' : 'black'}`
+		const tileClass = `last-move-tile-${sym === Tile.W ? 'white' : 'black'}`
 		lastMoveTile.setAttribute('class', tileClass)
 
 		newMove.appendChild(lastMoveTile)

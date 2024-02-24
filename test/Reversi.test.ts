@@ -1,26 +1,12 @@
 // https://vitest.dev/api/expect.html
 // https://jestjs.io/docs/expect
 import { describe, it, expect } from 'vitest'
-import { Reversi } from '../src/Reversi.js'
-import { boardStringify } from './util.js'
-
-class ReversiTest extends Reversi {
-	stringify() {
-		let txt = '\n'
-		for (const row of this.boardArray) {
-			for (const val of row) {
-				txt += val ? val : '_'
-			}
-			txt += '\n'
-		}
-		return txt
-	}
-}
+import { ReversiTest, Tile } from './TestingClass.js'
 
 describe(`Reversi 2 players`, () => {
 	const reversi = new ReversiTest().init()
 	it(`init`, () => {
-		expect(boardStringify(reversi.boardArray)).toStrictEqual(
+		expect(reversi.stringify()).toStrictEqual(
 			`
 			________
 			________
@@ -56,7 +42,7 @@ describe(`Reversi 2 players`, () => {
 
 	it(`addTile(2, 3)`, () => {
 		reversi.addTile(2, 3)
-		expect(boardStringify(reversi.boardArray)).toStrictEqual(
+		expect(reversi.stringify()).toStrictEqual(
 			`
 			________
 			________
@@ -70,10 +56,10 @@ describe(`Reversi 2 players`, () => {
 		)
 	})
 
-	it(`addTile(5, 2)`, () => {
+	it(`addTile(4, 2)`, () => {
 		reversi.addTile(4, 2)
 		expect(reversi.counter).toBe(3)
-		expect(boardStringify(reversi.boardArray)).toStrictEqual(
+		expect(reversi.stringify()).toStrictEqual(
 			`
 			________
 			________
@@ -115,7 +101,7 @@ describe(`Reversi 2 players`, () => {
 		// __3_____
 		// ________
 		// ________
-		expect(reversi._getCanTileData('W')).toStrictEqual([
+		expect(reversi._getCanTileData(Tile.W)).toStrictEqual([
 			{
 				opens: 6,
 				opensAll: 7,

@@ -1,19 +1,18 @@
 // https://vitest.dev/api/expect.html
 // https://jestjs.io/docs/expect
 import { describe, it, expect } from 'vitest'
-import { Reversi } from '../src/Reversi.js'
+import { ReversiTest } from './TestingClass.js'
 import { ParkMiller } from './ParkMiller.js'
-import { boardStringify } from './util.js'
 
 describe(`demo 1`, () => {
 	const random = new ParkMiller(7)
-	const reversi = new Reversi({
+	const reversi = new ReversiTest({
 		boardLength: 4,
 		mode: 'demo',
 		random: () => random.float(),
 	}).init()
 	it(`result`, () => {
-		expect(boardStringify(reversi.boardArray)).toBe(
+		expect(reversi.stringify()).toBe(
 			`
 			WBBB
 			WWWW
@@ -27,13 +26,13 @@ describe(`demo 1`, () => {
 
 describe(`demo 2`, () => {
 	const random = new ParkMiller(2)
-	const reversi = new Reversi({
+	const reversi = new ReversiTest({
 		boardLength: 4,
 		mode: 'demo',
 		random: () => random.float(),
 	}).init()
 	it(`result`, () => {
-		expect(boardStringify(reversi.boardArray)).toBe(
+		expect(reversi.stringify()).toBe(
 			`
 			WWWB
 			WWWW
