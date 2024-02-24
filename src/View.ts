@@ -15,7 +15,7 @@ function getEl<T extends HTMLElement>(query: string | number): T {
 }
 
 export class View {
-	boardLength = getEl<HTMLInputElement>('#boardLength')
+	boardSize = getEl<HTMLInputElement>('#boardSize')
 	initialPlacement = getEl<HTMLInputElement>('#parallel')
 	mainContainer = getEl('.main-container')
 	blackScore = getEl('#black-score')
@@ -106,7 +106,7 @@ export class View {
 				that.sounds.place.play()
 			}
 		})({
-			boardLength: parseInt(this.boardLength.value),
+			boardSize: parseInt(this.boardSize.value),
 			initialPlacement: this.initialPlacement.checked
 				? 'parallel'
 				: 'cross',
@@ -136,11 +136,11 @@ export class View {
 	}
 
 	$setTile(sym: Sym, x: number, y: number) {
-		const { boardLength } = this.reversi
+		const { boardSize } = this.reversi
 		const aTile = document.createElement('div')
 		this.changeTileClass(aTile, sym)
 
-		const getSquare = getEl(y * boardLength + x)
+		const getSquare = getEl(y * boardSize + x)
 		getSquare.appendChild(aTile)
 		getSquare.removeEventListener('click', this.addTile)
 		// getSquare.removeEventListener("click", tilePlaceSound);
@@ -170,11 +170,11 @@ export class View {
 	}
 
 	$tempStopAllClicks() {
-		const { boardLength } = this.reversi
-		for (var y = 0; y < boardLength; y++) {
-			for (var x = 0; x < boardLength; x++) {
+		const { boardSize } = this.reversi
+		for (var y = 0; y < boardSize; y++) {
+			for (var x = 0; x < boardSize; x++) {
 				if (this.reversi.isTileEmpty(x, y)) {
-					getEl(y * boardLength + x).removeEventListener(
+					getEl(y * boardSize + x).removeEventListener(
 						'click',
 						this.addTile
 					)
@@ -184,11 +184,11 @@ export class View {
 	}
 
 	$startBackAllClicks() {
-		const { boardLength } = this.reversi
-		for (var y = 0; y < boardLength; y++) {
-			for (var x = 0; x < boardLength; x++) {
+		const { boardSize } = this.reversi
+		for (var y = 0; y < boardSize; y++) {
+			for (var x = 0; x < boardSize; x++) {
 				if (this.reversi.isTileEmpty(x, y)) {
-					getEl(y * boardLength + x).addEventListener(
+					getEl(y * boardSize + x).addEventListener(
 						'click',
 						this.addTile
 					)
@@ -217,11 +217,11 @@ export class View {
 	}
 
 	$predictionDots() {
-		const { boardLength, sym } = this.reversi
+		const { boardSize, sym } = this.reversi
 		this.predictorArray = []
 
-		for (let y = 0; y < boardLength; y++) {
-			for (let x = 0; x < boardLength; x++) {
+		for (let y = 0; y < boardSize; y++) {
+			for (let x = 0; x < boardSize; x++) {
 				if (this.reversi.isTileEmpty(x, y)) {
 					if (this.reversi.checkOKtoPlace(sym, x, y)) {
 						const createPredictor = document.createElement('div')
@@ -232,7 +232,7 @@ export class View {
 						// 	'onclick',
 						// 	'runATile(this)'
 						// )
-						const id = y * boardLength + x
+						const id = y * boardSize + x
 						const cell = getEl(id)
 						cell.appendChild(createPredictor)
 						cell.addEventListener('click', this.addTile)
@@ -325,9 +325,9 @@ export class View {
 		this.showSettingsButton()
 		let id = 0
 		const getSquares = document.querySelectorAll('.col')
-		const { boardLength } = this.reversi
-		for (let y = 0; y < boardLength; y++) {
-			for (let x = 0; x < boardLength; x++) {
+		const { boardSize } = this.reversi
+		for (let y = 0; y < boardSize; y++) {
+			for (let x = 0; x < boardSize; x++) {
 				getSquares[id].setAttribute('x-axis', x + '')
 				getSquares[id].setAttribute('y-axis', y + '')
 				getSquares[id].setAttribute('id', `cell${id}`)
@@ -345,7 +345,7 @@ export class View {
 	}
 
 	createBoard() {
-		const { boardLength } = this.reversi
+		const { boardSize } = this.reversi
 
 		const boardContainer = document.createElement('div')
 		boardContainer.setAttribute('class', 'main-board')
@@ -356,7 +356,7 @@ export class View {
 		const boardHMarkersContainer = document.createElement('div')
 		boardHMarkersContainer.setAttribute('class', 'h-markers-container')
 
-		for (let i = 0; i < boardLength; i++) {
+		for (let i = 0; i < boardSize; i++) {
 			const boardHMarkers = document.createElement('div')
 			boardHMarkers.setAttribute('class', 'h-markers')
 			boardHMarkersContainer.appendChild(boardHMarkers)
@@ -366,7 +366,7 @@ export class View {
 		const boardVMarkersContainer = document.createElement('div')
 		boardVMarkersContainer.setAttribute('class', 'v-markers-container')
 
-		for (let i = 0; i < boardLength; i++) {
+		for (let i = 0; i < boardSize; i++) {
 			const boardVMarkers = document.createElement('div')
 			boardVMarkers.setAttribute('class', 'v-markers')
 			boardVMarkersContainer.appendChild(boardVMarkers)
@@ -375,15 +375,15 @@ export class View {
 
 		let squareColorCounter = 0
 
-		for (let i = 0; i < boardLength; i++) {
+		for (let i = 0; i < boardSize; i++) {
 			const row = document.createElement('div')
 			row.setAttribute('class', 'row')
-			row.style.height = 100 / boardLength + '%'
+			row.style.height = 100 / boardSize + '%'
 			squareColorCounter++
-			for (let j = 0; j < boardLength; j++) {
+			for (let j = 0; j < boardSize; j++) {
 				const square = document.createElement('div')
 				square.setAttribute('class', 'col square')
-				square.style.width = 100 / boardLength + '%'
+				square.style.width = 100 / boardSize + '%'
 				if (squareColorCounter % 2 === 1) {
 					square.style.backgroundColor = '#86B50F'
 				}

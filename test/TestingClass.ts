@@ -13,7 +13,7 @@ export class ReversiTest extends Reversi {
 		}
 		for (const val of this.tiles) {
 			txt += strs[val]
-			if (!(++col % this.boardLength)) {
+			if (!(++col % this.boardSize)) {
 				txt += '\n'
 			}
 		}

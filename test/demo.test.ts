@@ -7,7 +7,7 @@ import { ParkMiller } from './ParkMiller.js'
 describe(`demo 1`, () => {
 	const random = new ParkMiller(7)
 	const reversi = new ReversiTest({
-		boardLength: 4,
+		boardSize: 4,
 		mode: 'demo',
 		random: () => random.float(),
 	}).init()
@@ -27,7 +27,7 @@ describe(`demo 1`, () => {
 describe(`demo 2`, () => {
 	const random = new ParkMiller(2)
 	const reversi = new ReversiTest({
-		boardLength: 4,
+		boardSize: 4,
 		mode: 'demo',
 		random: () => random.float(),
 	}).init()

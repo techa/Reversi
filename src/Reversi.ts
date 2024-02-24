@@ -18,7 +18,7 @@ export interface ReversiOptions {
 	 * range: 4-12
 	 * default: 8
 	 */
-	boardLength: number
+	boardSize: number
 	initialPlacement: 'cross' | 'parallel'
 	mode: Mode
 	random: () => number
@@ -36,7 +36,7 @@ export const directionXYs: [number, number][] = [
 ]
 
 export class Reversi {
-	boardLength = 8
+	boardSize = 8
 	initialPlacement: 'cross' | 'parallel' = 'cross'
 	mode: Mode = '2'
 
@@ -73,7 +73,7 @@ export class Reversi {
 	random: () => number
 
 	constructor(options: Partial<ReversiOptions> = {}) {
-		this.boardLength = options.boardLength ?? this.boardLength
+		this.boardSize = options.boardSize ?? this.boardSize
 		this.initialPlacement =
 			options.initialPlacement ?? this.initialPlacement
 
@@ -101,13 +101,13 @@ export class Reversi {
 
 	initBoardArray() {
 		this.tiles = []
-		for (let i = 0; i < this.boardLength ** 2; i++) {
+		for (let i = 0; i < this.boardSize ** 2; i++) {
 			this.tiles.push(Tile.Null)
 		}
 	}
 
 	initialPieces() {
-		const center = ((this.boardLength / 2) | 0) - 1
+		const center = ((this.boardSize / 2) | 0) - 1
 		for (let i = 0; i < 4; i++) {
 			let x = center
 			let y = center
@@ -131,13 +131,13 @@ export class Reversi {
 	}
 
 	isTileEmpty(x: number, y: number) {
-		return this.tiles[y * this.boardLength + x] === Tile.Null
+		return this.tiles[y * this.boardSize + x] === Tile.Null
 	}
 	getTile(x: number, y: number) {
-		return this.tiles[y * this.boardLength + x]
+		return this.tiles[y * this.boardSize + x]
 	}
 	$setTile(sym: Sym, x: number, y: number) {
-		this.tiles[y * this.boardLength + x] = sym
+		this.tiles[y * this.boardSize + x] = sym
 	}
 
 	$aiTurn() {
@@ -167,19 +167,19 @@ export class Reversi {
 	}
 
 	_opened(pX: number, pY: number, curr: number[] | false = false) {
-		const { boardLength } = this
+		const { boardSize } = this
 		directionXYs.forEach((dir) => {
 			const x = pX + dir[0]
 			const y = pY + dir[1]
 			if (
 				x >= 0 &&
-				x < boardLength &&
+				x < boardSize &&
 				y >= 0 &&
-				y < boardLength &&
+				y < boardSize &&
 				(!curr || curr[0] !== x || curr[1] !== y) &&
 				this.isTileEmpty(x, y)
 			) {
-				const id = y * boardLength + x
+				const id = y * boardSize + x
 				if (this.opens.indexOf(id) === -1) {
 					this.opens.push(id)
 				}
@@ -204,9 +204,9 @@ export class Reversi {
 
 	_getCanTileData(sym: Sym) {
 		const data: Cell[] = []
-		for (let index = 0; index < this.boardLength ** 2; index++) {
-			const x = index % this.boardLength
-			const y = (index / this.boardLength) | 0
+		for (let index = 0; index < this.boardSize ** 2; index++) {
+			const x = index % this.boardSize
+			const y = (index / this.boardSize) | 0
 
 			if (this.isTileEmpty(x, y)) {
 				if (this.checkOKtoPlace(sym, x, y)) {
@@ -261,19 +261,19 @@ export class Reversi {
 		y: number,
 		dir: [number, number]
 	) {
-		const { boardLength } = this
+		const { boardSize } = this
 		const dX = dir[0]
 		const dY = dir[1]
 		//              x-1,     x,  x+1
-		const xCheck = [x < 2, false, x > boardLength - 3][dX + 1]
+		const xCheck = [x < 2, false, x > boardSize - 3][dX + 1]
 		//              y-1,     y,  y+1
-		const yCheck = [y < 2, false, y > boardLength - 3][dY + 1]
+		const yCheck = [y < 2, false, y > boardSize - 3][dY + 1]
 
 		if (!(xCheck || yCheck)) {
 			const neighbour = this.getTile(x + dX, y + dY)
 			if (neighbour && neighbour !== sym) {
-				const minX = dX < 0 ? x : boardLength - x - 1
-				const minY = dY < 0 ? y : boardLength - y - 1
+				const minX = dX < 0 ? x : boardSize - x - 1
+				const minY = dY < 0 ? y : boardSize - y - 1
 				const minCount =
 					(dX && dY
 						? Math.min(minX, minY)
@@ -380,8 +380,8 @@ export class Reversi {
 	private _checkSlots(sym: Sym) {
 		let emptyCount = 0
 		let roughtCount = 0
-		for (let y = 0; y < this.boardLength; y++) {
-			for (let x = 0; x < this.boardLength; x++) {
+		for (let y = 0; y < this.boardSize; y++) {
+			for (let x = 0; x < this.boardSize; x++) {
 				if (this.isTileEmpty(x, y)) {
 					emptyCount++
 					if (this.checkOKtoPlace(sym, x, y)) {
@@ -407,8 +407,8 @@ export class Reversi {
 
 	private _changeRespectiveTiles(sym: Sym, x: number, y: number) {
 		this.directionEach(sym, x, y, (pX, pY) => {
-			this.tiles[pY * this.boardLength + pX] = sym
-			this.$changeTileClassByNum(this.boardLength * pY + pX, sym)
+			this.tiles[pY * this.boardSize + pX] = sym
+			this.$changeTileClassByNum(this.boardSize * pY + pX, sym)
 		})
 	}
 

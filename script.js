@@ -1,6 +1,6 @@
 'use strict'
 console.log('Hello  ')
-var boardLength = 8
+var boardSize = 8
 var initialPlacement = 'cross' // 'cross' or 'parallel'
 var counter = 1
 var boardArray = []
@@ -156,8 +156,8 @@ function _addTile(el) {
 function checkSlots(sym) {
 	var emptySlots = 0
 	var roughtCount = 0
-	for (var y = 0; y < boardLength; y++) {
-		for (var x = 0; x < boardLength; x++) {
+	for (var y = 0; y < boardSize; y++) {
+		for (var x = 0; x < boardSize; x++) {
 			if (boardArray[y][x] === null) {
 				emptySlots++
 				if (checkOKtoPlace(sym, x, y)) {
@@ -173,8 +173,8 @@ function checkSlots(sym) {
 function tilesCounting() {
 	var whiteCount = 0
 	var blackCount = 0
-	for (var i = 0; i < boardLength; i++) {
-		for (var j = 0; j < boardLength; j++) {
+	for (var i = 0; i < boardSize; i++) {
+		for (var j = 0; j < boardSize; j++) {
 			if (boardArray[i][j] === 'W') whiteCount += 1
 			else if (boardArray[i][j] === 'B') blackCount += 1
 		}
@@ -185,15 +185,15 @@ function tilesCounting() {
 
 function predictionDots(sym) {
 	predictorArray = []
-	for (var y = 0; y < boardLength; y++) {
-		for (var x = 0; x < boardLength; x++) {
+	for (var y = 0; y < boardSize; y++) {
+		for (var x = 0; x < boardSize; x++) {
 			if (boardArray[y][x] === null) {
 				if (checkOKtoPlace(sym, x, y)) {
 					var createPredictor = document.createElement('div')
 					createPredictor.setAttribute('class', 'predictor')
 					createPredictor.setAttribute('x-axis', x)
 					createPredictor.setAttribute('y-axis', y)
-					var id = y * boardLength + x
+					var id = y * boardSize + x
 					document
 						.getElementById(id)
 						.appendChild(createPredictor)
@@ -241,9 +241,9 @@ function glowchange(sym) {
 
 function createBoardArray() {
 	boardArray = []
-	for (var i = 0; i < boardLength; i++) {
+	for (var i = 0; i < boardSize; i++) {
 		var anArray = []
-		for (var j = 0; j < boardLength; j++) {
+		for (var j = 0; j < boardSize; j++) {
 			anArray.push(null)
 		}
 		boardArray.push(anArray)
@@ -256,7 +256,7 @@ function createBoardArray() {
  * @param {number} y
  */
 function setTile(sym, x, y) {
-	var index = y * boardLength + x
+	var index = y * boardSize + x
 	var getSquare = document.getElementById(index)
 	var aTile = document.createElement('div')
 
@@ -269,7 +269,7 @@ function setTile(sym, x, y) {
 }
 
 function initialize() {
-	var center = ((boardLength / 2) | 0) - 1
+	var center = ((boardSize / 2) | 0) - 1
 	for (var i = 0; i < 4; i++) {
 		var x = center
 		var y = center
@@ -324,17 +324,17 @@ function checkDirection(sym, x, y, dir) {
 	var dX = dir[0]
 	var dY = dir[1]
 	//              x-1,     x,  x+1
-	var xCheck = [x < 2, false, x > boardLength - 3][dX + 1]
+	var xCheck = [x < 2, false, x > boardSize - 3][dX + 1]
 	//              y-1,     y,  y+1
-	var yCheck = [y < 2, false, y > boardLength - 3][dY + 1]
+	var yCheck = [y < 2, false, y > boardSize - 3][dY + 1]
 
 	if (!(xCheck || yCheck)) {
 		if (
 			boardArray[y + dY][x + dX] !== null &&
 			boardArray[y + dY][x + dX] !== sym
 		) {
-			var minX = dX < 0 ? x : boardLength - x - 1
-			var minY = dY < 0 ? y : boardLength - y - 1
+			var minX = dX < 0 ? x : boardSize - x - 1
+			var minY = dY < 0 ? y : boardSize - y - 1
 			var minCount =
 				(dX && dY ? Math.min(minX, minY) : dX ? minX : dY ? minY : 0) +
 				1
@@ -371,7 +371,7 @@ function changeRespectiveTiles(sym, x, y) {
 					var pY = y + dY * a
 					while (boardArray[pY][pX] !== sym) {
 						boardArray[pY][pX] = sym
-						changeTileClassByNum(boardLength * pY + pX, sym)
+						changeTileClassByNum(boardSize * pY + pX, sym)
 						a++
 						pX = x + dX * a
 						pY = y + dY * a
@@ -406,8 +406,8 @@ function aiTurn() {
 		var roughtCount = 0
 
 		////////////collect all playable square and total changes that it will make,save it in an array of object///////////
-		for (var y = 0; y < boardLength; y++) {
-			for (var x = 0; x < boardLength; x++) {
+		for (var y = 0; y < boardSize; y++) {
+			for (var x = 0; x < boardSize; x++) {
 				if (boardArray[y][x] === null) {
 					if (checkOKtoPlace(getSym, x, y)) {
 						var total = accumulator(getSym, x, y)
@@ -493,8 +493,8 @@ function allBoardInitialisation(noclick = false) {
 	takePutSettingsButton()
 	var k = 0
 	var getSquares = document.querySelectorAll('.col')
-	for (var i = 0; i < boardLength; i++) {
-		for (var j = 0; j < boardLength; j++) {
+	for (var i = 0; i < boardSize; i++) {
+		for (var j = 0; j < boardSize; j++) {
 			getSquares[k].setAttribute('x-axis', j)
 			getSquares[k].setAttribute('y-axis', i)
 			getSquares[k].setAttribute('id', k)
@@ -532,7 +532,7 @@ function createBoard() {
 	var boardHMarkersContainer = document.createElement('div')
 	boardHMarkersContainer.setAttribute('class', 'h-markers-container')
 
-	for (var i = 0; i < boardLength; i++) {
+	for (var i = 0; i < boardSize; i++) {
 		var boardHMarkers = document.createElement('div')
 		boardHMarkers.setAttribute('class', 'h-markers')
 		boardHMarkersContainer.appendChild(boardHMarkers)
@@ -542,7 +542,7 @@ function createBoard() {
 	var boardVMarkersContainer = document.createElement('div')
 	boardVMarkersContainer.setAttribute('class', 'v-markers-container')
 
-	for (var i = 0; i < boardLength; i++) {
+	for (var i = 0; i < boardSize; i++) {
 		var boardVMarkers = document.createElement('div')
 		boardVMarkers.setAttribute('class', 'v-markers')
 		boardVMarkersContainer.appendChild(boardVMarkers)
@@ -551,15 +551,15 @@ function createBoard() {
 
 	var squareColorCounter = 0
 
-	for (var i = 0; i < boardLength; i++) {
+	for (var i = 0; i < boardSize; i++) {
 		var row = document.createElement('div')
 		row.setAttribute('class', 'row')
-		row.style.height = 100 / boardLength + '%'
+		row.style.height = 100 / boardSize + '%'
 		squareColorCounter++
-		for (var j = 0; j < boardLength; j++) {
+		for (var j = 0; j < boardSize; j++) {
 			var square = document.createElement('div')
 			square.setAttribute('class', 'col square')
-			square.style.width = 100 / boardLength + '%'
+			square.style.width = 100 / boardSize + '%'
 			if (squareColorCounter % 2 === 1) {
 				square.style.backgroundColor = '#86B50F'
 			}
@@ -717,11 +717,11 @@ function preStartGame(mode) {
 }
 
 function tempStopAllClicks() {
-	for (var y = 0; y < boardLength; y++) {
-		for (var x = 0; x < boardLength; x++) {
+	for (var y = 0; y < boardSize; y++) {
+		for (var x = 0; x < boardSize; x++) {
 			if (boardArray[y][x] === null) {
 				document
-					.getElementById(y * boardLength + x)
+					.getElementById(y * boardSize + x)
 					.removeEventListener('click', addTile)
 			}
 		}
@@ -729,11 +729,11 @@ function tempStopAllClicks() {
 }
 
 function startBackAllClicks() {
-	for (var y = 0; y < boardLength; y++) {
-		for (var x = 0; x < boardLength; x++) {
+	for (var y = 0; y < boardSize; y++) {
+		for (var x = 0; x < boardSize; x++) {
 			if (boardArray[y][x] === null) {
 				document
-					.getElementById(y * boardLength + x)
+					.getElementById(y * boardSize + x)
 					.addEventListener('click', addTile)
 			}
 		}
@@ -792,13 +792,13 @@ function takeOffShroud() {
 }
 
 function getSettings() {
-	var boardLengthInput = document.getElementById('boardLength')
-	boardLength = boardLengthInput ? parseInt(boardLengthInput.value) : 8
+	var boardSizeInput = document.getElementById('boardSize')
+	boardSize = boardSizeInput ? parseInt(boardSizeInput.value) : 8
 
 	var parallel = document.getElementById('parallel')
 	initialPlacement = parallel && parallel.checked ? 'parallel' : 'cross'
 
-	console.log('boardLength = ', boardLength)
+	console.log('boardSize = ', boardSize)
 	console.log('initialPlacement = ', initialPlacement)
 }
 
