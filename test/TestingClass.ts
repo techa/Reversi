@@ -1,8 +1,8 @@
-import { Reversi, Tile } from '../src/Reversi.ts'
+import { AIReversi, Tile } from '../src/AI.ts'
 
 export * from '../src/Reversi.ts'
 
-export class ReversiTest extends Reversi {
+export class ReversiTest extends AIReversi {
 	stringify() {
 		let txt = '\n'
 		let col = 0

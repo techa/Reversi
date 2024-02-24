@@ -141,10 +141,7 @@ export abstract class Reversi {
 
 	_aiTurn() {
 		if (this.botMode) {
-			const sym = this.sym
-			const tile = this._ai_Most()
-			////////////do the move///////////////////////////////////////////////////
-			this.checkOKtoPlace(sym, tile.x, tile.y)
+			const tile = this.ai_nextHand()
 			this._doTheMove(tile.x, tile.y, true)
 		} else {
 			if (this.demo) {
@@ -155,90 +152,7 @@ export abstract class Reversi {
 	}
 	$stopDualBotMode() {}
 
-	_accumulator(sym: Sym, x: number, y: number) {
-		let totalChanged = 0
-		this.directionEach(sym, x, y, () => totalChanged++)
-		return totalChanged
-	}
-
-	_opened(pX: number, pY: number, curr: number[] | false = false) {
-		const { boardSize } = this
-		directionXYs.forEach((dir) => {
-			const x = pX + dir[0]
-			const y = pY + dir[1]
-			if (
-				x >= 0 &&
-				x < boardSize &&
-				y >= 0 &&
-				y < boardSize &&
-				(!curr || curr[0] !== x || curr[1] !== y) &&
-				this.isTileEmpty(x, y)
-			) {
-				const id = y * boardSize + x
-				if (this.opens.indexOf(id) === -1) {
-					this.opens.push(id)
-				}
-			}
-		})
-	}
-
-	_openedScore(dx: number, dy: number) {
-		this.opens = []
-		this._opened(dx, dy)
-		return this.opens.length
-	}
-
-	_openedScoreAll(sym: Sym, dx: number, dy: number) {
-		this.opens = []
-		this.directionEach(sym, dx, dy, (pX, pY) => {
-			this._opened(pX, pY, [dx, dy])
-		})
-		this._opened(dx, dy)
-		return this.opens.length
-	}
-
-	_getCanTileData(sym: Sym) {
-		const data: Cell[] = []
-		for (let index = 0; index < this.boardSize ** 2; index++) {
-			const x = index % this.boardSize
-			const y = (index / this.boardSize) | 0
-
-			if (this.isTileEmpty(x, y)) {
-				if (this.checkOKtoPlace(sym, x, y)) {
-					data.push({
-						x,
-						y,
-						total: this._accumulator(sym, x, y),
-						opens: this._openedScore(x, y),
-						opensAll: this._openedScoreAll(sym, x, y),
-					})
-				}
-			}
-		}
-		return data
-	}
-
-	_ai_Most(): Cell {
-		const data = this._getCanTileData(this.sym)
-		let maxChanged = 0
-
-		// check which square gives max change
-		for (let i = 0; i < data.length; i++) {
-			if (data[i].total >= maxChanged) {
-				maxChanged = data[i].total
-			}
-		}
-
-		// take x and y axis of max change
-		const randomArray: Cell[] = []
-		for (let j = 0; j < data.length; j++) {
-			if (data[j].total === maxChanged) {
-				randomArray.push(data[j])
-			}
-		}
-
-		return randomArray[Math.floor(this.random() * randomArray.length)]
-	}
+	ai_nextHand(): any {}
 
 	checkOKtoPlace(sym: Sym, x: number, y: number) {
 		return (
@@ -300,20 +214,24 @@ export abstract class Reversi {
 		}
 	}
 
-	private _doTheMove(x: number, y: number, ai = false) {
+	hit(x: number, y: number) {
 		this.$setTile(this.sym, x, y)
-		this.$updateLastMove(this.sym, x, y)
 		this._changeRespectiveTiles(this.sym, x, y)
-		this.S_place()
-
 		this.countIncr()
 
-		this.$tilesCounting()
+		return this._checkSlots(this.sym)
+	}
+
+	_doTheMove(x: number, y: number, ai = false) {
+		this.S_place()
+		this.$updateLastMove(this.sym, x, y)
 
 		/////////Check anymore playable empty square
 		//check any move left///////////////////////////
 		// console.log(this.sym + ' turn')
-		const slots = this._checkSlots(this.sym)
+		const slots = this.hit(x, y)
+
+		this.$tilesCounting()
 
 		if (slots.empty > 0) {
 			if (slots.movable > 0) {
