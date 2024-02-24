@@ -1,7 +1,7 @@
 // https://vitest.dev/api/expect.html
 // https://jestjs.io/docs/expect
 import { describe, it, expect } from 'vitest'
-import { ReversiTest, Tile } from './TestingClass.js'
+import { ReversiTest } from './TestingClass.js'
 
 describe(`Reversi 2 players`, () => {
 	const reversi = new ReversiTest().init()

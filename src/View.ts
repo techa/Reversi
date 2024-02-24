@@ -3,7 +3,7 @@ import Place from '../audio/button-16.mp3'
 import Beep from '../audio/button-21.mp3'
 import Invalid from '../audio/button-24.mp3'
 
-import { Reversi, type Sym, Tile } from './Reversi.js'
+import { AIReversi, type Sym, Tile, BoardSize } from './AI.js'
 
 type ID = number
 
@@ -27,7 +27,7 @@ export class View {
 
 	predictorArray: ID[] = []
 
-	reversi: Reversi
+	reversi: AIReversi
 
 	sounds = {
 		beep: new Audio(),
@@ -47,7 +47,7 @@ export class View {
 		const that = this
 
 		clearTimeout(that.timerID)
-		this.reversi = new (class extends Reversi {
+		this.reversi = new (class extends AIReversi {
 			$aiTurn() {
 				clearTimeout(that.timerID)
 				that.timerID = setTimeout(this._aiTurn.bind(this), 2000)
@@ -106,7 +106,7 @@ export class View {
 				that.sounds.place.play()
 			}
 		})({
-			boardSize: parseInt(this.boardSize.value),
+			boardSize: parseInt(this.boardSize.value) as BoardSize,
 			initialPlacement: this.initialPlacement.checked
 				? 'parallel'
 				: 'cross',

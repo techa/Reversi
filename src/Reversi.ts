@@ -4,13 +4,8 @@ export const enum Tile {
 	W = 2,
 }
 export type Sym = Tile.B | Tile.W
-export interface Cell {
-	x: number
-	y: number
-	total: number
-	opens: number
-	opensAll: number
-}
+export type BoardSize = 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12
+export type InitialPlacement = 'cross' | 'parallel'
 export type Mode = 'single' | '2' | 'demo'
 
 export interface ReversiOptions {
@@ -18,8 +13,8 @@ export interface ReversiOptions {
 	 * range: 4-12
 	 * default: 8
 	 */
-	boardSize: number
-	initialPlacement: 'cross' | 'parallel'
+	boardSize: BoardSize
+	initialPlacement: InitialPlacement
 	mode: Mode
 	random: () => number
 }
@@ -35,9 +30,9 @@ export const directionXYs: [number, number][] = [
 	[-1, 0], // left
 ]
 
-export class Reversi {
-	boardSize = 8
-	initialPlacement: 'cross' | 'parallel' = 'cross'
+export abstract class Reversi {
+	boardSize: BoardSize = 8
+	initialPlacement: InitialPlacement = 'cross'
 	mode: Mode = '2'
 
 	counter = 1
