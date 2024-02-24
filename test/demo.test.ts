@@ -50,13 +50,14 @@ const AIBattle = (options: Partial<ReversiOptions>) => {
 		black: 0,
 		white: 0,
 		draw: 0,
+		total: 200,
 	}
 
-	for (let i = 0; i < 500; i++) {
+	for (let i = 0; i < wins.total; i++) {
 		const reversi = new ReversiTest({
 			...options,
 			mode: 'demo',
-			// aiPlayer2LV: ((i / 100) | 0) as AILV,
+			aiPlayer2LV: (i % 6) as AILV,
 		}).init()
 
 		if (reversi.blackCount > reversi.whiteCount) {
@@ -76,6 +77,9 @@ const AIBattle = (options: Partial<ReversiOptions>) => {
 			aiPlayer1LV: i as AILV,
 		})
 		// console.log(`B-${i}, W-1`, wins)
-		console.log(`B-${i}`, (wins.black / 5).toFixed(0) + '%')
+		console.log(
+			`B-${i}`,
+			((wins.black / wins.total) * 100).toFixed(1) + '%'
+		)
 	}
 })()

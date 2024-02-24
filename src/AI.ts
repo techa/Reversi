@@ -44,39 +44,37 @@ export interface AISetting {
 	opens?: number[]
 	opensAll?: number[]
 	total?: number[]
-	position_edge?: number[]
-	position_edge2?: number[]
-	next_turn?: number[]
+	position_edge?: number
+	position_edge2?: number
+	next_turn?: boolean
+	blur?: number
 }
 export type AISettings = AISetting[]
 
 export const AIsetting: AISettings = [
 	{},
 	// 1
-	{ total: 1 },
+	{ total: [1, 1, 1] },
 	// 2
 	{ total: [-1, 0, 1], opens: [0, 1, 0] },
 	// 3
 	{ total: [-1, 0, 1], opens: [0, 1, 0], position_edge: 0.5 },
 	// 4
-	{ total: [-1, 0, 2], opensAll: [0, 1, 0.5], position_edge: 1 },
+	{
+		total: [-1, 0, 1],
+		opensAll: [0, 1, 0.5],
+		position_edge: 1,
+		position_edge2: 1,
+	},
 	// 5
 	{
 		total: [-1, 0, 1],
 		opensAll: [0, 1, 0.5],
 		position_edge: 1,
 		position_edge2: 1,
-		next_turn: 100,
+		next_turn: true,
 	},
-].map((setting) => {
-	for (const key in setting) {
-		const value = setting[key]
-		if (typeof value === 'number') {
-			setting[key] = [value, value, value]
-		}
-	}
-	return setting as AISetting
-})
+]
 
 export class AIReversi extends Reversi {
 	opens: number[]
@@ -126,7 +124,7 @@ export class AIReversi extends Reversi {
 				(x !== 1 && y === 0) ||
 				(x !== 1 && y === edge)
 			) {
-				hand.score += (boardSize / 2) * position_edge[term]
+				hand.score += (boardSize / 2) * position_edge
 			}
 			if (
 				(x === edge && y !== 1) ||
@@ -134,7 +132,7 @@ export class AIReversi extends Reversi {
 				(x !== edge + 1 && y === 0) ||
 				(x !== edge + 1 && y === edge)
 			) {
-				hand.score += (boardSize / 2) * position_edge[term]
+				hand.score += (boardSize / 2) * position_edge
 			}
 			// minus
 			if (
@@ -143,28 +141,19 @@ export class AIReversi extends Reversi {
 				(x === edge - 1 && y === 1) ||
 				(x === edge - 1 && y === edge - 1)
 			) {
-				hand.score -= (boardSize / 2) * position_edge[term]
+				hand.score -= (boardSize / 2) * position_edge
 			}
 		}
 		if (position_edge2) {
 			if (x === 2 || y === 2 || x === edge - 2 || y === edge - 2) {
-				hand.score += boardSize * position_edge2[term]
+				hand.score += boardSize * position_edge2
 			}
 		}
 
-		// console.log(
-		// 	this.sym,
-		// 	lv,
-		// 	next_turn,
-		// 	'LV',
-		// 	this.aiPlayer1LV,
-		// 	this.aiPlayer2LV
-		// )
 		if (next_turn) {
 			this.thinking = true
 			this.logging()
 			const slots = this.hit(x, y)
-
 			if (this.term === 2) {
 				if (!slots.movable) {
 					hand.score += 100
