@@ -51,14 +51,14 @@ export interface AISetting {
 }
 export type AISettings = AISetting[]
 
-export const AIsetting: AISettings = [
+export const AIsettings: AISettings = [
 	{},
 	// 1
 	{ total: [1, 1, 1] },
 	// 2
-	{ total: [-1, 0, 1], opens: [0, 1, 0] },
+	{ total: [-1, 0, 1], opens: [0, 1, 0.5] },
 	// 3
-	{ total: [-1, 0, 1], opens: [0, 1, 0], position_edge: 0.5 },
+	{ total: [-1, 0, 1], opens: [0, 1, 0.5], position_edge: 0.5 },
 	// 4
 	{
 		total: [-1, 0, 1],
@@ -78,20 +78,17 @@ export const AIsetting: AISettings = [
 
 export class AIReversi extends Reversi {
 	opens: number[]
-	hands: Hand[] = []
 	hiScore: number
 
-	boardLog: string[] = []
+	boardLog: BoardLog[] = []
 	thinking = false
 
 	aiPlayer1LV: AILV
 	aiPlayer2LV: AILV
 
-	getScore(hand: Hand) {
+	getScore(hand: Hand, lv: number) {
 		const { total: _total, x, y } = hand
-		const { boardSize } = this
-
-		const lv = this.sym === Tile.B ? this.aiPlayer1LV : this.aiPlayer2LV
+		const { boardSize, term } = this
 		const {
 			total,
 			opens,
@@ -99,8 +96,7 @@ export class AIReversi extends Reversi {
 			position_edge,
 			position_edge2,
 			next_turn,
-		} = AIsetting[lv]
-		const term = this.term
+		} = AIsettings[lv]
 
 		if (total) {
 			hand.score += _total * total[term]
@@ -166,22 +162,15 @@ export class AIReversi extends Reversi {
 		return hand
 	}
 
-	logging(/* hand: Hand */) {
-		this.boardLog.push(
-			// {
-			// 	tiles: this.tiles.slice(),
-			// 	counter: this.counter,
-			// }
-			JSON.stringify({
-				// hand,
-				tiles: this.tiles,
-				counter: this.counter,
-			})
-		)
+	logging() {
+		this.boardLog.push({
+			tiles: this.tiles.slice(),
+			counter: this.counter,
+		})
 	}
 
 	reset(index = 0) {
-		const log = JSON.parse(this.boardLog[index]) as BoardLog
+		const log = this.boardLog[index]
 		if (log) {
 			const { tiles, counter } = log
 			this.tiles = tiles
@@ -226,21 +215,22 @@ export class AIReversi extends Reversi {
 	}
 
 	ai_nextHand() {
-		this.getHands()
-		return this.pick()
+		const lv = this.sym === Tile.B ? this.aiPlayer1LV : this.aiPlayer2LV
+
+		return this.pick(this.getHands(lv), AIsettings[lv].blur)
 	}
 
-	pick(range = 0) {
-		const hands = this.hands
-			.filter((hand) => hand.score >= this.hiScore - range)
+	pick(hands: Hand[], blur = 0.5) {
+		hands = hands
+			.filter((hand) => hand.score >= this.hiScore - blur)
 			.sort((a, b) => b.score - a.score)
 
 		return hands[Math.floor(this.random() * hands.length)]
 	}
 
-	getHands() {
+	getHands(lv: number) {
 		const { boardSize } = this
-		this.hands = []
+		const hands: Hand[] = []
 		this.hiScore = -Infinity
 
 		for (let index = 0; index < boardSize ** 2; index++) {
@@ -256,15 +246,16 @@ export class AIReversi extends Reversi {
 						opensAll: this.openedAll(x, y),
 						score: 0,
 					}
-					this.getScore(hand)
+					this.getScore(hand, lv)
+
 					if (hand.score > this.hiScore) {
 						this.hiScore = hand.score
 					}
-					this.hands.push(hand)
+					hands.push(hand)
 				}
 			}
 		}
-		return this.hands
+		return hands
 	}
 
 	accumulator(sym: Sym, x: number, y: number) {

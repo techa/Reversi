@@ -8,7 +8,7 @@ describe(`AI`, () => {
 	reversi.addTile(2, 3)
 	reversi.addTile(4, 2)
 
-	it(`getHands`, () => {
+	it(`getHands(1)`, () => {
 		// ________
 		// _____0__
 		// ____W1__
@@ -17,7 +17,7 @@ describe(`AI`, () => {
 		// _____4__
 		// ________
 		// ________
-		expect(reversi.getHands()).toStrictEqual([
+		expect(reversi.getHands(1)).toStrictEqual([
 			{
 				opens: 7,
 				opensAll: 10,
