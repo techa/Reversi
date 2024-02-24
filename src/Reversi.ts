@@ -318,7 +318,7 @@ export abstract class Reversi {
 		if (slots.empty > 0) {
 			if (slots.movable > 0) {
 				// console.log(this.sym + ' still can')
-				this._glowchange()
+				this.$glowchange()
 
 				if (ai) {
 					if (this.singlePlayerMode) {
@@ -351,8 +351,6 @@ export abstract class Reversi {
 					}
 				} else {
 					// console.log(this.sym + ' also cannot, end game')
-					this.$stopGlow1()
-					this.$stopGlow2()
 					this.botMode = false
 					if (!ai) {
 						this.$tempStopAllClicks()
@@ -362,8 +360,6 @@ export abstract class Reversi {
 			}
 		} else {
 			// console.log(this.sym + ' cannot d')
-			this.$stopGlow1()
-			this.$stopGlow2()
 			this.botMode = false
 			if (!ai) {
 				this.$tempStopAllClicks()
@@ -445,25 +441,7 @@ export abstract class Reversi {
 		}
 	}
 
-	// startGlowBlack
-	$startGlow1() {}
-	// startGlowWhite
-	$startGlow2() {}
-
-	// stopGlowBlack
-	$stopGlow1() {}
-	// stopGlowWhite
-	$stopGlow2() {}
-
-	private _glowchange() {
-		if (this.sym === Tile.W) {
-			this.$stopGlow1()
-			this.$startGlow2()
-		} else {
-			this.$startGlow1()
-			this.$stopGlow2()
-		}
-	}
+	$glowchange() {}
 
 	$tempStopAllClicks() {}
 

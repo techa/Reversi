@@ -69,17 +69,14 @@ export class View {
 			$changeTileClassByNum(id: number, sym: Sym) {
 				that.$changeTileClassByNum(id, sym)
 			}
-			$startGlow1() {
-				that.$startGlow1()
-			}
-			$startGlow2() {
-				that.$startGlow2()
-			}
-			$stopGlow1() {
-				that.$stopGlow1()
-			}
-			$stopGlow2() {
-				that.$stopGlow2()
+			$glowchange() {
+				if (this.sym === Tile.W) {
+					that.$stopGlow1()
+					that.$startGlow2()
+				} else {
+					that.$startGlow1()
+					that.$stopGlow2()
+				}
 			}
 			$tempStopAllClicks() {
 				that.$tempStopAllClicks()
@@ -198,6 +195,8 @@ export class View {
 	}
 
 	$checkWin(message: string) {
+		this.$stopGlow1()
+		this.$stopGlow2()
 		getEl('.win-lose-draw').innerHTML = message
 		this.startAnimations()
 	}
