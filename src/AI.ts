@@ -44,6 +44,7 @@ export interface AISetting {
 	opens?: number[]
 	opensAll?: number[]
 	total?: number[]
+	position_corner?: number
 	position_edge?: number
 	position_edge2?: number
 	next_turn?: boolean
@@ -56,13 +57,19 @@ export const AIsettings: AISettings = [
 	// 1
 	{ total: [1, 1, 1] },
 	// 2
-	{ total: [-1, 0, 1], opens: [0, 1, 0.5] },
+	{ total: [-1, 0, 1], opens: [0, 1, 0.5], position_corner: 1 },
 	// 3
-	{ total: [-1, 0, 1], opens: [0, 1, 0.5], position_edge: 0.5 },
+	{
+		total: [-1, 0, 1],
+		opens: [0, 1, 0.5],
+		position_corner: 1,
+		position_edge: 0.5,
+	},
 	// 4
 	{
 		total: [-1, 0, 1],
 		opensAll: [0, 1, 0.5],
+		position_corner: 1,
 		position_edge: 1,
 		position_edge2: 1,
 	},
@@ -70,6 +77,7 @@ export const AIsettings: AISettings = [
 	{
 		total: [-1, 0, 1],
 		opensAll: [0, 1, 0.5],
+		position_corner: 1,
 		position_edge: 1,
 		position_edge2: 1,
 		next_turn: true,
@@ -93,6 +101,7 @@ export class AIReversi extends Reversi {
 			total,
 			opens,
 			opensAll,
+			position_corner,
 			position_edge,
 			position_edge2,
 			next_turn,
@@ -113,6 +122,16 @@ export class AIReversi extends Reversi {
 
 		// Position score
 		const edge = boardSize - 1
+		if (position_corner) {
+			if (
+				(x === 0 && y === 0) ||
+				(x === 0 && y === edge) ||
+				(x === edge && y === 0) ||
+				(x === edge && y === edge)
+			) {
+				hand.score += (boardSize / 2) * position_corner
+			}
+		}
 		if (position_edge) {
 			if (
 				(x === 0 && y !== 1) ||
