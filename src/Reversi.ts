@@ -136,10 +136,6 @@ export abstract class Reversi {
 	}
 
 	$aiTurn() {
-		this._aiTurn()
-	}
-
-	_aiTurn() {
 		if (this.botMode) {
 			const tile = this.ai_nextHand()
 			this._doTheMove(tile.x, tile.y, true)
@@ -152,7 +148,7 @@ export abstract class Reversi {
 	}
 	$stopDualBotMode() {}
 
-	ai_nextHand(): any {}
+	abstract ai_nextHand(): { x: number; y: number }
 
 	checkOKtoPlace(sym: Sym, x: number, y: number) {
 		return (
