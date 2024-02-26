@@ -45,8 +45,7 @@ export interface AISetting {
 	opensAll?: number[]
 	total?: number[]
 	position_corner?: number
-	position_edge?: number
-	position_edge2?: number
+	position_edge?: number[]
 	next_turn?: boolean
 	blur?: number
 }
@@ -63,23 +62,23 @@ export const AIsettings: AISettings = [
 		total: [-1, 0, 1],
 		opens: [0, 1, 0.5],
 		position_corner: 1,
-		position_edge: 0.5,
+		position_edge: [1, -0.5],
 	},
 	// 4
 	{
 		total: [-1, 0, 1],
+		opens: [0.5, 0.5, 0.5],
 		opensAll: [0, 1, 0.5],
 		position_corner: 1,
-		position_edge: 1,
-		position_edge2: 1,
+		position_edge: [0.5, -0.5, 0.5],
 	},
 	// 5
 	{
 		total: [-1, 0, 1],
+		opens: [0.5, 0.5, 0.5],
 		opensAll: [0, 1, 0.5],
 		position_corner: 1,
-		position_edge: 1,
-		position_edge2: 1,
+		position_edge: [0.5, -0.5, 0.5],
 		next_turn: true,
 	},
 ]
@@ -103,7 +102,6 @@ export class AIReversi extends Reversi {
 			opensAll,
 			position_corner,
 			position_edge,
-			position_edge2,
 			next_turn,
 		} = AIsettings[lv]
 
@@ -133,35 +131,13 @@ export class AIReversi extends Reversi {
 			}
 		}
 		if (position_edge) {
-			if (
-				(x === 0 && y !== 1) ||
-				(x === 0 && y !== edge - 1) ||
-				(x !== 1 && y === 0) ||
-				(x !== 1 && y === edge)
-			) {
-				hand.score += (boardSize / 2) * position_edge
-			}
-			if (
-				(x === edge && y !== 1) ||
-				(x === edge && y !== edge - 1) ||
-				(x !== edge + 1 && y === 0) ||
-				(x !== edge + 1 && y === edge)
-			) {
-				hand.score += (boardSize / 2) * position_edge
-			}
-			// minus
-			if (
-				(x === 1 && y === 1) ||
-				(x === 1 && y === edge - 1) ||
-				(x === edge - 1 && y === 1) ||
-				(x === edge - 1 && y === edge - 1)
-			) {
-				hand.score -= (boardSize / 2) * position_edge
-			}
-		}
-		if (position_edge2) {
-			if (x === 2 || y === 2 || x === edge - 2 || y === edge - 2) {
-				hand.score += boardSize * position_edge2
+			for (let i = 0; i < position_edge.length; i++) {
+				if (x === i || x === edge - i) {
+					hand.score += boardSize * position_edge[i]
+				}
+				if (y === i || y === edge - i) {
+					hand.score += boardSize * position_edge[i]
+				}
 			}
 		}
 
