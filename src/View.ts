@@ -14,6 +14,12 @@ function getEl<T extends HTMLElement>(query: string | number): T {
 	else throw new TypeError(`(${query}) is invaild query`)
 }
 
+function createEl(className: string, tagName = 'div') {
+	const el = document.createElement(tagName)
+	el.setAttribute('class', className)
+	return el
+}
+
 export class View {
 	boardSize = getEl<HTMLInputElement>('#boardSize')
 	initialPlacement = getEl<HTMLInputElement>('#parallel')
@@ -134,8 +140,12 @@ export class View {
 		this.preStartGame(mode)()
 	}
 
+	getSymColor(sym: Sym) {
+		return sym === Tile.W ? 'white' : 'black'
+	}
+
 	changeTileClass(el: Element, sym: Sym) {
-		el.setAttribute('class', sym === Tile.W ? 'white-tiles' : 'black-tiles')
+		el.setAttribute('class', `${this.getSymColor(sym)}-tiles`)
 	}
 	$changeTileClassByNum(id: number, sym: Sym) {
 		this.changeTileClass(getEl(id).firstChild as Element, sym)
@@ -237,8 +247,7 @@ export class View {
 						cell.addEventListener('click', this.addTile)
 						this.predictorArray.push(id)
 
-						const canhit = document.createElement('div')
-						canhit.setAttribute('class', 'can-hit')
+						const canhit = createEl('can-hit')
 						canhit.setAttribute('x-axis', x + '')
 						canhit.setAttribute('y-axis', y + '')
 
@@ -255,8 +264,7 @@ export class View {
 								this.hideHandScoreDetails
 							)
 						} else {
-							const predictor = document.createElement('div')
-							predictor.setAttribute('class', 'predictor')
+							const predictor = createEl('predictor')
 							canhit.appendChild(predictor)
 						}
 						cell.appendChild(canhit)
@@ -268,15 +276,13 @@ export class View {
 
 	showHandScoreDetails(hand: Hand) {
 		return (event: MouseEvent) => {
-			const box = document.createElement('div')
-			box.setAttribute('class', 'score-details')
+			const box = createEl('score-details')
 			box.style.left = event.clientX + 10 + 'px'
 			box.style.top = event.clientY + 10 + 'px'
 			for (const key in hand.scores) {
 				const score = hand.scores[key]
 				if (score) {
-					const item = document.createElement('div')
-					item.setAttribute('class', 'score-details-item')
+					const item = createEl('score-details-item')
 					item.innerHTML = `${key}: ${
 						typeof score === 'number' ? +score.toFixed(2) : score
 					}`
@@ -401,28 +407,22 @@ export class View {
 	createBoard() {
 		const { boardSize } = this.reversi
 
-		const boardContainer = document.createElement('div')
-		boardContainer.setAttribute('class', 'main-board')
-		const boardFrame = document.createElement('div')
-		boardFrame.setAttribute('class', 'board-frame')
+		const boardContainer = createEl('main-board')
+		const boardFrame = createEl('board-frame')
 
 		// markers
-		const boardHMarkersContainer = document.createElement('div')
-		boardHMarkersContainer.setAttribute('class', 'h-markers-container')
+		const boardHMarkersContainer = createEl('h-markers-container')
 
 		for (let i = 0; i < boardSize; i++) {
-			const boardHMarkers = document.createElement('div')
-			boardHMarkers.setAttribute('class', 'h-markers')
+			const boardHMarkers = createEl('h-markers')
 			boardHMarkersContainer.appendChild(boardHMarkers)
 			boardHMarkers.innerHTML = String.fromCharCode(65 + i)
 		}
 
-		const boardVMarkersContainer = document.createElement('div')
-		boardVMarkersContainer.setAttribute('class', 'v-markers-container')
+		const boardVMarkersContainer = createEl('v-markers-container')
 
 		for (let i = 0; i < boardSize; i++) {
-			const boardVMarkers = document.createElement('div')
-			boardVMarkers.setAttribute('class', 'v-markers')
+			const boardVMarkers = createEl('v-markers')
 			boardVMarkersContainer.appendChild(boardVMarkers)
 			boardVMarkers.innerHTML = i + 1 + ''
 		}
@@ -430,13 +430,11 @@ export class View {
 		let squareColorCounter = 0
 
 		for (let i = 0; i < boardSize; i++) {
-			const row = document.createElement('div')
-			row.setAttribute('class', 'row')
+			const row = createEl('row')
 			row.style.height = 100 / boardSize + '%'
 			squareColorCounter++
 			for (let j = 0; j < boardSize; j++) {
-				const square = document.createElement('div')
-				square.setAttribute('class', 'col square')
+				const square = createEl('col square')
 				square.style.width = 100 / boardSize + '%'
 				if (squareColorCounter % 2 === 1) {
 					square.style.backgroundColor = '#86B50F'
@@ -455,24 +453,18 @@ export class View {
 	}
 
 	lastMoveDisplayCreator() {
-		const createContainer = document.createElement('div')
-		createContainer.setAttribute('class', 'last-move-display-container')
+		const createContainer = createEl('last-move-display-container')
 		this.mainContainer.appendChild(createContainer)
 	}
 
 	$updateLastMove(sym: Sym, x: number, y: number) {
 		const getLastMoveContainer = getEl('.last-move-display-container')
 
-		const newMove = document.createElement('div')
-		newMove.setAttribute('class', 'last-move-slot')
-
-		const lastMoveTile = document.createElement('div')
-		const tileClass = `last-move-tile-${sym === Tile.W ? 'white' : 'black'}`
-		lastMoveTile.setAttribute('class', tileClass)
+		const newMove = createEl('last-move-slot')
+		const lastMoveTile = createEl(`last-move-tile-${this.getSymColor(sym)}`)
 
 		newMove.appendChild(lastMoveTile)
-		const lastMovePosition = document.createElement('div')
-		lastMovePosition.setAttribute('class', 'last-move-number')
+		const lastMovePosition = createEl('last-move-number')
 		lastMovePosition.innerHTML = String.fromCharCode(65 + x) + (y + 1)
 		newMove.appendChild(lastMovePosition)
 
