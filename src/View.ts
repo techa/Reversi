@@ -57,7 +57,9 @@ export class View {
 			}
 			$setTile(sym: Sym, x: number, y: number) {
 				super.$setTile(sym, x, y)
-				that.$setTile(sym, x, y)
+				if (!this.thinking) {
+					that.$setTile(sym, x, y)
+				}
 			}
 			$updateLastMove(sym: Sym, x: number, y: number) {
 				that.$updateLastMove(sym, x, y)
@@ -67,7 +69,9 @@ export class View {
 				that.$tilesCounting()
 			}
 			$changeTileClassByNum(id: number, sym: Sym) {
-				that.$changeTileClassByNum(id, sym)
+				if (!this.thinking) {
+					that.$changeTileClassByNum(id, sym)
+				}
 			}
 			$glowchange() {
 				if (this.sym === Tile.W) {
