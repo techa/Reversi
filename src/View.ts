@@ -7,6 +7,8 @@ import { AIReversi, type Sym, Tile, BoardSize, Hand } from './AI.js'
 
 type ID = number
 
+function getEl<T extends HTMLElement>(id: number): T
+function getEl<T extends HTMLElement>(query: string): T
 function getEl<T extends HTMLElement>(query: string | number): T {
 	query = typeof query === 'number' ? `#cell${query}` : query
 	const el = document.querySelector(query)
@@ -14,16 +16,18 @@ function getEl<T extends HTMLElement>(query: string | number): T {
 	else throw new TypeError(`(${query}) is invaild query`)
 }
 
-function createEl(className: string, tagName = 'div') {
-	const el = document.createElement(tagName)
+function createEl(className: string) {
+	const el = document.createElement('div')
 	el.setAttribute('class', className)
-	return el
+	return el as HTMLDivElement
 }
 
 export class View {
 	boardSize = getEl<HTMLInputElement>('#boardSize')
 	initialPlacement = getEl<HTMLInputElement>('#parallel')
 	mainContainer = getEl('.main-container')
+	squares: HTMLDivElement[] = []
+
 	blackScore = getEl('#black-score')
 	whiteScore = getEl('#white-score')
 	glow1 = getEl('#glow-1')
@@ -148,7 +152,7 @@ export class View {
 		el.setAttribute('class', `${this.getSymColor(sym)}-tiles`)
 	}
 	$changeTileClassByNum(id: number, sym: Sym) {
-		this.changeTileClass(getEl(id).firstChild as Element, sym)
+		this.changeTileClass(this.squares[id].firstChild as Element, sym)
 	}
 
 	$setTile(sym: Sym, x: number, y: number) {
@@ -156,7 +160,7 @@ export class View {
 		const aTile = document.createElement('div')
 		this.changeTileClass(aTile, sym)
 
-		const getSquare = getEl(y * boardSize + x)
+		const getSquare = this.squares[y * boardSize + x]
 		getSquare.appendChild(aTile)
 		getSquare.removeEventListener('click', this.addTile)
 		// getSquare.removeEventListener("click", tilePlaceSound);
@@ -190,7 +194,7 @@ export class View {
 		for (var y = 0; y < boardSize; y++) {
 			for (var x = 0; x < boardSize; x++) {
 				if (this.reversi.isTileEmpty(x, y)) {
-					getEl(y * boardSize + x).removeEventListener(
+					this.squares[y * boardSize + x].removeEventListener(
 						'click',
 						this.addTile
 					)
@@ -204,7 +208,7 @@ export class View {
 		for (var y = 0; y < boardSize; y++) {
 			for (var x = 0; x < boardSize; x++) {
 				if (this.reversi.isTileEmpty(x, y)) {
-					getEl(y * boardSize + x).addEventListener(
+					this.squares[y * boardSize + x].addEventListener(
 						'click',
 						this.addTile
 					)
@@ -243,7 +247,7 @@ export class View {
 				if (this.reversi.isTileEmpty(x, y)) {
 					if (this.reversi.checkOKtoPlace(sym, x, y)) {
 						const id = y * boardSize + x
-						const cell = getEl(id)
+						const cell = this.squares[y * boardSize + x]
 						cell.addEventListener('click', this.addTile)
 						this.predictorArray.push(id)
 
@@ -302,7 +306,7 @@ export class View {
 
 	$removePredictionDots() {
 		for (let i = 0; i < this.predictorArray.length; i++) {
-			const target = getEl(this.predictorArray[i])
+			const target = this.squares[this.predictorArray[i]]
 			target.removeChild(target.firstChild!)
 			target.removeEventListener
 		}
@@ -441,6 +445,7 @@ export class View {
 				}
 				squareColorCounter++
 				row.appendChild(square)
+				this.squares.push(square)
 			}
 			boardContainer.appendChild(row)
 		}
