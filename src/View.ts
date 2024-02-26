@@ -50,7 +50,9 @@ export class View {
 		this.reversi = new (class extends AIReversi {
 			$aiTurn() {
 				clearTimeout(that.timerID)
-				that.timerID = setTimeout(this.$aiTurn.bind(this), 2000)
+				that.timerID = setTimeout(() => {
+					super.$aiTurn()
+				}, 2000)
 			}
 			$stopDualBotMode() {
 				clearTimeout(that.timerID)
