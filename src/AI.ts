@@ -19,6 +19,7 @@ export interface ReversiOptions {
 	boardSize: BoardSize
 	initialPlacement: InitialPlacement
 	mode: Mode
+	yourColor: Tile
 	random: () => number
 	aiPlayer1LV: AILV
 	aiPlayer2LV: AILV
@@ -133,10 +134,14 @@ export class AIReversi extends Reversi {
 		} = AIsettings[lv]
 
 		if (count) {
+			// 序盤は少なく取る
 			scores.count += hand.count * count[term]
 		}
 
 		// 開放度が低いほど高スコア
+		// 開放度理論
+		// ひっくり返した石に隣接する空きマスが少ないほど良い手
+		// どこに置くか迷ったら、なるべく多くの石に囲まれているものをひっくり返す
 		if (opensAll) {
 			scores.opensAll +=
 				(boardSize - this.openedAll(x, y) / hand.count) * opensAll[term]

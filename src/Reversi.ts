@@ -16,6 +16,7 @@ export interface ReversiOptions {
 	boardSize: BoardSize
 	initialPlacement: InitialPlacement
 	mode: Mode
+	yourColor: Tile
 	random: () => number
 }
 
@@ -34,6 +35,7 @@ export abstract class Reversi {
 	boardSize: BoardSize = 8
 	initialPlacement: InitialPlacement = 'cross'
 	mode: Mode = '2'
+	yourColor = Tile.B
 
 	counter = 1
 	sym: Sym = Tile.B
@@ -53,13 +55,17 @@ export abstract class Reversi {
 		const mode = this.mode
 		return mode === '2'
 			? 'Player 1'
-			: mode === 'demo'
-			? 'AI - Black'
-			: 'You'
+			: mode === 'single' && this.yourColor === Tile.B
+			? 'You'
+			: 'AI - Black'
 	}
 	get player2Name() {
 		const mode = this.mode
-		return mode === '2' ? 'Player 2' : 'AI - White'
+		return mode === '2'
+			? 'Player 2'
+			: mode === 'single' && this.yourColor === Tile.W
+			? 'You'
+			: 'AI - White'
 	}
 
 	whiteCount = 0
@@ -74,6 +80,11 @@ export abstract class Reversi {
 
 		this.mode = options.mode ?? this.mode
 		this.random = options.random ?? Math.random
+
+		this.yourColor = options.yourColor ?? this.yourColor
+		if (!this.yourColor) {
+			this.yourColor = this.random() > 0.5 ? Tile.B : Tile.W
+		}
 	}
 
 	init() {
@@ -87,7 +98,7 @@ export abstract class Reversi {
 			this.demo = true
 		}
 
-		if (this.demo) {
+		if (this.demo || this.yourColor !== this.sym) {
 			this.botMode = true
 			this.$aiTurn()
 		} else {

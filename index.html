@@ -36,7 +36,7 @@
 		</div>
 
 		<div class="settings-from-container">
-			<div>
+			<form name="setting">
 				<label>
 					Board Size:
 					<input
@@ -68,7 +68,35 @@
 						/>parallel
 					</label>
 				</div>
-			</div>
+				<div>
+					Your Color:
+					<label>
+						<input
+							type="radio"
+							name="yourColor"
+							value="1"
+							id="black"
+							checked
+						/>Black
+					</label>
+					<label>
+						<input
+							type="radio"
+							name="yourColor"
+							value="2"
+							id="white"
+						/>White
+					</label>
+					<label>
+						<input
+							type="radio"
+							name="yourColor"
+							value="0"
+							id="random"
+						/>Random
+					</label>
+				</div>
+			</form>
 		</div>
 
 		<div class="main-container">

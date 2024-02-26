@@ -23,7 +23,6 @@ function createEl(className: string) {
 }
 
 export class View {
-	boardSize = getEl<HTMLInputElement>('#boardSize')
 	initialPlacement = getEl<HTMLInputElement>('#parallel')
 	mainContainer = getEl('.main-container')
 	squares: HTMLDivElement[] = []
@@ -57,6 +56,7 @@ export class View {
 	init(mode: typeof this.reversi.mode) {
 		const that = this
 
+		const setting = document.forms['setting'].elements
 		clearTimeout(that.timerID)
 		this.reversi = new (class extends AIReversi {
 			$aiTurn() {
@@ -120,11 +120,10 @@ export class View {
 				that.sounds.place.play()
 			}
 		})({
-			boardSize: parseInt(this.boardSize.value) as BoardSize,
-			initialPlacement: this.initialPlacement.checked
-				? 'parallel'
-				: 'cross',
+			boardSize: parseInt(setting['boardSize'].value) as BoardSize,
+			initialPlacement: setting['initialPlacement'].value,
 			mode,
+			yourColor: parseInt(setting['yourColor'].value),
 		})
 
 		this.addTile = (event: Event) => {
