@@ -90,6 +90,8 @@ export abstract class Reversi {
 		if (this.demo) {
 			this.botMode = true
 			this.$aiTurn()
+		} else {
+			this.$playerTurn()
 		}
 		return this
 	}
@@ -237,7 +239,7 @@ export abstract class Reversi {
 				if (ai) {
 					if (this.singlePlayerMode) {
 						this.$startBackAllClicks()
-						this.$predictionDots()
+						this.$playerTurn()
 					} else {
 						this.$aiTurn()
 					}
@@ -245,7 +247,7 @@ export abstract class Reversi {
 					if (this.singlePlayerMode) {
 						this.$tempStopAllClicks()
 					} else {
-						this.$predictionDots()
+						this.$playerTurn()
 					}
 					if (this.botMode) {
 						this.$aiTurn()
@@ -261,7 +263,7 @@ export abstract class Reversi {
 						// console.log(this.sym + 'still can')
 						this.$aiTurn()
 					} else {
-						this.$predictionDots()
+						this.$playerTurn()
 					}
 				} else {
 					// console.log(this.sym + ' also cannot, end game')
@@ -372,7 +374,7 @@ export abstract class Reversi {
 			: 'It is a Draw!!'
 	}
 
-	$predictionDots() {}
+	$playerTurn() {}
 	$removePredictionDots() {}
 
 	S_invalid() {

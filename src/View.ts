@@ -106,8 +106,8 @@ export class View {
 				that.$checkWin(message)
 				return message
 			}
-			$predictionDots() {
-				that.$predictionDots()
+			$playerTurn() {
+				that.$playerTurn()
 			}
 			$removePredictionDots() {
 				that.$removePredictionDots()
@@ -127,9 +127,6 @@ export class View {
 			mode,
 		})
 
-		this.allBoardInitialisation()
-		this.reversi.init()
-
 		this.addTile = (event: Event) => {
 			const el = event.target as HTMLElement
 			const x = parseInt(el.getAttribute('x-axis')!)
@@ -139,9 +136,14 @@ export class View {
 			this.hideHandScoreDetails()
 		}
 
-		this.closeModeSelectContainer()
+		this.allBoardInitialisation()
+		this.closeSettingFormContainer()
 
-		this.preStartGame(mode)()
+		this.reversi.init()
+
+		this.hideShroud()
+		this.$startGlow1()
+		this.$stopGlow2()
 	}
 
 	getSymColor(sym: Sym) {
@@ -238,7 +240,10 @@ export class View {
 		}, 2000)
 	}
 
-	$predictionDots() {
+	/**
+	 * show predictionDots
+	 */
+	$playerTurn() {
 		const { boardSize, sym } = this.reversi
 		this.predictorArray = []
 
@@ -312,19 +317,8 @@ export class View {
 		}
 	}
 
-	closeModeSelectContainer() {
+	closeSettingFormContainer() {
 		getEl('.settings-from-container').style.display = 'none'
-	}
-
-	preStartGame(mode: typeof this.reversi.mode) {
-		return () => {
-			this.hideShroud()
-			this.$startGlow1()
-			this.$stopGlow2()
-			if (mode !== 'demo') {
-				this.$predictionDots()
-			}
-		}
 	}
 
 	addEventToStart() {
