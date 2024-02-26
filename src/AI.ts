@@ -30,7 +30,14 @@ export interface Hand {
 	count: number
 	opens: number
 	opensAll: number
-	score: number
+	scores: {
+		count: number
+		opens: number
+		opensAll: number
+		position_corner: number
+		position_edge: number[]
+		total: number
+	}
 }
 
 interface BoardLog {
@@ -94,7 +101,7 @@ export class AIReversi extends Reversi {
 	aiPlayer2LV: AILV
 
 	getScore(hand: Hand, lv: number) {
-		const { x, y } = hand
+		const { x, y, scores } = hand
 		const { boardSize, term } = this
 		const {
 			count,
@@ -106,16 +113,16 @@ export class AIReversi extends Reversi {
 		} = AIsettings[lv]
 
 		if (count) {
-			hand.score += hand.count * count[term]
+			scores.count += hand.count * count[term]
 		}
 
 		// 開放度が低いほど高スコア
 		if (opensAll) {
-			hand.score +=
+			scores.opensAll +=
 				(boardSize - this.openedAll(x, y) / hand.count) * opensAll[term]
 		}
 		if (opens) {
-			hand.score += (boardSize - this.opened(x, y)) * opens[term]
+			scores.opens += (boardSize - this.opened(x, y)) * opens[term]
 		}
 
 		// Position score
@@ -127,16 +134,16 @@ export class AIReversi extends Reversi {
 				(x === edge && y === 0) ||
 				(x === edge && y === edge)
 			) {
-				hand.score += (boardSize / 2) * position_corner
+				scores.position_corner += boardSize * position_corner
 			}
 		}
 		if (position_edge) {
 			for (let i = 0; i < position_edge.length; i++) {
 				if (x === i || x === edge - i) {
-					hand.score += boardSize * position_edge[i]
+					scores.position_edge[i] += boardSize * position_edge[i]
 				}
 				if (y === i || y === edge - i) {
-					hand.score += boardSize * position_edge[i]
+					scores.position_edge[i] += boardSize * position_edge[i]
 				}
 			}
 		}
@@ -144,16 +151,33 @@ export class AIReversi extends Reversi {
 		if (next_turn) {
 			this.thinking = true
 			this.logging()
-			const slots = this.hit(x, y)
 			if (this.term === 2) {
-				if (!slots.movable) {
-					hand.score += 100
-				} else {
-					hand.score += this.getHand(x, y, lv)?.score || 0
+				const slots = this.hit(x, y)
+				if (slots.empty) {
+					if (!slots.movable) {
+						scores.total += 100
+					} else {
+						// const hand = this.ai_nextHand()
+						// hand.score +=
+						// 	this.getHand(hand.x, hand.y, lv).score || 0
+					}
 				}
 			}
 			this.reset()
 			this.thinking = false
+		}
+
+		// score total
+		for (const key in scores) {
+			const value = scores[key]
+			if (Array.isArray(value)) {
+				scores.total += value.reduce<number>(
+					(score, val) => score + val,
+					0
+				)
+			} else if (key !== 'total' && typeof value === 'number') {
+				scores.total += value
+			}
 		}
 
 		return hand
@@ -219,8 +243,8 @@ export class AIReversi extends Reversi {
 
 	pick(hands: Hand[], blur = 0.5) {
 		hands = hands
-			.filter((hand) => hand.score >= this.hiScore - blur)
-			.sort((a, b) => b.score - a.score)
+			.filter((hand) => hand.scores.total >= this.hiScore - blur)
+			.sort((a, b) => b.scores.total - a.scores.total)
 
 		return hands[Math.floor(this.random() * hands.length)]
 	}
@@ -235,8 +259,8 @@ export class AIReversi extends Reversi {
 				if (this.isTileEmpty(x, y)) {
 					if (this.checkOKtoPlace(this.sym, x, y)) {
 						const hand = this.getHand(x, y, lv)
-						if (hand.score > this.hiScore) {
-							this.hiScore = hand.score
+						if (hand.scores.total > this.hiScore) {
+							this.hiScore = hand.scores.total
 						}
 						if (hand) {
 							hands.push(hand)
@@ -255,7 +279,14 @@ export class AIReversi extends Reversi {
 			count: this.accumulator(this.sym, x, y),
 			opens: this.opened(x, y),
 			opensAll: this.openedAll(x, y),
-			score: 0,
+			scores: {
+				count: 0,
+				opens: 0,
+				opensAll: 0,
+				position_corner: 0,
+				position_edge: [0, 0, 0],
+				total: 0,
+			},
 		}
 		this.getScore(hand, lv)
 		return hand

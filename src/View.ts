@@ -3,7 +3,7 @@ import Place from '../audio/button-16.mp3'
 import Beep from '../audio/button-21.mp3'
 import Invalid from '../audio/button-24.mp3'
 
-import { AIReversi, type Sym, Tile, BoardSize } from './AI.js'
+import { AIReversi, type Sym, Tile, BoardSize, Hand } from './AI.js'
 
 type ID = number
 
@@ -26,6 +26,7 @@ export class View {
 	addTile: (event: Event) => void
 
 	predictorArray: ID[] = []
+	scoreViwLV = import.meta.env.DEV ? 5 : 0
 
 	reversi: AIReversi
 
@@ -124,6 +125,8 @@ export class View {
 			const x = parseInt(el.getAttribute('x-axis')!)
 			const y = parseInt(el.getAttribute('y-axis')!)
 			this.reversi.addTile(x, y)
+
+			this.hideHandScoreDetails()
 		}
 
 		this.closeModeSelectContainer()
@@ -229,23 +232,63 @@ export class View {
 			for (let x = 0; x < boardSize; x++) {
 				if (this.reversi.isTileEmpty(x, y)) {
 					if (this.reversi.checkOKtoPlace(sym, x, y)) {
-						const createPredictor = document.createElement('div')
-						createPredictor.setAttribute('class', 'predictor')
-						createPredictor.setAttribute('x-axis', x + '')
-						createPredictor.setAttribute('y-axis', y + '')
-						// createPredictor.setAttribute(
-						// 	'onclick',
-						// 	'runATile(this)'
-						// )
 						const id = y * boardSize + x
 						const cell = getEl(id)
-						cell.appendChild(createPredictor)
 						cell.addEventListener('click', this.addTile)
 						this.predictorArray.push(id)
+
+						const canhit = document.createElement('div')
+						canhit.setAttribute('class', 'can-hit')
+						canhit.setAttribute('x-axis', x + '')
+						canhit.setAttribute('y-axis', y + '')
+
+						const lv = this.scoreViwLV
+						if (this.reversi.singlePlayerMode && lv) {
+							const hand = this.reversi.getHand(x, y, lv)
+							canhit.textContent = hand.scores.total.toFixed(1)
+							canhit.addEventListener(
+								'mouseover',
+								this.showHandScoreDetails(hand)
+							)
+							canhit.addEventListener(
+								'mouseleave',
+								this.hideHandScoreDetails
+							)
+						} else {
+							const predictor = document.createElement('div')
+							predictor.setAttribute('class', 'predictor')
+							canhit.appendChild(predictor)
+						}
+						cell.appendChild(canhit)
 					}
 				}
 			}
 		}
+	}
+
+	showHandScoreDetails(hand: Hand) {
+		return (event: MouseEvent) => {
+			const box = document.createElement('div')
+			box.setAttribute('class', 'score-details')
+			box.style.left = event.clientX + 10 + 'px'
+			box.style.top = event.clientY + 10 + 'px'
+			for (const key in hand.scores) {
+				const value = hand.scores[key]
+				if (value) {
+					const item = document.createElement('div')
+					item.setAttribute('class', 'score-details-item')
+					item.innerHTML = `${key}: ${value}`
+					if (hand[key]) {
+						item.innerHTML += ` (${hand[key]})`
+					}
+					box.appendChild(item)
+				}
+			}
+			document.body.appendChild(box)
+		}
+	}
+	hideHandScoreDetails() {
+		document.body.removeChild(getEl('.score-details'))
 	}
 
 	$removePredictionDots() {
