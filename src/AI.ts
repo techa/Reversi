@@ -35,6 +35,7 @@ export interface Hand {
 		opens: number
 		opensAll: number
 		position_corner: number
+		position_corner_clue: number
 		position_edge: number[]
 		total: number
 	}
@@ -52,6 +53,7 @@ export interface AISetting {
 	opens?: number[]
 	opensAll?: number[]
 	position_corner?: number
+	position_corner_clue?: number
 	position_edge?: number[]
 	next_turn?: boolean
 	blur?: number
@@ -69,6 +71,7 @@ export const AIsettings: AISettings = [
 		count: [-1, 0, 1],
 		opens: [0, 1, 0.5],
 		position_corner: 1,
+		position_corner_clue: -1,
 		position_edge: [1, -0.5],
 	},
 	// 4
@@ -77,6 +80,7 @@ export const AIsettings: AISettings = [
 		opens: [0.5, 0.5, 0.5],
 		opensAll: [0, 1, 0.5],
 		position_corner: 1,
+		position_corner_clue: -1,
 		position_edge: [0.5, -0.5, 0.5],
 	},
 	// 5
@@ -85,6 +89,7 @@ export const AIsettings: AISettings = [
 		opens: [0.5, 0.5, 0.5],
 		opensAll: [0, 1, 0.5],
 		position_corner: 1,
+		position_corner_clue: -1,
 		position_edge: [0.5, -0.5, 0.5],
 		next_turn: true,
 	},
@@ -100,6 +105,16 @@ export class AIReversi extends Reversi {
 	aiPlayer1LV: AILV
 	aiPlayer2LV: AILV
 
+	private _corner_clue(x: number, y: number, dx: number, dy: number) {
+		const cx = dx > 2 ? -1 : 1
+		const cy = dy > 2 ? -1 : 1
+		return (
+			this.isTileEmpty(dx, dy) &&
+			(((dx > 2 ? x >= dx - 1 : x <= 1) && y === dy + cy) ||
+				((dy > 2 ? y >= dy - 1 : y <= 1) && x === dx + cx))
+		)
+	}
+
 	getScore(hand: Hand, lv: number) {
 		const { x, y, scores } = hand
 		const { boardSize, term } = this
@@ -108,6 +123,7 @@ export class AIReversi extends Reversi {
 			opens,
 			opensAll,
 			position_corner,
+			position_corner_clue,
 			position_edge,
 			next_turn,
 		} = AIsettings[lv]
@@ -135,6 +151,16 @@ export class AIReversi extends Reversi {
 				(x === edge && y === edge)
 			) {
 				scores.position_corner += boardSize * position_corner
+			}
+		}
+		if (position_corner_clue) {
+			if (
+				this._corner_clue(x, y, 0, 0) ||
+				this._corner_clue(x, y, 0, edge) ||
+				this._corner_clue(x, y, edge, 0) ||
+				this._corner_clue(x, y, edge, edge)
+			) {
+				scores.position_corner_clue += boardSize * position_corner_clue
 			}
 		}
 		if (position_edge) {
@@ -284,6 +310,7 @@ export class AIReversi extends Reversi {
 				opens: 0,
 				opensAll: 0,
 				position_corner: 0,
+				position_corner_clue: 0,
 				position_edge: [0, 0, 0],
 				total: 0,
 			},
