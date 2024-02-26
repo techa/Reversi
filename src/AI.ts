@@ -37,6 +37,7 @@ export interface Hand {
 		position_corner: number
 		position_corner_clue: number
 		position_edge: number[]
+		next_turn: number
 		total: number
 	}
 }
@@ -55,7 +56,7 @@ export interface AISetting {
 	position_corner?: number
 	position_corner_clue?: number
 	position_edge?: number[]
-	next_turn?: boolean
+	next_turn?: number
 	blur?: number
 }
 export type AISettings = AISetting[]
@@ -65,7 +66,7 @@ export const AIsettings: AISettings = [
 	// 1
 	{ count: [1, 1, 1] },
 	// 2
-	{ count: [-1, 0, 1], opens: [0, 1, 0.5], position_corner: 1 },
+	{ count: [-1, 0, 1], opens: [0, 1, 0.5], position_corner: 0.5, blur: 3 },
 	// 3
 	{
 		count: [-1, 0, 1],
@@ -73,6 +74,7 @@ export const AIsettings: AISettings = [
 		position_corner: 1,
 		position_corner_clue: -1,
 		position_edge: [1, -0.5],
+		blur: 2,
 	},
 	// 4
 	{
@@ -82,6 +84,7 @@ export const AIsettings: AISettings = [
 		position_corner: 1,
 		position_corner_clue: -1,
 		position_edge: [0.5, -0.5, 0.5],
+		blur: 1,
 	},
 	// 5
 	{
@@ -91,7 +94,8 @@ export const AIsettings: AISettings = [
 		position_corner: 1,
 		position_corner_clue: -1,
 		position_edge: [0.5, -0.5, 0.5],
-		next_turn: true,
+		next_turn: 100,
+		blur: 0,
 	},
 ]
 
@@ -181,7 +185,7 @@ export class AIReversi extends Reversi {
 				const slots = this.hit(x, y)
 				if (slots.empty) {
 					if (!slots.movable) {
-						scores.total += 100
+						scores.next_turn += next_turn
 					} else {
 						// const hand = this.ai_nextHand()
 						// hand.score +=
@@ -267,7 +271,7 @@ export class AIReversi extends Reversi {
 		return this.pick(this.getHands(lv), AIsettings[lv].blur)
 	}
 
-	pick(hands: Hand[], blur = 0.5) {
+	pick(hands: Hand[], blur = 0.001) {
 		hands = hands
 			.filter((hand) => hand.scores.total >= this.hiScore - blur)
 			.sort((a, b) => b.scores.total - a.scores.total)
@@ -312,6 +316,7 @@ export class AIReversi extends Reversi {
 				position_corner: 0,
 				position_corner_clue: 0,
 				position_edge: [0, 0, 0],
+				next_turn: 0,
 				total: 0,
 			},
 		}
