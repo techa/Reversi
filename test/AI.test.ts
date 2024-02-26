@@ -21,7 +21,7 @@ describe(`AI`, () => {
 			{
 				opens: 7,
 				opensAll: 10,
-				total: 1,
+				count: 1,
 				x: 5,
 				y: 1,
 				score: 1,
@@ -29,7 +29,7 @@ describe(`AI`, () => {
 			{
 				opens: 6,
 				opensAll: 8,
-				total: 1,
+				count: 1,
 				x: 5,
 				y: 2,
 				score: 1,
@@ -45,7 +45,7 @@ describe(`AI`, () => {
 			{
 				opens: 6,
 				opensAll: 7,
-				total: 1,
+				count: 1,
 				x: 5,
 				y: 4,
 				score: 1,
@@ -53,7 +53,7 @@ describe(`AI`, () => {
 			{
 				opens: 7,
 				opensAll: 9,
-				total: 1,
+				count: 1,
 				x: 5,
 				y: 5,
 				score: 1,

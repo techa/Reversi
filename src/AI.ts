@@ -27,7 +27,7 @@ export interface ReversiOptions {
 export interface Hand {
 	x: number
 	y: number
-	total: number
+	count: number
 	opens: number
 	opensAll: number
 	score: number
@@ -41,9 +41,9 @@ interface BoardLog {
 
 // 考慮の重要度
 export interface AISetting {
+	count?: number[]
 	opens?: number[]
 	opensAll?: number[]
-	total?: number[]
 	position_corner?: number
 	position_edge?: number[]
 	next_turn?: boolean
@@ -54,19 +54,19 @@ export type AISettings = AISetting[]
 export const AIsettings: AISettings = [
 	{},
 	// 1
-	{ total: [1, 1, 1] },
+	{ count: [1, 1, 1] },
 	// 2
-	{ total: [-1, 0, 1], opens: [0, 1, 0.5], position_corner: 1 },
+	{ count: [-1, 0, 1], opens: [0, 1, 0.5], position_corner: 1 },
 	// 3
 	{
-		total: [-1, 0, 1],
+		count: [-1, 0, 1],
 		opens: [0, 1, 0.5],
 		position_corner: 1,
 		position_edge: [1, -0.5],
 	},
 	// 4
 	{
-		total: [-1, 0, 1],
+		count: [-1, 0, 1],
 		opens: [0.5, 0.5, 0.5],
 		opensAll: [0, 1, 0.5],
 		position_corner: 1,
@@ -74,7 +74,7 @@ export const AIsettings: AISettings = [
 	},
 	// 5
 	{
-		total: [-1, 0, 1],
+		count: [-1, 0, 1],
 		opens: [0.5, 0.5, 0.5],
 		opensAll: [0, 1, 0.5],
 		position_corner: 1,
@@ -94,10 +94,10 @@ export class AIReversi extends Reversi {
 	aiPlayer2LV: AILV
 
 	getScore(hand: Hand, lv: number) {
-		const { total: _total, x, y } = hand
+		const { x, y } = hand
 		const { boardSize, term } = this
 		const {
-			total,
+			count,
 			opens,
 			opensAll,
 			position_corner,
@@ -105,14 +105,14 @@ export class AIReversi extends Reversi {
 			next_turn,
 		} = AIsettings[lv]
 
-		if (total) {
-			hand.score += _total * total[term]
+		if (count) {
+			hand.score += hand.count * count[term]
 		}
 
 		// 開放度が低いほど高スコア
 		if (opensAll) {
 			hand.score +=
-				(boardSize - this.openedAll(x, y) / _total) * opensAll[term]
+				(boardSize - this.openedAll(x, y) / hand.count) * opensAll[term]
 		}
 		if (opens) {
 			hand.score += (boardSize - this.opened(x, y)) * opens[term]
@@ -252,7 +252,7 @@ export class AIReversi extends Reversi {
 		const hand = {
 			x,
 			y,
-			total: this.accumulator(this.sym, x, y),
+			count: this.accumulator(this.sym, x, y),
 			opens: this.opened(x, y),
 			opensAll: this.openedAll(x, y),
 			score: 0,
