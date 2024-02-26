@@ -306,7 +306,9 @@ export class View {
 		}
 	}
 	hideHandScoreDetails() {
-		document.body.removeChild(getEl('.score-details'))
+		for (const el of document.querySelectorAll('.score-details')) {
+			document.body.removeChild(el)
+		}
 	}
 
 	$removePredictionDots() {
@@ -427,6 +429,7 @@ export class View {
 
 		let squareColorCounter = 0
 
+		this.squares = []
 		for (let i = 0; i < boardSize; i++) {
 			const row = createEl('row')
 			row.style.height = 100 / boardSize + '%'
