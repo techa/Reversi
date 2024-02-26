@@ -243,7 +243,7 @@ export class View {
 						canhit.setAttribute('y-axis', y + '')
 
 						const lv = this.scoreViwLV
-						if (this.reversi.singlePlayerMode && lv) {
+						if (!this.reversi.demo && lv) {
 							const hand = this.reversi.getHand(x, y, lv)
 							canhit.textContent = hand.scores.total.toFixed(1)
 							canhit.addEventListener(
@@ -273,13 +273,16 @@ export class View {
 			box.style.left = event.clientX + 10 + 'px'
 			box.style.top = event.clientY + 10 + 'px'
 			for (const key in hand.scores) {
-				const value = hand.scores[key]
-				if (value) {
+				const score = hand.scores[key]
+				if (score) {
 					const item = document.createElement('div')
 					item.setAttribute('class', 'score-details-item')
-					item.innerHTML = `${key}: ${value}`
-					if (hand[key]) {
-						item.innerHTML += ` (${hand[key]})`
+					item.innerHTML = `${key}: ${
+						typeof score === 'number' ? +score.toFixed(2) : score
+					}`
+					const value = hand[key]
+					if (value) {
+						item.innerHTML += ` (${value})`
 					}
 					box.appendChild(item)
 				}
