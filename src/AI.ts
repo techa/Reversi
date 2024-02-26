@@ -256,9 +256,16 @@ export class AIReversi extends Reversi {
 
 		for (let y = 0; y < boardSize; y++) {
 			for (let x = 0; x < boardSize; x++) {
-				const hand = this.getHand(x, y, lv)
-				if (hand) {
-					hands.push(hand)
+				if (this.isTileEmpty(x, y)) {
+					if (this.checkOKtoPlace(this.sym, x, y)) {
+						const hand = this.getHand(x, y, lv)
+						if (hand.score > this.hiScore) {
+							this.hiScore = hand.score
+						}
+						if (hand) {
+							hands.push(hand)
+						}
+					}
 				}
 			}
 		}
@@ -266,24 +273,16 @@ export class AIReversi extends Reversi {
 	}
 
 	getHand(x: number, y: number, lv: number) {
-		if (this.isTileEmpty(x, y)) {
-			if (this.checkOKtoPlace(this.sym, x, y)) {
-				const hand = {
-					x,
-					y,
-					total: this.accumulator(this.sym, x, y),
-					opens: this.opened(x, y),
-					opensAll: this.openedAll(x, y),
-					score: 0,
-				}
-				this.getScore(hand, lv)
-
-				if (hand.score > this.hiScore) {
-					this.hiScore = hand.score
-				}
-				return hand
-			}
+		const hand = {
+			x,
+			y,
+			total: this.accumulator(this.sym, x, y),
+			opens: this.opened(x, y),
+			opensAll: this.openedAll(x, y),
+			score: 0,
 		}
+		this.getScore(hand, lv)
+		return hand
 	}
 
 	accumulator(sym: Sym, x: number, y: number) {
