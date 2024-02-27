@@ -3,7 +3,7 @@ import Place from '../audio/button-16.mp3'
 import Beep from '../audio/button-21.mp3'
 import Invalid from '../audio/button-24.mp3'
 
-import { AIReversi, type Sym, Tile, BoardSize, Hand } from './AI.js'
+import { AIReversi, type Sym, Tile, BoardSize, Hand, AILV } from './AI.js'
 
 type ID = number
 
@@ -23,7 +23,6 @@ function createEl(className: string) {
 }
 
 export class View {
-	initialPlacement = getEl<HTMLInputElement>('#parallel')
 	mainContainer = getEl('.main-container')
 	squares: HTMLDivElement[] = []
 
@@ -55,8 +54,9 @@ export class View {
 
 	init(mode: typeof this.reversi.mode) {
 		const that = this
-
 		const setting = document.forms['setting'].elements
+		const aiLv = parseInt(setting['aiLv'].value)
+
 		clearTimeout(that.timerID)
 		this.reversi = new (class extends AIReversi {
 			$aiTurn() {
@@ -69,9 +69,9 @@ export class View {
 				clearTimeout(that.timerID)
 			}
 			$setTile(x: number, y: number, sym: Sym) {
-				super.$setTile(x, y,sym, )
+				super.$setTile(x, y, sym)
 				if (!this.thinking) {
-					that.$setTile( x, y,sym)
+					that.$setTile(x, y, sym)
 				}
 			}
 			$updateLastMove(x: number, y: number) {
@@ -124,6 +124,8 @@ export class View {
 			initialPlacement: setting['initialPlacement'].value,
 			mode,
 			yourColor: parseInt(setting['yourColor'].value),
+			aiPlayer1LV: aiLv as AILV,
+			aiPlayer2LV: aiLv as AILV,
 		})
 
 		this.addTile = (event: Event) => {
