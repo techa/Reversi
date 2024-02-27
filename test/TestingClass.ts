@@ -1,4 +1,4 @@
-import { AIReversi, Tile } from '../src/AI.ts'
+import { AIReversi, Sym, Tile } from '../src/AI.ts'
 
 export * from '../src/Reversi.ts'
 
@@ -19,4 +19,14 @@ export class ReversiTest extends AIReversi {
 		}
 		return txt
 	}
+
+	$stopDualBotMode() {}
+	$updateLastMove(x: number, y: number) {}
+	$changeTileClassByNum(id: number, sym: Sym) {}
+	$glowchange() {}
+	$tempStopAllClicks() {}
+	$startBackAllClicks() {}
+	$playerTurn() {}
+	$removePredictionDots() {}
+	S_place() {}
 }

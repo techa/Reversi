@@ -133,7 +133,7 @@ export abstract class Reversi {
 				sym = Tile.W
 			}
 
-			this.$setTile(sym, x, y)
+			this.$setTile(x, y, sym)
 		}
 		this.$tilesCounting()
 	}
@@ -144,7 +144,7 @@ export abstract class Reversi {
 	getTile(x: number, y: number) {
 		return this.tiles[y * this.boardSize + x]
 	}
-	$setTile(sym: Sym, x: number, y: number) {
+	$setTile(x: number, y: number, sym: Sym) {
 		this.tiles[y * this.boardSize + x] = sym
 	}
 
@@ -155,31 +155,26 @@ export abstract class Reversi {
 		} else {
 			if (this.demo) {
 				this.demo = false
-				this.$stopDualBotMode()
+				this.$stopDualBotMode?.()
 			}
 		}
 	}
-	$stopDualBotMode() {}
+	abstract $stopDualBotMode(): void
 
 	abstract ai_nextHand(): { x: number; y: number }
 
-	checkOKtoPlace(sym: Sym, x: number, y: number) {
+	checkOKtoPlace(x: number, y: number) {
 		return (
 			directionXYs
 				.map((value) => {
-					return this._checkDirection(sym, x, y, value)
+					return this.checkDirection(x, y, value)
 				})
 				.indexOf(true) > -1
 		)
 	}
 
-	private _checkDirection(
-		sym: Sym,
-		x: number,
-		y: number,
-		dir: [number, number]
-	) {
-		const { boardSize } = this
+	checkDirection(x: number, y: number, dir: [number, number]) {
+		const { boardSize, sym } = this
 		const dX = dir[0]
 		const dY = dir[1]
 		//              x-1,     x,  x+1
@@ -214,7 +209,7 @@ export abstract class Reversi {
 	}
 
 	addTile(x: number, y: number) {
-		if (this.checkOKtoPlace(this.sym, x, y)) {
+		if (this.checkOKtoPlace(x, y)) {
 			this.$removePredictionDots()
 			this._doTheMove(x, y)
 			//bot mode on and off
@@ -224,16 +219,16 @@ export abstract class Reversi {
 	}
 
 	hit(x: number, y: number) {
-		this.$setTile(this.sym, x, y)
-		this._changeRespectiveTiles(this.sym, x, y)
+		this.$setTile(x, y, this.sym)
+		this._changeRespectiveTiles(x, y)
 		this.countIncr()
 
-		return this._checkSlots(this.sym)
+		return this._checkSlots()
 	}
 
 	_doTheMove(x: number, y: number, ai = false) {
 		this.S_place()
-		this.$updateLastMove(this.sym, x, y)
+		this.$updateLastMove(x, y)
 
 		/////////Check anymore playable empty square
 		//check any move left///////////////////////////
@@ -268,7 +263,7 @@ export abstract class Reversi {
 				// console.log(this.sym + ' no place to move, pass')
 				this.countIncr()
 				// console.log(this.sym + ' turn')
-				const slots = this._checkSlots(this.sym)
+				const slots = this._checkSlots()
 				if (slots.movable > 0) {
 					if (ai) {
 						// console.log(this.sym + 'still can')
@@ -295,14 +290,14 @@ export abstract class Reversi {
 		}
 	}
 
-	private _checkSlots(sym: Sym) {
+	_checkSlots() {
 		let emptyCount = 0
 		let roughtCount = 0
 		for (let y = 0; y < this.boardSize; y++) {
 			for (let x = 0; x < this.boardSize; x++) {
 				if (this.isTileEmpty(x, y)) {
 					emptyCount++
-					if (this.checkOKtoPlace(sym, x, y)) {
+					if (this.checkOKtoPlace(x, y)) {
 						roughtCount++
 					}
 				}
@@ -312,7 +307,7 @@ export abstract class Reversi {
 		return { empty: emptyCount, movable: roughtCount }
 	}
 
-	$updateLastMove(sym: Sym, x: number, y: number) {}
+	abstract $updateLastMove(x: number, y: number): void
 
 	$tilesCounting() {
 		this.whiteCount = 0
@@ -323,14 +318,14 @@ export abstract class Reversi {
 		}
 	}
 
-	private _changeRespectiveTiles(sym: Sym, x: number, y: number) {
-		this.directionEach(sym, x, y, (pX, pY) => {
-			this.tiles[pY * this.boardSize + pX] = sym
-			this.$changeTileClassByNum(this.boardSize * pY + pX, sym)
+	private _changeRespectiveTiles(x: number, y: number) {
+		this.directionEach(this.sym, x, y, (pX, pY) => {
+			this.tiles[pY * this.boardSize + pX] = this.sym
+			this.$changeTileClassByNum(this.boardSize * pY + pX, this.sym)
 		})
 	}
 
-	$changeTileClassByNum(id: number, sym: Sym) {}
+	abstract $changeTileClassByNum(id: number, sym: Sym): void
 
 	directionEach(
 		sym: Sym,
@@ -338,13 +333,10 @@ export abstract class Reversi {
 		y: number,
 		callback: (x: number, y: number) => void
 	) {
-		const directionToGo = directionXYs.map((value) => {
-			return this._checkDirection(sym, x, y, value)
-		})
 		for (let i = 0; i < 8; i++) {
-			if (directionToGo[i]) {
+			const dir = directionXYs[i]
+			if (this.checkDirection(x, y, dir)) {
 				let settle = false
-				const dir = directionXYs[i]
 				const dX = dir[0]
 				const dY = dir[1]
 
@@ -368,11 +360,11 @@ export abstract class Reversi {
 		}
 	}
 
-	$glowchange() {}
+	abstract $glowchange(): void
 
-	$tempStopAllClicks() {}
+	abstract $tempStopAllClicks(): void
 
-	$startBackAllClicks() {}
+	abstract $startBackAllClicks(): void
 
 	/**
 	 * @returns winner name
@@ -385,11 +377,11 @@ export abstract class Reversi {
 			: 'It is a Draw!!'
 	}
 
-	$playerTurn() {}
-	$removePredictionDots() {}
+	abstract $playerTurn(): void
+	abstract $removePredictionDots(): void
 
 	S_invalid() {
 		throw new Error(`addTile: invalid position x or y`)
 	}
-	S_place() {}
+	abstract S_place(): void
 }

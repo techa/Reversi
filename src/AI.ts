@@ -100,7 +100,7 @@ export const AIsettings: AISettings = [
 	},
 ]
 
-export class AIReversi extends Reversi {
+export abstract class AIReversi extends Reversi {
 	opens: number[]
 	hiScore: number
 
@@ -292,7 +292,7 @@ export class AIReversi extends Reversi {
 		for (let y = 0; y < boardSize; y++) {
 			for (let x = 0; x < boardSize; x++) {
 				if (this.isTileEmpty(x, y)) {
-					if (this.checkOKtoPlace(this.sym, x, y)) {
+					if (this.checkOKtoPlace(x, y)) {
 						const hand = this.getHand(x, y, lv)
 						if (hand.scores.total > this.hiScore) {
 							this.hiScore = hand.scores.total

@@ -68,14 +68,14 @@ export class View {
 			$stopDualBotMode() {
 				clearTimeout(that.timerID)
 			}
-			$setTile(sym: Sym, x: number, y: number) {
-				super.$setTile(sym, x, y)
+			$setTile(x: number, y: number, sym: Sym) {
+				super.$setTile(x, y,sym, )
 				if (!this.thinking) {
-					that.$setTile(sym, x, y)
+					that.$setTile( x, y,sym)
 				}
 			}
-			$updateLastMove(sym: Sym, x: number, y: number) {
-				that.$updateLastMove(sym, x, y)
+			$updateLastMove(x: number, y: number) {
+				that.$updateLastMove(x, y)
 			}
 			$tilesCounting() {
 				super.$tilesCounting()
@@ -156,7 +156,7 @@ export class View {
 		this.changeTileClass(this.squares[id].firstChild as Element, sym)
 	}
 
-	$setTile(sym: Sym, x: number, y: number) {
+	$setTile(x: number, y: number, sym: Sym) {
 		const { boardSize } = this.reversi
 		const aTile = document.createElement('div')
 		this.changeTileClass(aTile, sym)
@@ -243,13 +243,13 @@ export class View {
 	 * show predictionDots
 	 */
 	$playerTurn() {
-		const { boardSize, sym } = this.reversi
+		const { boardSize } = this.reversi
 		this.predictorArray = []
 
 		for (let y = 0; y < boardSize; y++) {
 			for (let x = 0; x < boardSize; x++) {
 				if (this.reversi.isTileEmpty(x, y)) {
-					if (this.reversi.checkOKtoPlace(sym, x, y)) {
+					if (this.reversi.checkOKtoPlace(x, y)) {
 						const id = y * boardSize + x
 						const cell = this.squares[y * boardSize + x]
 						cell.addEventListener('click', this.addTile)
@@ -458,11 +458,13 @@ export class View {
 		this.mainContainer.appendChild(createContainer)
 	}
 
-	$updateLastMove(sym: Sym, x: number, y: number) {
+	$updateLastMove(x: number, y: number) {
 		const getLastMoveContainer = getEl('.last-move-display-container')
 
 		const newMove = createEl('last-move-slot')
-		const lastMoveTile = createEl(`last-move-tile-${this.getSymColor(sym)}`)
+		const lastMoveTile = createEl(
+			`last-move-tile-${this.getSymColor(this.reversi.sym)}`
+		)
 
 		newMove.appendChild(lastMoveTile)
 		const lastMovePosition = createEl('last-move-number')
