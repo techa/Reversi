@@ -333,7 +333,7 @@ export abstract class Reversi {
 	}
 
 	private _changeRespectiveTiles(x: number, y: number) {
-		this.directionEach(this.sym, x, y, (pX, pY) => {
+		this.directionEach(x, y, (pX, pY) => {
 			this.tiles[pY * this.boardSize + pX] = this.sym
 			this.$changeTileClassByNum(this.boardSize * pY + pX, this.sym)
 		})
@@ -342,7 +342,6 @@ export abstract class Reversi {
 	abstract $changeTileClassByNum(id: number, sym: Sym): void
 
 	directionEach(
-		sym: Sym,
 		x: number,
 		y: number,
 		callback: (x: number, y: number) => void
@@ -359,7 +358,7 @@ export abstract class Reversi {
 						let a = 1
 						let pX = x + dX * a
 						let pY = y + dY * a
-						while (this.getTile(pX, pY) !== sym) {
+						while (this.getTile(pX, pY) !== this.sym) {
 							callback(pX, pY)
 							a++
 							pX = x + dX * a

@@ -311,7 +311,7 @@ export abstract class AIReversi extends Reversi {
 		const hand = {
 			x,
 			y,
-			count: this.accumulator(this.sym, x, y),
+			count: this.accumulator(x, y),
 			opens: this.opened(x, y),
 			opensAll: this.openedAll(x, y),
 			scores: {
@@ -329,9 +329,9 @@ export abstract class AIReversi extends Reversi {
 		return hand
 	}
 
-	accumulator(sym: Sym, x: number, y: number) {
+	accumulator(x: number, y: number) {
 		let totalChanged = 0
-		this.directionEach(sym, x, y, () => totalChanged++)
+		this.directionEach(x, y, () => totalChanged++)
 		return totalChanged
 	}
 
@@ -364,7 +364,7 @@ export abstract class AIReversi extends Reversi {
 
 	openedAll(dx: number, dy: number) {
 		this.opens = []
-		this.directionEach(this.sym, dx, dy, (pX, pY) => {
+		this.directionEach(dx, dy, (pX, pY) => {
 			this._opened(pX, pY, [dx, dy])
 		})
 		this._opened(dx, dy)
