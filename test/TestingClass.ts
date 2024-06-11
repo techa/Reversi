@@ -20,6 +20,28 @@ export class ReversiTest extends AIReversi {
 		return txt
 	}
 
+	insert(data: string) {
+		const tiles = data
+			.replace(/\s*/g, '')
+			.split('')
+			.map(
+				(char) =>
+					({
+						_: Tile.Null,
+						B: Tile.B,
+						W: Tile.W,
+					}[char] ?? Tile.OutSide)
+			)
+		if (
+			tiles.length === this.boardSize ** 2 &&
+			tiles.every((tile) => tile >= 0)
+		) {
+			this.tiles = tiles
+		} else {
+			throw new Error(`data(${data}) ${tiles}is invaild`)
+		}
+	}
+
 	$stopDualBotMode() {}
 	$updateLastMove(x: number, y: number) {}
 	$changeTileClassByNum(id: number, sym: Sym) {}

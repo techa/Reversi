@@ -1,7 +1,7 @@
 // https://vitest.dev/api/expect.html
 // https://jestjs.io/docs/expect
 import { describe, it, expect } from 'vitest'
-import { ReversiTest } from './TestingClass.js'
+import { ReversiTest, Tile } from './TestingClass.js'
 
 describe(`AI`, () => {
 	const reversi = new ReversiTest().init()
@@ -110,5 +110,97 @@ describe(`AI`, () => {
 		expect(reversi.getTile(0, 8)).toBe(-1)
 		expect(reversi.getTile(8, 0)).toBe(-1)
 	})
+})
 
+describe(`fixed`, () => {
+	const reversi = new ReversiTest({
+		boardSize: 5,
+	}).init()
+	it(``, () => {
+		reversi.insert(`
+			WW_BB
+			_____
+			_____
+			_____
+			WW_BB
+			`)
+		expect(reversi.sym).toBe(1)
+		expect(reversi.getTile(1, 0)).toBe(2)
+		expect(reversi.tiles).toStrictEqual([
+			2, 2, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0,
+			1, 1,
+		])
+		expect(reversi.fixedCount(2, 0)).toBe(1)
+
+		// WWoBB
+		// _____
+		// _____
+		// _____
+		// WW_BB
+		expect(reversi.fixed(Tile.B, 2, 0)).toBe(true)
+
+		// WW_BB
+		// ____o
+		// _____
+		// _____
+		// WW_BB
+		expect(reversi.fixed(Tile.B, 4, 1)).toBe(true)
+
+		// WW_BB
+		// ___x_
+		// _____
+		// _____
+		// WW_BB
+		expect(reversi.fixed(Tile.B, 3, 1)).toBe(false)
+		// WW_BB
+		// x____
+		// _____
+		// _____
+		// WW_BB
+		expect(reversi.fixed(Tile.B, 0, 1)).toBe(false)
+
+		reversi.insert(`
+			W_B__
+			_____
+			_____
+			_____
+			B_W__
+			`)
+		// WxB__
+		// _____
+		// _____
+		// _____
+		// B_W__
+		expect(reversi.fixed(Tile.B, 1, 0)).toBe(false)
+
+		// W_B__
+		// _____
+		// _____
+		// _____
+		// BxW__
+		expect(reversi.fixed(Tile.B, 1, 4)).toBe(true)
+		reversi.insert(`
+			W_W__
+			_____
+			_____
+			_____
+			B_WB_
+			`)
+		// WxW__ -> WBWx_ -> WBBBx -> WWWWW
+		expect(reversi.fixed(Tile.B, 1, 0)).toBe(false)
+		// BxWB_  -> BBBB_
+		expect(reversi.fixed(Tile.B, 1, 4)).toBe(true)
+
+		reversi.insert(`
+			W_BW_
+			_____
+			_____
+			_____
+			W_W__
+			`)
+		// WxBW_ -> WBBW_ -> WBBBB
+		expect(reversi.fixed(Tile.B, 1, 0)).toBe(true)
+		// WxW__ -> WBBB_ -> WWWWW
+		expect(reversi.fixed(Tile.B, 1, 4)).toBe(false)
+	})
 })

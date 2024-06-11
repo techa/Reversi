@@ -356,6 +356,7 @@ export abstract class AIReversi extends Reversi {
 		})
 	}
 
+	// 開放度理論
 	opened(dx: number, dy: number) {
 		this.opens = []
 		this._opened(dx, dy)
@@ -369,5 +370,108 @@ export abstract class AIReversi extends Reversi {
 		})
 		this._opened(dx, dy)
 		return this.opens.length
+	}
+
+	//
+	/**
+	 * 確定タイル：自分の色で固定されるタイルかを確認する
+	 * ```
+	 * ----tiles0----+target+----tiles1-----
+	 * B   B   B     |  W   | W   W   _   _    =false
+	 * B   B   B     |  B   | W   W   _   _    =true
+	 * B   B   B     |  W   | W   W   B   B    =true
+	 *
+	 * B   B   B     |  W   | B   _   _   _    =true
+	 * ```
+	 */
+	fixed(sym: Sym, x: number, y: number) {
+		let tiles0: Tile[] = []
+		let tiles1: Tile[] = []
+		// top&bottom, right&left, top-right&bottom-left, top-left&bottom-right ４つのラインを調べた結果を
+
+		// symの反色か空きマスが一つでもあればcanReverseFlag=true
+		const canReverseFlag = (tiles: Tile[]) => {
+			return tiles.some((tile) => tile !== sym)
+		}
+		const canReverse = (tiles: Tile[]) => {
+			// return tiles.some((tile) => tile === Tile.Null)
+			let before: Tile = sym
+			for (let i = 0; i < tiles.length; i++) {
+				const tile = tiles[i]
+				if (tile === Tile.Null) {
+					if (before === Tile.Null) {
+						return true
+					}
+					// * -tiles0+target+----tiles1-----
+					// *  B     |  W   | W   B   _    =false
+					// *  B     |  W   | B   _   _    =true
+					// *  W     |  B   | B   W   _    =false
+					// *  W     |  B   | W   _   _    =true
+					if (before !== sym) {
+						return tiles.length - i > 1
+					}
+				}
+				before = tile
+			}
+
+			return false
+		}
+
+		for (let i = 0; i < 8; i++) {
+			const [dX, dY] = directionXYs[i]
+			if (i % 2 === 0) {
+				tiles0 = []
+				tiles1 = []
+			}
+
+			let a = 0
+			while (true) {
+				a++
+				let pX = x + dX * a
+				let pY = y + dY * a
+				const tile = this.getTile(pX, pY)
+
+				if (tile === Tile.OutSide) {
+					break
+				} else {
+					if (i % 2 === 0) {
+						tiles0.push(tile)
+					} else {
+						tiles1.push(tile)
+					}
+				}
+			}
+
+			if (i % 2) {
+				// console.log('tiles0', tiles0)
+				// console.log('tiles1', tiles1)
+
+				// * ----tiles0----+target+----tiles1-----
+				// * B   B   B     |  W   | W   W   _   _    =false
+				//   ↑targetの反色が一つでもあればcanReverseFlag=true
+				// 空きマスが一つでもあれば引っくり返せる可能性がある
+				if (
+					(canReverseFlag(tiles0) && canReverse(tiles1)) ||
+					(canReverseFlag(tiles1) && canReverse(tiles0))
+				) {
+					return false
+				}
+			}
+		}
+		return true
+	}
+
+	// 確定タイル：自分の色で固定されるタイルを数える
+	fixedCount(x: number, y: number) {
+		let count = 0
+		this.directionEach(x, y, (px, py) => {
+			if (this.fixed(this.sym, px, py)) {
+				count++
+			}
+		})
+		if (this.fixed(this.sym, x, y)) {
+			count++
+		}
+		return count
 	}
 }
