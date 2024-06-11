@@ -3,7 +3,7 @@
 import { describe, it, expect } from 'vitest'
 import { ReversiTest } from './TestingClass.js'
 import { ParkMiller } from './ParkMiller.js'
-import { AILV, ReversiOptions } from '../src/AI.js'
+import { AILV, ReversiOptions, AIsettings } from '../src/AI.js'
 
 describe(`demo 1`, () => {
 	const random = new ParkMiller(7)
@@ -72,7 +72,7 @@ const AIBattle = (options: Partial<ReversiOptions>) => {
 }
 
 ;(async () => {
-	for (let i = 0; i <= 5; i++) {
+	for (let i = 0; i < AIsettings.length; i++) {
 		const wins = AIBattle({
 			aiPlayer1LV: i as AILV,
 		})

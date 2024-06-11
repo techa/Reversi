@@ -31,6 +31,8 @@ describe(`AI`, () => {
 					position_corner: 0,
 					position_edge: [0, 0, 0],
 					total: 1,
+					next_turn: 0,
+					position_corner_clue: 0,
 				},
 			},
 			{
@@ -46,6 +48,8 @@ describe(`AI`, () => {
 					position_corner: 0,
 					position_edge: [0, 0, 0],
 					total: 1,
+					next_turn: 0,
+					position_corner_clue: 0,
 				},
 			},
 			{
@@ -61,6 +65,8 @@ describe(`AI`, () => {
 					position_corner: 0,
 					position_edge: [0, 0, 0],
 					total: 1,
+					next_turn: 0,
+					position_corner_clue: 0,
 				},
 			},
 			{
@@ -76,6 +82,8 @@ describe(`AI`, () => {
 					position_corner: 0,
 					position_edge: [0, 0, 0],
 					total: 1,
+					next_turn: 0,
+					position_corner_clue: 0,
 				},
 			},
 			{
@@ -91,6 +99,8 @@ describe(`AI`, () => {
 					position_corner: 0,
 					position_edge: [0, 0, 0],
 					total: 1,
+					next_turn: 0,
+					position_corner_clue: 0,
 				},
 			},
 		])

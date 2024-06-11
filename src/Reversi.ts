@@ -163,17 +163,20 @@ export abstract class Reversi {
 
 	abstract ai_nextHand(): { x: number; y: number }
 
-	checkOKtoPlace(x: number, y: number) {
-		return (
-			directionXYs
-				.map((value) => {
-					return this.checkDirection(x, y, value)
-				})
-				.indexOf(true) > -1
-		)
+	/**
+	 * * Tileにコマを置くことが出来るかを判定。
+	 * * 八方向の内、一つでもひっくり返せるなら true
+	 */
+	checkOKtoPlace(x: number, y: number): boolean {
+		for (const dir of directionXYs) {
+			if (this.checkDirection(x, y, dir)) {
+				return true
+			}
+		}
+		return false
 	}
 
-	checkDirection(x: number, y: number, dir: [number, number]) {
+	checkDirection(x: number, y: number, dir: [number, number]): boolean {
 		const { boardSize, sym } = this
 		const dX = dir[0]
 		const dY = dir[1]
