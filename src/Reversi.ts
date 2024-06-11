@@ -6,7 +6,7 @@ export const enum Tile {
 }
 export type Sym = Tile.B | Tile.W
 export type BoardSize = 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12
-export type InitialPlacement = 'cross' | 'parallel'
+export type InitialPlacement = 'cross' | 'parallel' | 'random'
 export type Mode = 'single' | '2' | 'demo'
 
 export interface ReversiOptions {
@@ -82,10 +82,14 @@ export abstract class Reversi {
 		this.mode = options.mode ?? this.mode
 		this.random = options.random ?? Math.random
 
-		this.yourColor = options.yourColor ?? this.yourColor
-		if (!this.yourColor) {
-			this.yourColor = this.random() > 0.5 ? Tile.B : Tile.W
+		if (this.initialPlacement === 'random') {
+			this.initialPlacement = this.random() > 0.5 ? 'cross' : 'parallel'
 		}
+
+		this.yourColor =
+			options.yourColor || this.yourColor || this.random() > 0.5
+				? Tile.B
+				: Tile.W
 	}
 
 	init() {
@@ -180,6 +184,9 @@ export abstract class Reversi {
 		return false
 	}
 
+	/**
+	 * * dirの方向へひっくり返せるなら true
+	 */
 	checkDirection(x: number, y: number, dir: [number, number]): boolean {
 		const { boardSize, sym } = this
 		const dX = dir[0]
