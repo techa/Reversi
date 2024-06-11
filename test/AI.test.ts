@@ -105,4 +105,10 @@ describe(`AI`, () => {
 			},
 		])
 	})
+
+	it(`get outside`, () => {
+		expect(reversi.getTile(0, 8)).toBe(-1)
+		expect(reversi.getTile(8, 0)).toBe(-1)
+	})
+
 })

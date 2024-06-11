@@ -139,9 +139,12 @@ export abstract class Reversi {
 	}
 
 	isTileEmpty(x: number, y: number) {
-		return this.tiles[y * this.boardSize + x] === Tile.Null
+		return this.getTile(x, y) === Tile.Null
 	}
 	getTile(x: number, y: number) {
+		if (x >= this.boardSize || y >= this.boardSize) {
+			return Tile.OutSide
+		}
 		return this.tiles[y * this.boardSize + x]
 	}
 	$setTile(x: number, y: number, sym: Sym) {
