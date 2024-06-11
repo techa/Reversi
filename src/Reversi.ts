@@ -1,4 +1,5 @@
 export const enum Tile {
+	OutSide = -1,
 	Null = 0,
 	B = 1,
 	W = 2,
