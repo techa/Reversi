@@ -1,9 +1,7 @@
 /// <reference types="vite/client" />
-import Place from '../audio/button-16.mp3'
-import Beep from '../audio/button-21.mp3'
-import Invalid from '../audio/button-24.mp3'
 import { Tile, type Sym, type BoardSize } from './Reversi.js'
 import { AIReversi, type Hand, type AILV, AIsettings } from './AI.js'
+import { SoundID, Sounds } from './Sounds.js'
 
 type ID = number
 
@@ -80,10 +78,10 @@ class ReversiView extends AIReversi {
 	}
 	S_invalid() {
 		console.log('Invalid Move')
-		this.view.sounds.invalid.play()
+		this.view.sounds.sePlay(SoundID.Invalid)
 	}
 	S_place() {
-		this.view.sounds.place.play()
+		this.view.sounds.sePlay(SoundID.Place)
 	}
 }
 
@@ -103,19 +101,8 @@ export class View {
 
 	reversi: ReversiView
 
-	sounds = {
-		beep: new Audio(),
-		place: new Audio(),
-		invalid: new Audio(),
-	}
-
+	sounds = new Sounds()
 	timerID: number
-
-	constructor() {
-		this.sounds.beep.src = Beep
-		this.sounds.place.src = Place
-		this.sounds.invalid.src = Invalid
-	}
 
 	init(mode: typeof this.reversi.mode) {
 		const setting = document.forms['setting'].elements
@@ -337,23 +324,23 @@ export class View {
 	addEventToStart() {
 		getEl('#single-player').addEventListener('click', () => {
 			this.init('single')
-			this.sounds.beep.play()
+			this.sounds.sePlay(SoundID.Beep)
 		})
 
 		getEl('#two-players').addEventListener('click', () => {
 			this.init('2')
-			this.sounds.beep.play()
+			this.sounds.sePlay(SoundID.Beep)
 		})
 
 		getEl('#demo').addEventListener('click', () => {
 			this.init('demo')
-			this.sounds.beep.play()
+			this.sounds.sePlay(SoundID.Beep)
 		})
 
 		getEl('.dark-shroud').addEventListener('click', () => {
 			this.hideShroud()
 			this.showSettingsButton()
-			this.sounds.beep.play()
+			this.sounds.sePlay(SoundID.Beep)
 		})
 		getEl('.result-container').addEventListener('click', (event) => {
 			event.stopPropagation()
@@ -362,7 +349,7 @@ export class View {
 			this.hideShroud()
 			this.removeBoard()
 			this.init(this.reversi.mode)
-			this.sounds.beep.play()
+			this.sounds.sePlay(SoundID.Beep)
 		})
 		getEl('#back-to-top').addEventListener('click', () => {
 			this.hideShroud()
@@ -371,13 +358,13 @@ export class View {
 			this.showStartPage()
 			this.$stopGlow1()
 			this.$stopGlow2()
-			this.sounds.beep.play()
+			this.sounds.sePlay(SoundID.Beep)
 		})
 
 		getEl('#menu').addEventListener('click', () => {
 			this.hideSettingsButton()
 			this.showShroud()
-			this.sounds.beep.play()
+			this.sounds.sePlay(SoundID.Beep)
 		})
 	}
 
@@ -519,7 +506,7 @@ export class View {
 
 		const getResultContainer = getEl('.result-container')
 		getResultContainer.style.opacity = '1'
-		this.sounds.beep.play()
+		this.sounds.sePlay(SoundID.Beep)
 	}
 
 	hideShroud() {
