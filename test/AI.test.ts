@@ -19,6 +19,7 @@ describe(`AI`, () => {
 		// ________
 		expect(reversi.getHands(1)).toStrictEqual([
 			{
+				fixed: 0,
 				opens: 7,
 				opensAll: 10,
 				count: 1,
@@ -32,10 +33,12 @@ describe(`AI`, () => {
 					position_edge: [0, 0, 0],
 					total: 1,
 					next_turn: 0,
+					fixed: 0,
 					position_corner_clue: 0,
 				},
 			},
 			{
+				fixed: 0,
 				opens: 6,
 				opensAll: 8,
 				count: 1,
@@ -49,10 +52,12 @@ describe(`AI`, () => {
 					position_edge: [0, 0, 0],
 					total: 1,
 					next_turn: 0,
+					fixed: 0,
 					position_corner_clue: 0,
 				},
 			},
 			{
+				fixed: 0,
 				opens: 5,
 				opensAll: 6,
 				count: 1,
@@ -66,10 +71,12 @@ describe(`AI`, () => {
 					position_edge: [0, 0, 0],
 					total: 1,
 					next_turn: 0,
+					fixed: 0,
 					position_corner_clue: 0,
 				},
 			},
 			{
+				fixed: 0,
 				opens: 6,
 				opensAll: 7,
 				count: 1,
@@ -83,10 +90,12 @@ describe(`AI`, () => {
 					position_edge: [0, 0, 0],
 					total: 1,
 					next_turn: 0,
+					fixed: 0,
 					position_corner_clue: 0,
 				},
 			},
 			{
+				fixed: 0,
 				opens: 7,
 				opensAll: 9,
 				count: 1,
@@ -100,6 +109,7 @@ describe(`AI`, () => {
 					position_edge: [0, 0, 0],
 					total: 1,
 					next_turn: 0,
+					fixed: 0,
 					position_corner_clue: 0,
 				},
 			},
@@ -116,7 +126,8 @@ describe(`fixed`, () => {
 	const reversi = new ReversiTest({
 		boardSize: 5,
 	}).init()
-	it(``, () => {
+
+	it(`fixed`, () => {
 		reversi.insert(`
 			WW_BB
 			_____
@@ -202,5 +213,42 @@ describe(`fixed`, () => {
 		expect(reversi.fixed(Tile.B, 1, 0)).toBe(true)
 		// WxW__ -> WBBB_ -> WWWWW
 		expect(reversi.fixed(Tile.B, 1, 4)).toBe(false)
+	})
+
+	it(`fixedCount`, () => {
+		const reversi = new ReversiTest({
+			boardSize: 4,
+		}).init()
+		expect(reversi.stringify()).toBe(
+			`
+			____
+			_WB_
+			_BW_
+			____
+			`.replace(/\t/g, '')
+		)
+		expect(reversi.fixedCount(2, 0)).toBe(0)
+
+		reversi.addTile(2, 3)
+		reversi.addTile(3, 1)
+
+		expect(reversi.stringify()).toBe(
+			`
+			____
+			_WWW
+			_BB_
+			__B_
+			`.replace(/\t/g, '')
+		)
+		// ____
+		// _WWW
+		// _BB_
+		// __Bw
+		expect(reversi.fixedCount(3, 3)).toBe(1)
+		// ____   ____
+		// _WWW   _WWW
+		// _BB_   _ww_
+		// _wB_   _wB_
+		expect(reversi.fixedCount(1, 3)).toBe(0)
 	})
 })

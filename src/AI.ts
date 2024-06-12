@@ -31,6 +31,7 @@ export interface Hand {
 	count: number
 	opens: number
 	opensAll: number
+	fixed: number
 	scores: {
 		count: number
 		opens: number
@@ -39,6 +40,7 @@ export interface Hand {
 		position_corner_clue: number
 		position_edge: number[]
 		next_turn: number
+		fixed: number
 		total: number
 	}
 }
@@ -58,6 +60,7 @@ export interface AISetting {
 	position_corner_clue?: number
 	position_edge?: number[]
 	next_turn?: number
+	fixed?: number
 	blur?: number
 }
 export type AISettings = AISetting[]
@@ -96,6 +99,7 @@ export const AIsettings: AISettings = [
 		position_corner_clue: -1,
 		position_edge: [0.5, -0.5, 0.5],
 		next_turn: 100,
+		fixed: 1,
 		blur: 0,
 	},
 ]
@@ -131,6 +135,7 @@ export abstract class AIReversi extends Reversi {
 			position_corner_clue,
 			position_edge,
 			next_turn,
+			fixed,
 		} = AIsettings[lv]
 
 		if (count) {
@@ -198,6 +203,10 @@ export abstract class AIReversi extends Reversi {
 				}
 			}
 			this.reset()
+		}
+
+		if (fixed) {
+			scores.fixed += hand.fixed * fixed
 		}
 
 		// score total
@@ -310,12 +319,13 @@ export abstract class AIReversi extends Reversi {
 	}
 
 	getHand(x: number, y: number, lv: number) {
-		const hand = {
+		const hand: Hand = {
 			x,
 			y,
 			count: this.accumulator(x, y),
 			opens: this.opened(x, y),
 			opensAll: this.openedAll(x, y),
+			fixed: this.fixedCount(x, y),
 			scores: {
 				count: 0,
 				opens: 0,
@@ -324,6 +334,7 @@ export abstract class AIReversi extends Reversi {
 				position_corner_clue: 0,
 				position_edge: [0, 0, 0],
 				next_turn: 0,
+				fixed: 0,
 				total: 0,
 			},
 		}
@@ -374,7 +385,6 @@ export abstract class AIReversi extends Reversi {
 		return this.opens.length
 	}
 
-	//
 	/**
 	 * 確定タイル：自分の色で固定されるタイルかを確認する
 	 * ```
@@ -386,14 +396,14 @@ export abstract class AIReversi extends Reversi {
 	 * B   B   B     |  W   | B   _   _   _    =true
 	 * ```
 	 */
-	fixed(sym: Sym, x: number, y: number) {
+	fixed(sym: Sym, x: number, y: number, hitting?: [number, number]) {
 		let tiles0: Tile[] = []
 		let tiles1: Tile[] = []
-		// top&bottom, right&left, top-right&bottom-left, top-left&bottom-right ４つのラインを調べた結果を
 
 		// symの反色か空きマスが一つでもあればcanReverseFlag=true
+		let flagTile: Tile
 		const canReverseFlag = (tiles: Tile[]) => {
-			return tiles.some((tile) => tile !== sym)
+			return tiles.some((tile) => (flagTile = tile) !== sym)
 		}
 		const canReverse = (tiles: Tile[]) => {
 			// return tiles.some((tile) => tile === Tile.Null)
@@ -401,7 +411,7 @@ export abstract class AIReversi extends Reversi {
 			for (let i = 0; i < tiles.length; i++) {
 				const tile = tiles[i]
 				if (tile === Tile.Null) {
-					if (before === Tile.Null) {
+					if (flagTile === Tile.Null || before === Tile.Null) {
 						return true
 					}
 					// * -tiles0+target+----tiles1-----
@@ -419,6 +429,13 @@ export abstract class AIReversi extends Reversi {
 			return false
 		}
 
+		const getTile = (px: number, py: number) => {
+			return hitting && px === hitting[0] && py === hitting[1]
+				? this.sym
+				: this.getTile(px, py)
+		}
+
+		// top&bottom, right&left, top-right&bottom-left, top-left&bottom-right ４つのラインを調べる
 		for (let i = 0; i < 8; i++) {
 			const [dX, dY] = directionXYs[i]
 			if (i % 2 === 0) {
@@ -431,7 +448,7 @@ export abstract class AIReversi extends Reversi {
 				a++
 				let pX = x + dX * a
 				let pY = y + dY * a
-				const tile = this.getTile(pX, pY)
+				const tile = getTile(pX, pY)
 
 				if (tile === Tile.OutSide) {
 					break
@@ -467,7 +484,7 @@ export abstract class AIReversi extends Reversi {
 	fixedCount(x: number, y: number) {
 		let count = 0
 		this.directionEach(x, y, (px, py) => {
-			if (this.fixed(this.sym, px, py)) {
+			if (this.fixed(this.sym, px, py, [x, y])) {
 				count++
 			}
 		})
