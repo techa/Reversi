@@ -3,7 +3,15 @@ import Place from '../audio/button-16.mp3'
 import Beep from '../audio/button-21.mp3'
 import Invalid from '../audio/button-24.mp3'
 
-import { AIReversi, type Sym, Tile, BoardSize, Hand, AILV } from './AI.js'
+import {
+	AIReversi,
+	type Sym,
+	Tile,
+	BoardSize,
+	Hand,
+	AILV,
+	AIsettings,
+} from './AI.js'
 
 type ID = number
 
@@ -34,7 +42,7 @@ export class View {
 	addTile: (event: Event) => void
 
 	predictorArray: ID[] = []
-	scoreViwLV = import.meta.env.DEV ? 5 : 0
+	scoreViwLV = import.meta.env.DEV ? AIsettings.length - 1 : 0
 
 	reversi: AIReversi
 
@@ -263,6 +271,7 @@ export class View {
 
 						const lv = this.scoreViwLV
 						if (!this.reversi.demo && lv) {
+							// Displays hand score at DEV
 							const hand = this.reversi.getHand(x, y, lv)
 							canhit.textContent = hand.scores.total.toFixed(1)
 							canhit.addEventListener(
@@ -289,12 +298,15 @@ export class View {
 			const box = createEl('score-details')
 			box.style.left = event.clientX + 10 + 'px'
 			box.style.top = event.clientY + 10 + 'px'
+
 			for (const key in hand.scores) {
 				const score = hand.scores[key]
 				if (score) {
 					const item = createEl('score-details-item')
 					item.innerHTML = `${key}: ${
-						typeof score === 'number' ? +score.toFixed(2) : score
+						typeof score === 'number'
+							? +score.toFixed(2) + 'pt'
+							: score
 					}`
 					const value = hand[key]
 					if (value) {
@@ -303,6 +315,7 @@ export class View {
 					box.appendChild(item)
 				}
 			}
+
 			document.body.appendChild(box)
 		}
 	}
