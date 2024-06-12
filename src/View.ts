@@ -284,6 +284,7 @@ export class View {
 							)
 						} else {
 							const predictor = createEl('predictor')
+							predictor.style.pointerEvents = 'none'
 							canhit.appendChild(predictor)
 						}
 						cell.appendChild(canhit)
