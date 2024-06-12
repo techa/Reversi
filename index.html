@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Reversi</title>
+		<link
+			href="https://fonts.googleapis.com/css?family=Archivo+Black&display=swap"
+			rel="stylesheet"
+		/>
+		<link
+			href="https://fonts.googleapis.com/css?family=DM+Serif+Display&display=swap"
+			rel="stylesheet"
+		/>
+		<link
+			href="https://fonts.googleapis.com/css?family=Leckerli+One&display=swap"
+			rel="stylesheet"
+		/>
+		<link
+			href="https://fonts.googleapis.com/css?family=Indie+Flower&display=swap"
+			rel="stylesheet"
+		/>
+		<script type="module" crossorigin src="/Reversi/assets/index-DktlA8jh.js"></script>
+		<link rel="stylesheet" crossorigin href="/Reversi/assets/index-Bk1Yl4rk.css">
+	</head>
+	<body>
+		<div class="header">
+			<span class="white-letter">R</span><span class="black-letter">E</span
+			><span class="white-letter">V</span><span class="black-letter">E</span
+			><span class="white-letter">R</span><span class="black-letter">S</span
+			><span class="white-letter">I</span>
+		</div>
+
+		<div class="settings-from-container">
+			<form name="setting">
+				<label>
+					Board Size:
+					<input
+						type="number"
+						name="boardSize"
+						id="boardSize"
+						value="8"
+						min="4"
+						max="12"
+					/>
+				</label>
+				<div>
+					Initial Placement:
+					<label>
+						<input
+							type="radio"
+							name="initialPlacement"
+							value="cross"
+							id="cross"
+							checked
+						/>cross
+					</label>
+					<label>
+						<input
+							type="radio"
+							name="initialPlacement"
+							value="parallel"
+							id="parallel"
+						/>parallel
+					</label>
+					<label>
+						<input
+							type="radio"
+							name="initialPlacement"
+							value="random"
+							id="random"
+						/>Random
+					</label>
+				</div>
+				<div>
+					Your Color:
+					<label>
+						<input
+							type="radio"
+							name="yourColor"
+							value="1"
+							id="black"
+							checked
+						/>Black
+					</label>
+					<label>
+						<input
+							type="radio"
+							name="yourColor"
+							value="2"
+							id="white"
+						/>White
+					</label>
+					<label>
+						<input
+							type="radio"
+							name="yourColor"
+							value="0"
+							id="random"
+						/>Random
+					</label>
+				</div>
+				<div>
+					<label>
+						AI LV:
+						<input
+							type="number"
+							name="aiLv"
+							id="aiLv"
+							value="3"
+							min="0"
+							max="5"
+						/>
+					</label>
+				</div>
+			</form>
+		</div>
+
+		<div class="main-container">
+			<div class="main-page-container">
+				<button class="selections" id="single-player">
+					Single Player
+				</button>
+				<button class="selections" id="two-players">
+					2 Players
+				</button>
+				<button class="selections" id="demo">
+					Demo
+				</button>
+			</div>
+		</div>
+
+		<div class="score-container">
+			<div class="score-inner-container">
+				<div class="name" id="player-name">AI - Black</div>
+				<div class="tile-container">
+					<div class="glow" id="glow-1">
+						<span></span>
+						<span></span>
+						<span></span>
+						<span></span>
+					</div>
+					<div class="score-tile score-black">
+						<div class="score" id="black-score">2</div>
+					</div>
+				</div>
+			</div>
+			<div class="score-inner-container">
+				<div class="name" id="bot-name">AI - White</div>
+				<div class="tile-container">
+					<div class="glow" id="glow-2">
+						<span></span>
+						<span></span>
+						<span></span>
+						<span></span>
+					</div>
+					<div class="score-tile score-white">
+						<div class="score" id="white-score">2</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="dark-shroud">
+			<div class="win-lose-draw">You Win!</div>
+			<div class="result-container">
+				<!-- <button
+					class="name result-selections"
+					id="stay"
+				>
+					Stay
+				</button> -->
+				<button
+					class="name result-selections"
+					id="restart"
+				>
+					Restart
+				</button>
+				<button
+					class="name result-selections"
+					id="back-to-top"
+				>
+					Back to Top
+				</button>
+			</div>
+		</div>
+		<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu settings" id="menu"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+
+		<!-- <script type="text/javascript" src="script.js"></script> -->
+	</body>
+</html>
