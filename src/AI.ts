@@ -7,7 +7,6 @@ import {
 	directionXYs,
 	Reversi,
 } from './Reversi.js'
-export * from './Reversi.js'
 
 export type AILV = 0 | 1 | 2 | 3 | 4 | 5
 
@@ -229,7 +228,7 @@ export abstract class AIReversi extends Reversi {
 		this.thinking = true
 		this.boardLog.push({
 			tiles: this.tiles.slice(),
-			counter: this.counter,
+			counter: this.turn,
 		})
 	}
 
@@ -238,8 +237,8 @@ export abstract class AIReversi extends Reversi {
 		if (log) {
 			const { tiles, counter } = log
 			this.tiles = tiles
-			this.counter = counter
-			this.sym = this.counter % 2 === 0 ? Tile.W : Tile.B
+			this.turn = counter
+			this.sym = this.turn % 2 === 0 ? Tile.W : Tile.B
 		}
 		this.boardLog = []
 		if (!index) {
@@ -278,7 +277,7 @@ export abstract class AIReversi extends Reversi {
 
 	get countPer() {
 		const max = this.boardSize ** 2 - 4
-		return this.counter / max
+		return this.turn / max
 	}
 
 	ai_nextHand() {

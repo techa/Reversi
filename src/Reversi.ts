@@ -39,13 +39,13 @@ export abstract class Reversi {
 	boardSize: BoardSize = 8
 	initialPlacement: InitialPlacement = 'cross'
 	mode: Mode = '2'
-	yourColor = Tile.B
+	yourColor: Sym = Tile.B
 
-	counter = 1
+	turn = 1
 	sym: Sym = Tile.B
 	countIncr() {
-		this.counter++
-		this.sym = this.counter % 2 === 0 ? Tile.W : Tile.B
+		this.turn++
+		this.sym = this.turn % 2 === 0 ? Tile.W : Tile.B
 	}
 
 	tiles: Tile[] = []
@@ -122,7 +122,18 @@ export abstract class Reversi {
 		}
 	}
 
-	initialPieces() {
+	/**
+	 * * 初期配置の駒４つを配置する
+	 *
+	 * ```
+	 * cross    parallel
+	 * ____      ____
+	 * _WB_      _WW_
+	 * _BW_      _BB_
+	 * ____      ____
+	 * ```
+	 */
+	initialPieces(type = this.initialPlacement) {
 		const center = ((this.boardSize / 2) | 0) - 1
 		for (let i = 0; i < 4; i++) {
 			let x = center
@@ -135,8 +146,8 @@ export abstract class Reversi {
 			}
 			let sym = Tile.B
 			if (
-				(this.initialPlacement === 'cross' && (!i || i === 3)) ||
-				(this.initialPlacement === 'parallel' && i < 2)
+				(type === 'cross' && (!i || i === 3)) ||
+				(type === 'parallel' && i < 2)
 			) {
 				sym = Tile.W
 			}
@@ -146,10 +157,10 @@ export abstract class Reversi {
 		this.$tilesCounting()
 	}
 
-	isTileEmpty(x: number, y: number) {
+	isTileEmpty(x: number, y: number): boolean {
 		return this.getTile(x, y) === Tile.Null
 	}
-	getTile(x: number, y: number) {
+	getTile(x: number, y: number): Tile {
 		if (x < 0 || y < 0 || x >= this.boardSize || y >= this.boardSize) {
 			return Tile.OutSide
 		}
@@ -344,13 +355,15 @@ export abstract class Reversi {
 
 	abstract $changeTileClassByNum(id: number, sym: Sym): void
 
+	/**
+	 * 座標に駒を置いたとき引っくり返せる全ての駒に対してcallbackを実行する
+	 */
 	directionEach(
 		x: number,
 		y: number,
 		callback: (x: number, y: number) => void
 	) {
-		for (let i = 0; i < 8; i++) {
-			const dir = directionXYs[i]
+		for (const dir of directionXYs) {
 			if (this.checkDirection(x, y, dir)) {
 				let settle = false
 				const dX = dir[0]

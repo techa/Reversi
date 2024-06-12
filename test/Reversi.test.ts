@@ -58,7 +58,7 @@ describe(`Reversi 2 players`, () => {
 
 	it(`addTile(4, 2)`, () => {
 		reversi.addTile(4, 2)
-		expect(reversi.counter).toBe(3)
+		expect(reversi.turn).toBe(3)
 		expect(reversi.stringify()).toStrictEqual(
 			`
 			________

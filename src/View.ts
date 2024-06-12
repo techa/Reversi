@@ -2,16 +2,8 @@
 import Place from '../audio/button-16.mp3'
 import Beep from '../audio/button-21.mp3'
 import Invalid from '../audio/button-24.mp3'
-
-import {
-	AIReversi,
-	type Sym,
-	Tile,
-	BoardSize,
-	Hand,
-	AILV,
-	AIsettings,
-} from './AI.js'
+import { Tile, type Sym, type BoardSize } from './Reversi.js'
+import { AIReversi, type Hand, type AILV, AIsettings } from './AI.js'
 
 type ID = number
 
@@ -30,6 +22,71 @@ function createEl(className: string) {
 	return el as HTMLDivElement
 }
 
+class ReversiView extends AIReversi {
+	view: View
+
+	$aiTurn() {
+		clearTimeout(this.view.timerID)
+		this.view.timerID = setTimeout(() => {
+			super.$aiTurn()
+		}, 2000)
+	}
+	$stopDualBotMode() {
+		clearTimeout(this.view.timerID)
+	}
+	$setTile(x: number, y: number, sym: Sym) {
+		super.$setTile(x, y, sym)
+		if (!this.thinking) {
+			this.view.$setTile(x, y, sym)
+		}
+	}
+	$updateLastMove(x: number, y: number) {
+		this.view.$updateLastMove(x, y)
+	}
+	$tilesCounting() {
+		super.$tilesCounting()
+		this.view.$tilesCounting()
+	}
+	$changeTileClassByNum(id: number, sym: Sym) {
+		if (!this.thinking) {
+			this.view.$changeTileClassByNum(id, sym)
+		}
+	}
+	$glowchange() {
+		if (this.sym === Tile.W) {
+			this.view.$stopGlow1()
+			this.view.$startGlow2()
+		} else {
+			this.view.$startGlow1()
+			this.view.$stopGlow2()
+		}
+	}
+	$tempStopAllClicks() {
+		this.view.$tempStopAllClicks()
+	}
+	$startBackAllClicks() {
+		this.view.$startBackAllClicks()
+	}
+	$checkWin() {
+		const message = super.$checkWin()
+		this.view.$checkWin(message)
+		return message
+	}
+	$playerTurn() {
+		this.view.$playerTurn()
+	}
+	$removePredictionDots() {
+		this.view.$removePredictionDots()
+	}
+	S_invalid() {
+		console.log('Invalid Move')
+		this.view.sounds.invalid.play()
+	}
+	S_place() {
+		this.view.sounds.place.play()
+	}
+}
+
 export class View {
 	mainContainer = getEl('.main-container')
 	squares: HTMLDivElement[] = []
@@ -44,7 +101,7 @@ export class View {
 	predictorArray: ID[] = []
 	scoreViwLV = import.meta.env.DEV ? AIsettings.length - 1 : 0
 
-	reversi: AIReversi
+	reversi: ReversiView
 
 	sounds = {
 		beep: new Audio(),
@@ -61,73 +118,11 @@ export class View {
 	}
 
 	init(mode: typeof this.reversi.mode) {
-		const that = this
 		const setting = document.forms['setting'].elements
 		const aiLv = parseInt(setting['aiLv'].value)
 
-		clearTimeout(that.timerID)
-		this.reversi = new (class extends AIReversi {
-			$aiTurn() {
-				clearTimeout(that.timerID)
-				that.timerID = setTimeout(() => {
-					super.$aiTurn()
-				}, 2000)
-			}
-			$stopDualBotMode() {
-				clearTimeout(that.timerID)
-			}
-			$setTile(x: number, y: number, sym: Sym) {
-				super.$setTile(x, y, sym)
-				if (!this.thinking) {
-					that.$setTile(x, y, sym)
-				}
-			}
-			$updateLastMove(x: number, y: number) {
-				that.$updateLastMove(x, y)
-			}
-			$tilesCounting() {
-				super.$tilesCounting()
-				that.$tilesCounting()
-			}
-			$changeTileClassByNum(id: number, sym: Sym) {
-				if (!this.thinking) {
-					that.$changeTileClassByNum(id, sym)
-				}
-			}
-			$glowchange() {
-				if (this.sym === Tile.W) {
-					that.$stopGlow1()
-					that.$startGlow2()
-				} else {
-					that.$startGlow1()
-					that.$stopGlow2()
-				}
-			}
-			$tempStopAllClicks() {
-				that.$tempStopAllClicks()
-			}
-			$startBackAllClicks() {
-				that.$startBackAllClicks()
-			}
-			$checkWin() {
-				const message = super.$checkWin()
-				that.$checkWin(message)
-				return message
-			}
-			$playerTurn() {
-				that.$playerTurn()
-			}
-			$removePredictionDots() {
-				that.$removePredictionDots()
-			}
-			S_invalid() {
-				console.log('Invalid Move')
-				that.sounds.invalid.play()
-			}
-			S_place() {
-				that.sounds.place.play()
-			}
-		})({
+		clearTimeout(this.timerID)
+		this.reversi = new ReversiView({
 			boardSize: parseInt(setting['boardSize'].value) as BoardSize,
 			initialPlacement: setting['initialPlacement'].value,
 			mode,
@@ -135,6 +130,7 @@ export class View {
 			aiPlayer1LV: aiLv as AILV,
 			aiPlayer2LV: aiLv as AILV,
 		})
+		this.reversi.view = this
 
 		this.addTile = (event: Event) => {
 			const el = event.target as HTMLElement
