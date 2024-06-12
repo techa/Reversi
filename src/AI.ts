@@ -184,7 +184,6 @@ export abstract class AIReversi extends Reversi {
 		}
 
 		if (next_turn) {
-			this.thinking = true
 			this.logging()
 			if (this.term === 2) {
 				const slots = this.hit(x, y)
@@ -199,7 +198,6 @@ export abstract class AIReversi extends Reversi {
 				}
 			}
 			this.reset()
-			this.thinking = false
 		}
 
 		// score total
@@ -219,6 +217,7 @@ export abstract class AIReversi extends Reversi {
 	}
 
 	logging() {
+		this.thinking = true
 		this.boardLog.push({
 			tiles: this.tiles.slice(),
 			counter: this.counter,
@@ -234,6 +233,9 @@ export abstract class AIReversi extends Reversi {
 			this.sym = this.counter % 2 === 0 ? Tile.W : Tile.B
 		}
 		this.boardLog = []
+		if (!index) {
+			this.thinking = false
+		}
 	}
 
 	constructor(options: Partial<ReversiOptions> = {}) {
