@@ -102,6 +102,7 @@ export const AIsettings: AISettings = [
 		blur: 0,
 	},
 ]
+export const AILVMAX = AIsettings.length - 1
 
 export abstract class AIReversi extends Reversi {
 	opens: number[]

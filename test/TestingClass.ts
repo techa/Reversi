@@ -1,5 +1,5 @@
-import { AIReversi } from '../src/AI.ts'
-import { type Sym, Tile } from '../src/Reversi.ts'
+import { AIReversi } from '../src/AI.js'
+import { type Sym, Tile } from '../src/Reversi.js'
 
 export class ReversiTest extends AIReversi {
 	stringify() {

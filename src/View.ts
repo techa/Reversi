@@ -1,6 +1,6 @@
 /// <reference types="vite/client" />
 import { Tile, type Sym, type BoardSize } from './Reversi.js'
-import { AIReversi, type Hand, type AILV, AIsettings } from './AI.js'
+import { AIReversi, type Hand, type AILV, AIsettings, AILVMAX } from './AI.js'
 import { SoundID, Sounds } from './Sounds.js'
 
 type ID = number
@@ -97,7 +97,7 @@ export class View {
 	addTile: (event: Event) => void
 
 	predictorArray: ID[] = []
-	scoreViwLV = import.meta.env.DEV ? AIsettings.length - 1 : 0
+	scoreViwLV = import.meta.env.DEV ? AILVMAX : 0
 
 	reversi: ReversiView
 
@@ -448,6 +448,8 @@ export class View {
 		boardFrame.appendChild(boardHMarkersContainer)
 		boardFrame.appendChild(boardVMarkersContainer)
 		this.mainContainer.appendChild(boardFrame)
+
+		// this.squares = Array.from(document.querySelectorAll('.square'))
 
 		this.lastMoveDisplayCreator()
 	}

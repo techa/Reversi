@@ -1,4 +1,5 @@
 {
+	"name": "vite-svelte-ts-starter",
     "compilerOptions": {
         "module": "es2020",
         "moduleResolution": "Node",
@@ -12,7 +13,7 @@
 		"outDir": "dist"
     },
     "include": [
-        "src/**/*.ts"
+        "src/**/*.ts", "src/**/*.svelte"
     ],
     "exclude": [
         "node_modules",

@@ -169,6 +169,13 @@ export abstract class Reversi {
 	$setTile(x: number, y: number, sym: Sym) {
 		this.tiles[y * this.boardSize + x] = sym
 	}
+	$tilesUpdate(x: number, y: number) {
+		const result: Tile[] = this.tiles.slice()
+		this.directionEach(x, y, (pX, pY) => {
+			result[pY * this.boardSize + pX] = this.sym
+		})
+		this.tiles = result
+	}
 
 	$aiTurn() {
 		if (this.botMode) {
@@ -238,7 +245,7 @@ export abstract class Reversi {
 
 	addTile(x: number, y: number) {
 		if (this.checkOKtoPlace(x, y)) {
-			this.$removePredictionDots()
+			// this.$removePredictionDots()
 			this._doTheMove(x, y)
 			//bot mode on and off
 		} else {
@@ -248,7 +255,7 @@ export abstract class Reversi {
 
 	hit(x: number, y: number) {
 		this.$setTile(x, y, this.sym)
-		this._changeRespectiveTiles(x, y)
+		this.$tilesUpdate(x, y)
 		this.countIncr()
 
 		return this._checkSlots()
@@ -272,15 +279,12 @@ export abstract class Reversi {
 
 				if (ai) {
 					if (this.singlePlayerMode) {
-						this.$startBackAllClicks()
 						this.$playerTurn()
 					} else {
 						this.$aiTurn()
 					}
 				} else {
-					if (this.singlePlayerMode) {
-						this.$tempStopAllClicks()
-					} else {
+					if (!this.singlePlayerMode) {
 						this.$playerTurn()
 					}
 					if (this.botMode) {
@@ -302,18 +306,12 @@ export abstract class Reversi {
 				} else {
 					// console.log(this.sym + ' also cannot, end game')
 					this.botMode = false
-					if (!ai) {
-						this.$tempStopAllClicks()
-					}
 					this.$checkWin()
 				}
 			}
 		} else {
 			// console.log(this.sym + ' cannot d')
 			this.botMode = false
-			if (!ai) {
-				this.$tempStopAllClicks()
-			}
 			this.$checkWin()
 		}
 	}
@@ -345,15 +343,6 @@ export abstract class Reversi {
 			if (val === Tile.B) this.blackCount += 1
 		}
 	}
-
-	private _changeRespectiveTiles(x: number, y: number) {
-		this.directionEach(x, y, (pX, pY) => {
-			this.tiles[pY * this.boardSize + pX] = this.sym
-			this.$changeTileClassByNum(this.boardSize * pY + pX, this.sym)
-		})
-	}
-
-	abstract $changeTileClassByNum(id: number, sym: Sym): void
 
 	/**
 	 * 座標に駒を置いたとき引っくり返せる全ての駒に対してcallbackを実行する
@@ -391,10 +380,6 @@ export abstract class Reversi {
 
 	abstract $glowchange(): void
 
-	abstract $tempStopAllClicks(): void
-
-	abstract $startBackAllClicks(): void
-
 	/**
 	 * @returns winner name
 	 */
@@ -407,7 +392,7 @@ export abstract class Reversi {
 	}
 
 	abstract $playerTurn(): void
-	abstract $removePredictionDots(): void
+	// abstract $removePredictionDots(): void
 
 	S_invalid() {
 		throw new Error(`addTile: invalid position x or y`)

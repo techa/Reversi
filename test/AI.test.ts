@@ -2,7 +2,7 @@
 // https://jestjs.io/docs/expect
 import { describe, it, expect } from 'vitest'
 import { ReversiTest } from './TestingClass.js'
-import { Tile } from '../src/Reversi.ts'
+import { Tile } from '../src/Reversi.js'
 
 describe(`AI`, () => {
 	const reversi = new ReversiTest().init()
