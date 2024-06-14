@@ -64,7 +64,7 @@
 
 <div class="history-container">
 	{#each states.history as data}
-		<div class="last-move-slot" style="width: 120px;">
+		<div class="last-move-slot">
 			<div class="last-move-tile-{reversi.getSymColor(data.sym)}"></div>
 			<div class="last-move-number">
 				{String.fromCharCode(65 + data.x) + (data.y + 1)}
@@ -79,7 +79,6 @@
 		<div class="tile-container">
 			<div
 				class="glow"
-				id="glow-1"
 				style:visibility={states.blackTurn ? 'visible' : 'hidden'}
 			>
 				<span></span>
@@ -99,7 +98,6 @@
 		<div class="tile-container">
 			<div
 				class="glow"
-				id="glow-2"
 				style:visibility={states.whiteTurn ? 'visible' : 'hidden'}
 			>
 				<span></span>
@@ -122,8 +120,9 @@
 	}
 	.history-container {
 		width: 100%;
-		height: 120px;
-		margin-top: 20px;
+		height: 100px;
+		margin-top: 12px;
+		max-width: 640px;
 
 		box-sizing: border-box;
 		background-color: #343434;

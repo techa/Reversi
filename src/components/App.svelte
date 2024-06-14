@@ -9,7 +9,7 @@
 
 	// Title
 	const title = 'REVERSI'
-	let title_colorFlg = $state(true)
+	let title_colorFlg = $state(false)
 	function title_hover() {
 		title_colorFlg = !title_colorFlg
 	}
@@ -35,7 +35,7 @@
 	}}
 >
 	{#each title as char, i}
-		<span class="{(i + +title_colorFlg) % 2 ? 'white' : 'black'}-letter"
+		<span class="{(i + +title_colorFlg) % 2 ? 'black' : 'white'}-letter"
 			>{char}</span
 		>
 	{/each}
@@ -133,21 +133,13 @@
 		<Board></Board>
 	{:else}
 		<div class="main-page-container">
-			<button
-				class="selections"
-				onclick={() => start('single')}
-				id="single-player"
-			>
+			<button class="selections" onclick={() => start('single')}>
 				Single Player
 			</button>
-			<button
-				class="selections"
-				onclick={() => start('2')}
-				id="two-players"
-			>
+			<button class="selections" onclick={() => start('2')}>
 				2 Players
 			</button>
-			<button class="selections" onclick={() => start('demo')} id="demo">
+			<button class="selections" onclick={() => start('demo')}>
 				Demo
 			</button>
 		</div>
