@@ -19,7 +19,7 @@ export interface ReversiOptions {
 	initialPlacement: InitialPlacement
 	mode: Mode
 	yourColor: Tile
-	random: () => number
+	random?: () => number
 	aiPlayer1LV: AILV
 	aiPlayer2LV: AILV
 }
@@ -102,7 +102,7 @@ export const AIsettings: AISettings = [
 		blur: 0,
 	},
 ]
-export const AILVMAX = AIsettings.length - 1
+export const AILVMAX = (AIsettings.length - 1) as AILV
 
 export abstract class AIReversi extends Reversi {
 	opens: number[]
@@ -248,7 +248,8 @@ export abstract class AIReversi extends Reversi {
 	}
 
 	constructor(options: Partial<ReversiOptions> = {}) {
-		super(options)
+		super()
+		this.setOptions(options)
 		this.aiPlayer1LV = options.aiPlayer1LV ?? 1
 		this.aiPlayer2LV = options.aiPlayer2LV ?? 1
 	}

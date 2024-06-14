@@ -1,12 +1,11 @@
 <script lang="ts">
-	import { type AILV, AILVMAX } from '../AI.js'
-	import {
-		type InitialPlacement,
-		type Mode,
-		Tile,
-		type BoardSize,
-	} from '../Reversi.js'
+	import { AILVMAX } from '../AI.js'
+	import { type Mode, Tile } from '../Reversi.js'
+
 	import Board from './Board.svelte'
+	import Modal from './Modal.svelte'
+
+	import { options, reversi, states } from '../ViewConnect.svelte.js'
 
 	// Title
 	const title = 'REVERSI'
@@ -15,44 +14,44 @@
 		title_colorFlg = !title_colorFlg
 	}
 
-	// settings
-	let boardSize: BoardSize = $state(8)
-	let initialPlacement = $state<InitialPlacement>('cross')
-	let yourColor = $state(Tile.B)
-	let aiLv: AILV = $state(5)
+	// modal menu
+	let showModal = $state(false)
 
+	// // game start
 	let started = $state(false)
-	let mode: Mode = $state('2')
 	function start(_mode: Mode) {
 		started = true
-		mode = _mode
+		options.mode = _mode
+		reversi.init(options)
 	}
 </script>
 
-<div
+<button
 	class="header"
-	role="button"
-	tabindex="0"
 	onmouseenter={title_hover}
 	onmouseleave={title_hover}
+	onclick={() => {
+		showModal = true
+	}}
 >
 	{#each title as char, i}
 		<span class="{(i + +title_colorFlg) % 2 ? 'white' : 'black'}-letter"
 			>{char}</span
 		>
 	{/each}
-</div>
+</button>
+
+<Modal bind:showModal bind:started></Modal>
 
 {#if !started}
 	<div class="settings-from-container">
 		<form name="setting">
 			<label>
-				Board Size: {boardSize}
+				Board Size: {options.boardSize}
 				<input
 					type="range"
 					name="boardSize"
-					id="boardSize"
-					bind:value={boardSize}
+					bind:value={options.boardSize}
 					min="4"
 					max="12"
 				/>
@@ -64,9 +63,8 @@
 						type="radio"
 						name="initialPlacement"
 						value="cross"
-						id="cross"
 						checked
-						bind:group={initialPlacement}
+						bind:group={options.initialPlacement}
 					/>cross
 				</label>
 				<label>
@@ -74,8 +72,7 @@
 						type="radio"
 						name="initialPlacement"
 						value="parallel"
-						id="parallel"
-						bind:group={initialPlacement}
+						bind:group={options.initialPlacement}
 					/>parallel
 				</label>
 				<label>
@@ -83,8 +80,7 @@
 						type="radio"
 						name="initialPlacement"
 						value="random"
-						id="random"
-						bind:group={initialPlacement}
+						bind:group={options.initialPlacement}
 					/>Random
 				</label>
 			</div>
@@ -95,8 +91,7 @@
 						type="radio"
 						name="yourColor"
 						value={Tile.B}
-						id="black"
-						bind:group={yourColor}
+						bind:group={options.yourColor}
 						checked
 					/>Black
 				</label>
@@ -105,8 +100,7 @@
 						type="radio"
 						name="yourColor"
 						value={Tile.W}
-						id="white"
-						bind:group={yourColor}
+						bind:group={options.yourColor}
 					/>White
 				</label>
 				<label>
@@ -114,19 +108,17 @@
 						type="radio"
 						name="yourColor"
 						value={Tile.Null}
-						id="random"
-						bind:group={yourColor}
+						bind:group={options.yourColor}
 					/>Random
 				</label>
 			</div>
 			<div>
 				<label>
-					AI LV: {aiLv}
+					AI LV: {states.aiLv}
 					<input
 						type="range"
 						name="aiLv"
-						id="aiLv"
-						bind:value={aiLv}
+						bind:value={states.aiLv}
 						min="0"
 						max={AILVMAX}
 					/>
@@ -138,7 +130,7 @@
 
 <div class="main-container">
 	{#if started}
-		<Board {boardSize} {initialPlacement} {yourColor} {aiLv} {mode}></Board>
+		<Board></Board>
 	{:else}
 		<div class="main-page-container">
 			<button
@@ -163,6 +155,12 @@
 </div>
 
 <style>
+	.header {
+		background-color: transparent;
+		display: block;
+		border: none;
+		width: 100%;
+	}
 	.main-container {
 		flex-direction: column;
 		align-items: center;

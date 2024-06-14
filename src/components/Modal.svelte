@@ -1,15 +1,26 @@
 <script lang="ts">
-	import { Snippet } from "svelte"
+	import { type Snippet } from "svelte"
+	import { reversi, options } from '../ViewConnect.svelte.js'
 
-	let { show = false ,children}:{
-		show: boolean
-		children?:Snippet
+	let {
+		showModal = $bindable(),
+		started = $bindable(),
+		children,
+	}:{
+		showModal: boolean
+		started: boolean
+		children?: Snippet
 	} = $props()
 
 	let dialog: HTMLDialogElement
 
+	function close() {
+		dialog.close()
+		showModal = false
+	}
+
 	$effect(() => {
-		if (dialog && show) {
+		if (dialog && showModal) {
 			dialog.showModal()
 		}
 	})
@@ -19,16 +30,33 @@
 <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 <dialog
 	bind:this={dialog}
-	onclose={() => (show = false)}
-	onclick={() => dialog.close()}
+	onclose={close}
+	onclick={close}
 >
-	<div>
+	<div class="win-lose-draw">You Win!</div>
+	<div class="result-container">
+		<button
+			class="name result-selections"
+			onclick={()=> {
+				started = false
+				close()
+			}}
+		>
+			Back to Top
+		</button>
+
+		<button
+			class="name result-selections"
+			onclick={()=> {
+				close()
+				reversi.init(options)
+			}}
+		>
+			Restart
+		</button>
 		{#if children}
 			{@render children()}
 		{/if}
-		<hr />
-		<!-- svelte-ignore a11y_autofocus -->
-		<button autofocus onclick={() => dialog.close()}>close modal</button>
 	</div>
 </dialog>
 

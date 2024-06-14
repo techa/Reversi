@@ -77,7 +77,7 @@ export abstract class Reversi {
 
 	random: () => number
 
-	constructor(options: Partial<ReversiOptions> = {}) {
+	setOptions(options: Partial<ReversiOptions> = {}) {
 		this.boardSize = options.boardSize ?? this.boardSize
 		this.initialPlacement =
 			options.initialPlacement ?? this.initialPlacement
@@ -95,16 +95,17 @@ export abstract class Reversi {
 				: Tile.W
 	}
 
-	init() {
+	init(options: Partial<ReversiOptions> = {}) {
+		this.setOptions(options)
+		this.turn = 1
+		this.sym = Tile.B
 		this.initBoardArray()
 		this.initialPieces()
 
-		if (this.mode === 'single') {
-			this.singlePlayerMode = true
-			this.botMode = true
-		} else if (this.mode === 'demo') {
-			this.demo = true
-		}
+		this.demo = this.mode === 'demo'
+		const single = this.mode === 'single'
+		this.singlePlayerMode = single
+		this.botMode = single
 
 		if (this.demo || this.yourColor !== this.sym) {
 			this.botMode = true

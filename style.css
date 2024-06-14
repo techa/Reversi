@@ -476,7 +476,7 @@ button {
 	background: linear-gradient(to bottom, #ff920b, #f5e49b);
 	border: none;
 	border-radius: 15px;
-	opacity: 0;
+	/* opacity: 0; */
 }
 
 .result-selections {
