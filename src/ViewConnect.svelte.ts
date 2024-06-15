@@ -56,9 +56,11 @@ export const reversi = new (class extends AIReversi {
 	}
 	$aiTurn() {
 		clearTimeout(this.timerID)
-		this.timerID = setTimeout(() => {
-			super.$aiTurn()
-		}, 2000)
+		if (states.started) {
+			this.timerID = setTimeout(() => {
+				super.$aiTurn()
+			}, 2000)
+		}
 	}
 	$stopDualBotMode() {
 		clearTimeout(this.timerID)

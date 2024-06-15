@@ -43,6 +43,7 @@
 				onclick={(e) => {
 					close(e, true)
 					states.started = false
+					reversi.init(options)
 				}}
 			>
 				Back to Top
