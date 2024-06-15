@@ -9,9 +9,9 @@
 
 	// Title
 	const title = 'REVERSI'
-	let title_colorFlg = $state(false)
-	function title_hover() {
-		title_colorFlg = !title_colorFlg
+	let title_hover = $state(false)
+	function titlehover() {
+		title_hover = !title_hover
 	}
 
 	// game start
@@ -20,23 +20,67 @@
 		options.mode = _mode
 		reversi.init(options)
 	}
+	function cap(str: string) {
+		return str[0].toUpperCase() + str.slice(1).toLowerCase()
+	}
 </script>
 
-<div class="header">
-	<button
-		class="title"
-		onmouseenter={title_hover}
-		onmouseleave={title_hover}
-		onclick={() => {
-			states.showModal = true
-		}}
-	>
-		{#each title as char, i}
-			<span class="{(i + +title_colorFlg) % 2 ? 'black' : 'white'}-letter"
-				>{char}</span
-			>
-		{/each}
-	</button>
+<svg
+	xmlns="http://www.w3.org/2000/svg"
+	width="24"
+	height="24"
+	viewBox="0 0 24 24"
+	style="display: none;"
+>
+	<defs>
+		<symbol id="config" viewBox="0 0 24 24">
+			<path
+				d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+			/><circle cx="12" cy="12" r="3" />
+		</symbol>
+		<symbol id="menu" viewBox="0 0 24 24">
+			<line x1="4" x2="20" y1="12" y2="12" />
+			<line x1="4" x2="20" y1="6" y2="6" />
+			<line x1="4" x2="20" y1="18" y2="18" />
+		</symbol>
+		<symbol id="random" viewBox="0 0 24 24">
+			<path
+				stroke="black"
+				d="M2 18h1.4c1.3 0 2.5-.6 3.3-1.7l6.1-8.6c.7-1.1 2-1.7 3.3-1.7H22"
+			/>
+			<path d="m18 2 4 4-4 4" stroke="black" />
+			<path d="M2 6h1.9c1.5 0 2.9.9 3.6 2.2" />
+			<path d="M22 18h-5.9c-1.3 0-2.6-.7-3.3-1.8l-.5-.8" />
+			<path d="m18 14 4 4-4 4" />
+		</symbol>
+	</defs>
+</svg>
+
+<div class="header-wrapper">
+	<div class="header">
+		<button
+			class="title"
+			onmouseenter={titlehover}
+			onmouseleave={titlehover}
+			onclick={() => {
+				if (states.started) {
+					states.showModal = true
+				}
+			}}
+		>
+			{#each title as char, i}
+				<span
+					class="{(i + +title_hover) % 2 ? 'black' : 'white'}-letter"
+					>{char}</span
+				>
+			{/each}
+		</button>
+		<div class="btns">
+			<svg class="icon config" stroke="white">
+				<use href="#config"></use>
+			</svg>
+		</div>
+	</div>
 </div>
 
 <Modal></Modal>
@@ -44,8 +88,8 @@
 {#if !states.started}
 	<div class="settings-from-container">
 		<form name="setting">
+			<h4>Board Size: <span class="number">{options.boardSize}</span></h4>
 			<label>
-				Board Size: {options.boardSize}
 				<input
 					type="range"
 					name="boardSize"
@@ -55,64 +99,99 @@
 				/>
 			</label>
 			<div>
-				Initial Placement:
-				<label>
+				<h4>
+					Initial Placement: <span
+						>{cap(options.initialPlacement)}</span
+					>
+				</h4>
+				<label title="cross">
 					<input
 						type="radio"
 						name="initialPlacement"
 						value="cross"
 						checked
 						bind:group={options.initialPlacement}
-					/>cross
+					/>
+					<svg viewBox="0 0 24 24" class="icon ip-cross">
+						<circle cx="6" cy="6" r="5" fill="white"></circle>
+						<circle cx="18" cy="6" r="5" fill="black"></circle>
+						<circle cx="6" cy="18" r="5" fill="black"></circle>
+						<circle cx="18" cy="18" r="5" fill="white"></circle>
+					</svg>
+					<!-- <span>Cross</span> -->
 				</label>
-				<label>
+				<label title="parallel">
 					<input
 						type="radio"
 						name="initialPlacement"
 						value="parallel"
 						bind:group={options.initialPlacement}
-					/>parallel
+					/>
+					<svg viewBox="0 0 24 24" class="icon ip-parallel">
+						<circle cx="6" cy="6" r="5" fill="white"></circle>
+						<circle cx="18" cy="6" r="5" fill="white"></circle>
+						<circle cx="6" cy="18" r="5" fill="black"></circle>
+						<circle cx="18" cy="18" r="5" fill="black"></circle>
+					</svg>
+					<!-- <span>Parallel</span> -->
 				</label>
-				<label>
+				<label title="random">
 					<input
 						type="radio"
 						name="initialPlacement"
 						value="random"
 						bind:group={options.initialPlacement}
-					/>Random
+					/>
+					<svg class="icon ip-random">
+						<use href="#random"></use>
+					</svg>
+					<!-- <span>Random</span> -->
 				</label>
 			</div>
 			<div>
-				Your Color:
-				<label>
+				<h4>
+					Your Color: <span>
+						{['Random', 'Black', 'White'][options.yourColor]}</span
+					>
+				</h4>
+				<label title="black">
 					<input
 						type="radio"
 						name="yourColor"
 						value={Tile.B}
 						bind:group={options.yourColor}
 						checked
-					/>Black
+					/>
+					<svg viewBox="0 0 24 24" class="icon yc-black">
+						<circle cx="12" cy="12" r="10" fill="black"></circle>
+					</svg>
 				</label>
-				<label>
+				<label title="white">
 					<input
 						type="radio"
 						name="yourColor"
 						value={Tile.W}
 						bind:group={options.yourColor}
-					/>White
+					/>
+					<svg viewBox="0 0 24 24" class="icon yc-white">
+						<circle cx="12" cy="12" r="10" fill="white"></circle>
+					</svg>
 				</label>
-				<label>
+				<label title="random">
 					<input
 						type="radio"
 						name="yourColor"
 						value={Tile.Null}
 						bind:group={options.yourColor}
-					/>Random
+					/>
+					<svg class="icon yc-random">
+						<use href="#random"></use>
+					</svg>
 				</label>
 			</div>
 			<div>
+				<h4>AI LV: <span class="number">{states.aiLv}</span></h4>
 				<label>
-					AI LV: {states.aiLv}
 					<input
 						type="range"
 						name="aiLv"
@@ -140,6 +219,21 @@
 			<button class="selections" onclick={() => start('demo')}>
 				Demo
 			</button>
+
+			<div class="footer">
+				<a
+					href="https://github.com/techa/Reversi"
+					target="_blank"
+					rel="github repository"
+				>
+					<img
+						height="32"
+						width="32"
+						alt="github icon"
+						src="https://cdn.simpleicons.org/github/eee"
+					/>
+				</a>
+			</div>
 		</div>
 	{/if}
 </div>
@@ -166,9 +260,16 @@
 {/if}
 
 <style>
+	.header-wrapper {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
 	.header {
+		width: 640px;
 		display: flex;
 		justify-content: center;
+		position: relative;
 	}
 	.title {
 		background-color: transparent;
@@ -181,8 +282,54 @@
 		letter-spacing: 2px;
 		text-align: center;
 	}
+	.btns {
+		position: absolute;
+		right: 0;
+		display: flex;
+		align-items: center;
+		height: 100%;
+		width: 64px;
+	}
+	form {
+		text-align: center;
+	}
+	h4 {
+		margin: 1rem 0 0.5rem;
+	}
+	h4 span {
+		display: inline-flex;
+		font-size: large;
+	}
+	h4 span.number {
+		width: 2rem;
+	}
+	form label {
+		margin: 0 0.5rem;
+	}
+	form input[type='radio'] {
+		display: none;
+	}
+	svg.icon {
+		width: 32px;
+		height: 32px;
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 2;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+	}
+	form input[type='radio'] + .icon {
+		opacity: 0.5;
+	}
+	form input[type='radio']:checked + .icon {
+		opacity: 1;
+	}
 	.main-container {
 		flex-direction: column;
 		align-items: center;
+	}
+	.footer {
+		text-align: center;
+		margin: 24px 0;
 	}
 </style>
