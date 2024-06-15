@@ -1,12 +1,10 @@
 <script lang="ts">
-	import { type Snippet } from "svelte"
-	import { reversi, options, states } from '../ViewConnect.svelte.js'
-
-	let {
-		children,
-	}: {
-		children?: Snippet
-	} = $props()
+	import {
+		reversi,
+		options,
+		states,
+		ModalType,
+	} from '../ViewConnect.svelte.js'
 
 	let dialog: HTMLDialogElement
 
@@ -15,11 +13,11 @@
 			return
 		}
 		dialog.close()
-		states.showModal = false
+		states.modal = ModalType.Hide
 	}
 
 	$effect(() => {
-		if (dialog && states.showModal) {
+		if (dialog && states.modal) {
 			dialog.showModal()
 		}
 	})
@@ -27,38 +25,40 @@
 
 <!-- svelte-ignore a11y_click_events_have_key_events  a11y_no_noninteractive_element_interactions-->
 <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-<dialog
-	bind:this={dialog}
-	onclose={close}
-	onclick={close}
->
+<dialog bind:this={dialog} onclose={close} onclick={close}>
 	{#if states.winlose}
 		<div class="win-lose-draw">{states.winlose}</div>
 	{/if}
 
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
-	<div class="result-container" onclick={(e)=>{e.stopPropagation()}}>
-		<button
-			class="name result-selections"
-			onclick={(e)=> {
-				close(e, true)
-				states.started = false
-			}}
-		>
-			Back to Top
-		</button>
+	<div
+		class="result-container"
+		onclick={(e) => {
+			e.stopPropagation()
+		}}
+	>
+		{#if states.modal === ModalType.BackOrRestart}
+			<button
+				class="selections"
+				onclick={(e) => {
+					close(e, true)
+					states.started = false
+				}}
+			>
+				Back to Top
+			</button>
 
-		<button
-			class="name result-selections"
-			onclick={(e)=> {
-				close(e, true)
-				reversi.init(options)
-			}}
-		>
-			Restart
-		</button>
-		{#if children}
-			{@render children()}
+			<button
+				class="selections"
+				onclick={(e) => {
+					close(e, true)
+					reversi.init(options)
+				}}
+			>
+				Restart
+			</button>
+		{:else if states.modal === ModalType.Config}
+			<!--  -->
 		{/if}
 	</div>
 </dialog>
@@ -71,7 +71,7 @@
 		padding: 0;
 	}
 	dialog::backdrop {
-		background: rgba(0, 0, 0, 0.3);
+		background: rgba(0, 0, 0, 0.5);
 	}
 	dialog > div {
 		padding: 1em;

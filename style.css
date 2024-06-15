@@ -470,30 +470,9 @@ button {
 	text-align: center;
 	outline: none;
 
-	background: linear-gradient(to bottom, #ff920b, #f5e49b);
+	background: darkslategray;
 	border: none;
 	border-radius: 15px;
-	/* opacity: 0; */
-}
-
-.result-selections {
-	box-shadow: 6px 6px 6px black;
-	transition: all 0.05s linear;
-	border-bottom: 4px solid #035b00;
-	cursor: pointer;
-	outline: none;
-	background: linear-gradient(to bottom, #035b00, #84f280);
-}
-
-.result-selections:hover {
-	color: white;
-	text-shadow: 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #fff;
-}
-
-.result-selections:active {
-	box-shadow: 2px 2px 2px black;
-	border-bottom: 1px solid #8e7400;
-	transform: translateY(3px);
 }
 
 .win-lose-draw {

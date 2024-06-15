@@ -11,6 +11,12 @@ export const options: ReversiOptions = $state({
 	aiPlayer2LV: AILVMAX,
 })
 
+export const enum ModalType {
+	Hide,
+	BackOrRestart,
+	Config,
+}
+
 export const states = $state({
 	tiles: [] as Tile[],
 	history: [] as { sym: Sym; x: number; y: number }[],
@@ -22,7 +28,7 @@ export const states = $state({
 	aiLv: AILVMAX,
 
 	started: false,
-	showModal: false,
+	modal: ModalType.Hide,
 	winlose: '',
 	hand: null as null | Hand,
 	handPosition: null as null | [number, number],
@@ -91,7 +97,7 @@ export const reversi = new (class extends AIReversi {
 	$checkWin() {
 		states.blackTurn = false
 		states.whiteTurn = false
-		states.showModal = true
+		states.modal = ModalType.BackOrRestart
 		return (states.winlose = super.$checkWin())
 	}
 	$playerTurn() {

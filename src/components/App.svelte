@@ -5,7 +5,12 @@
 	import Board from './Board.svelte'
 	import Modal from './Modal.svelte'
 
-	import { options, reversi, states } from '../ViewConnect.svelte.js'
+	import {
+		ModalType,
+		options,
+		reversi,
+		states,
+	} from '../ViewConnect.svelte.js'
 
 	// Title
 	const title = 'REVERSI'
@@ -64,7 +69,7 @@
 			onmouseleave={titlehover}
 			onclick={() => {
 				if (states.started) {
-					states.showModal = true
+					states.modal = ModalType.BackOrRestart
 				}
 			}}
 		>
@@ -76,9 +81,15 @@
 			{/each}
 		</button>
 		<div class="btns">
-			<svg class="icon config" stroke="white">
-				<use href="#config"></use>
-			</svg>
+			<button
+				onclick={() => {
+					states.modal = ModalType.Config
+				}}
+			>
+				<svg class="icon config" stroke="white">
+					<use href="#config"></use>
+				</svg>
+			</button>
 		</div>
 	</div>
 </div>
