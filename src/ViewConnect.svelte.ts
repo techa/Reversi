@@ -1,4 +1,4 @@
-import { AIReversi, ReversiOptions, AILVMAX } from './AI.js'
+import { AIReversi, type ReversiOptions, AILVMAX, type Hand } from './AI.js'
 import { type Sym, Tile } from './Reversi.js'
 import { SoundID, Sounds } from './Sounds.js'
 
@@ -24,6 +24,8 @@ export const states = $state({
 	started: false,
 	showModal: false,
 	winlose: '',
+	hand: null as null | Hand,
+	handPosition: null as null | [number, number],
 
 	mute: false,
 	aiWait: 2000,
@@ -56,6 +58,7 @@ export const reversi = new (class extends AIReversi {
 		if (!this.thinking) {
 			states.tiles = this.tiles
 			states.playerTurn = false
+			states.hand = null
 		}
 	}
 	$tilesUpdate(x: number, y: number) {

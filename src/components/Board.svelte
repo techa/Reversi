@@ -30,15 +30,24 @@
 								class="{reversi.getSymColor(tile)}-tiles"
 							></div>
 						{:else if states.playerTurn && reversi.checkOKtoPlace(x, y)}
-							<div class="can-hit">
+							{@const _hand = reversi.getHand(x, y, states.aiLv)}
+							<div
+								class="can-hit"
+								role="presentation"
+								onmouseenter={(event) => {
+									states.hand = _hand
+									states.handPosition = [
+										event.clientX,
+										event.clientY,
+									]
+								}}
+								onmouseleave={() => {
+									states.hand = null
+									states.handPosition = null
+								}}
+							>
 								{#if !reversi.demo && states.aiLv}
-									{@const g = tile}
-									{@const hand = reversi.getHand(
-										x,
-										y,
-										states.aiLv,
-									)}
-									{hand.scores.total.toFixed(1) || ''}
+									{_hand.scores.total.toFixed(1) || ''}
 								{:else}
 									<div class="predictor"></div>
 								{/if}

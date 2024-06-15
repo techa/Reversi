@@ -144,6 +144,27 @@
 	{/if}
 </div>
 
+{#if states.hand && states.handPosition}
+	<div
+		class="score-details"
+		style="top: {states.handPosition[1] + 10}px;left: {states
+			.handPosition[0] + 10}px;"
+	>
+		{#each Object.entries(states.hand.scores) as [key, score]}
+			{#if score}
+				{@const value = states.hand[key]}
+				<div class="score-details-item">
+					{`${key}: ${
+						typeof score === 'number'
+							? +score.toFixed(2) + 'pt'
+							: score
+					}`}{value ? ` (${value})` : ''}
+				</div>
+			{/if}
+		{/each}
+	</div>
+{/if}
+
 <style>
 	.header {
 		display: flex;
