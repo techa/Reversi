@@ -43,7 +43,7 @@ export abstract class Reversi {
 
 	turn = 1
 	sym: Sym = Tile.B
-	countIncr() {
+	nextTurn() {
 		this.turn++
 		this.sym = this.turn % 2 === 0 ? Tile.W : Tile.B
 	}
@@ -100,15 +100,14 @@ export abstract class Reversi {
 		this.turn = 1
 		this.sym = Tile.B
 		this.initBoardArray()
-		this.initialPieces()
+		this.initialPieces(this.initialPlacement)
 
 		this.demo = this.mode === 'demo'
 		const single = this.mode === 'single'
 		this.singlePlayerMode = single
-		this.botMode = single
+		this.botMode = single || this.demo
 
 		if (this.demo || this.yourColor !== this.sym) {
-			this.botMode = true
 			this.$aiTurn()
 		} else {
 			this.$playerTurn()
@@ -134,7 +133,7 @@ export abstract class Reversi {
 	 * ____      ____
 	 * ```
 	 */
-	initialPieces(type = this.initialPlacement) {
+	initialPieces(type: InitialPlacement) {
 		const center = ((this.boardSize / 2) | 0) - 1
 		for (let i = 0; i < 4; i++) {
 			let x = center
@@ -178,19 +177,22 @@ export abstract class Reversi {
 		this.tiles = result
 	}
 
+	/**
+	 * * For override at ViewConnect
+	 * @abstract ViewConnect
+	 */
+	abstract $playerTurn(): void
 	$aiTurn() {
 		if (this.botMode) {
 			const tile = this.ai_nextHand()
 			this._doTheMove(tile.x, tile.y, true)
-		} else {
-			if (this.demo) {
-				this.demo = false
-				this.$stopDualBotMode?.()
-			}
 		}
 	}
-	abstract $stopDualBotMode(): void
 
+	/**
+	 * * For override at AIReversi
+	 * @abstract AIReversi
+	 */
 	abstract ai_nextHand(): { x: number; y: number }
 
 	/**
@@ -244,41 +246,41 @@ export abstract class Reversi {
 		return false
 	}
 
-	addTile(x: number, y: number) {
+	/**
+	 * * Classの外から操作するためのトリガーメソッド
+	 */
+	hit(x: number, y: number) {
 		if (this.checkOKtoPlace(x, y)) {
-			// this.$removePredictionDots()
 			this._doTheMove(x, y)
-			//bot mode on and off
 		} else {
 			this.S_invalid()
 		}
 	}
 
-	hit(x: number, y: number) {
+	addTile(x: number, y: number) {
 		this.$setTile(x, y, this.sym)
 		this.$tilesUpdate(x, y)
-		this.countIncr()
+		this.nextTurn()
 
 		return this._checkSlots()
 	}
 
-	_doTheMove(x: number, y: number, ai = false) {
+	_doTheMove(x: number, y: number, aiTurn = false) {
 		this.S_place()
-		this.$updateLastMove(x, y)
+		this.$addHistory(x, y)
 
 		/////////Check anymore playable empty square
 		//check any move left///////////////////////////
 		// console.log(this.sym + ' turn')
-		const slots = this.hit(x, y)
-
+		const slots = this.addTile(x, y)
 		this.$tilesCounting()
 
 		if (slots.empty > 0) {
 			if (slots.movable > 0) {
 				// console.log(this.sym + ' still can')
-				this.$glowchange()
+				this.$turnSwitch()
 
-				if (ai) {
+				if (aiTurn) {
 					if (this.singlePlayerMode) {
 						this.$playerTurn()
 					} else {
@@ -287,18 +289,17 @@ export abstract class Reversi {
 				} else {
 					if (!this.singlePlayerMode) {
 						this.$playerTurn()
-					}
-					if (this.botMode) {
+					} else {
 						this.$aiTurn()
 					}
 				}
 			} else {
 				// console.log(this.sym + ' no place to move, pass')
-				this.countIncr()
+				this.nextTurn()
 				// console.log(this.sym + ' turn')
 				const slots = this._checkSlots()
 				if (slots.movable > 0) {
-					if (ai) {
+					if (aiTurn) {
 						// console.log(this.sym + 'still can')
 						this.$aiTurn()
 					} else {
@@ -334,7 +335,7 @@ export abstract class Reversi {
 		return { empty: emptyCount, movable: roughtCount }
 	}
 
-	abstract $updateLastMove(x: number, y: number): void
+	abstract $addHistory(x: number, y: number): void
 
 	$tilesCounting() {
 		this.whiteCount = 0
@@ -379,7 +380,10 @@ export abstract class Reversi {
 		}
 	}
 
-	abstract $glowchange(): void
+	/**
+	 * @abstract ViewConnect
+	 */
+	abstract $turnSwitch(): void
 
 	/**
 	 * @returns winner name
@@ -391,9 +395,6 @@ export abstract class Reversi {
 			? `${this.player2Name} Win!`
 			: 'It is a Draw!!'
 	}
-
-	abstract $playerTurn(): void
-	// abstract $removePredictionDots(): void
 
 	S_invalid() {
 		throw new Error(`addTile: invalid position x or y`)

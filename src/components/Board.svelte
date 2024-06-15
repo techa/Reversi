@@ -40,7 +40,7 @@
 						data-x-axis={x}
 						data-y-axis={y}
 						onclick={() => {
-							reversi.addTile(x, y)
+							reversi.hit(x, y)
 						}}
 					>
 						{#if tile > 0}
@@ -64,7 +64,7 @@
 									states.handPosition = null
 								}}
 							>
-								{#if !reversi.demo && states.aiLv}
+								{#if options.mode !== 'demo' && states.aiLv}
 									{_hand.scores.total.toFixed(1) || ''}
 								{:else}
 									<div class="predictor"></div>

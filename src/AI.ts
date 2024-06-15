@@ -127,6 +127,9 @@ export abstract class AIReversi extends Reversi {
 	getScore(hand: Hand, lv: number) {
 		const { x, y, scores } = hand
 		const { boardSize, term } = this
+		if (!AIsettings[lv]) {
+			console.log('lv', lv)
+		}
 		const {
 			count,
 			opens,
@@ -191,7 +194,7 @@ export abstract class AIReversi extends Reversi {
 		if (next_turn) {
 			this.logging()
 			if (this.term === 2) {
-				const slots = this.hit(x, y)
+				const slots = this.addTile(x, y)
 				if (slots.empty) {
 					if (!slots.movable) {
 						scores.next_turn += next_turn
@@ -247,11 +250,10 @@ export abstract class AIReversi extends Reversi {
 		}
 	}
 
-	constructor(options: Partial<ReversiOptions> = {}) {
-		super()
-		this.setOptions(options)
+	init(options: Partial<ReversiOptions> = {}) {
 		this.aiPlayer1LV = options.aiPlayer1LV ?? 1
 		this.aiPlayer2LV = options.aiPlayer2LV ?? 1
+		return super.init(options)
 	}
 
 	/**

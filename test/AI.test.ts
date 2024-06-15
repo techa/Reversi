@@ -6,8 +6,8 @@ import { Tile } from '../src/Reversi.js'
 
 describe(`AI`, () => {
 	const reversi = new ReversiTest().init()
-	reversi.addTile(2, 3)
-	reversi.addTile(4, 2)
+	reversi.hit(2, 3)
+	reversi.hit(4, 2)
 
 	it(`getHands(1)`, () => {
 		// ________
@@ -124,9 +124,9 @@ describe(`AI`, () => {
 })
 
 describe(`fixed`, () => {
-	const reversi = new ReversiTest({
+	const reversi = new ReversiTest().init({
 		boardSize: 5,
-	}).init()
+	})
 
 	it(`fixed`, () => {
 		reversi.insert(`
@@ -217,9 +217,9 @@ describe(`fixed`, () => {
 	})
 
 	it(`fixedCount`, () => {
-		const reversi = new ReversiTest({
+		const reversi = new ReversiTest().init({
 			boardSize: 4,
-		}).init()
+		})
 		expect(reversi.stringify()).toBe(
 			`
 			____
@@ -230,8 +230,8 @@ describe(`fixed`, () => {
 		)
 		expect(reversi.fixedCount(2, 0)).toBe(0)
 
-		reversi.addTile(2, 3)
-		reversi.addTile(3, 1)
+		reversi.hit(2, 3)
+		reversi.hit(3, 1)
 
 		expect(reversi.stringify()).toBe(
 			`

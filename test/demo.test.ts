@@ -7,11 +7,11 @@ import { AILV, ReversiOptions, AIsettings } from '../src/AI.js'
 
 describe(`demo 1`, () => {
 	const random = new ParkMiller(7)
-	const reversi = new ReversiTest({
+	const reversi = new ReversiTest().init({
 		boardSize: 4,
 		mode: 'demo',
 		random: () => random.float(),
-	}).init()
+	})
 	it(`result`, () => {
 		expect(reversi.stringify()).toBe(
 			`
@@ -27,11 +27,11 @@ describe(`demo 1`, () => {
 
 describe(`demo 2`, () => {
 	const random = new ParkMiller(2)
-	const reversi = new ReversiTest({
+	const reversi = new ReversiTest().init({
 		boardSize: 4,
 		mode: 'demo',
 		random: () => random.float(),
-	}).init()
+	})
 	it(`result`, () => {
 		expect(reversi.stringify()).toBe(
 			`
@@ -54,11 +54,11 @@ const AIBattle = (options: Partial<ReversiOptions>) => {
 	}
 
 	for (let i = 0; i < wins.total; i++) {
-		const reversi = new ReversiTest({
+		const reversi = new ReversiTest().init({
 			...options,
 			mode: 'demo',
 			aiPlayer2LV: (i % 6) as AILV,
-		}).init()
+		})
 
 		if (reversi.blackCount > reversi.whiteCount) {
 			wins.black++

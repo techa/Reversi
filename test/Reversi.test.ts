@@ -24,24 +24,24 @@ describe(`Reversi 2 players`, () => {
 
 	it(`error position [0, 0]`, () => {
 		expect(() => {
-			reversi.addTile(0, 0)
+			reversi.hit(0, 0)
 		}).toThrowError()
 	})
 
 	it(`error position [3, 5]`, () => {
 		expect(() => {
-			reversi.addTile(3, 5)
+			reversi.hit(3, 5)
 		}).toThrowError()
 	})
 
 	it(`error position (on a piece) [3, 4]`, () => {
 		expect(() => {
-			reversi.addTile(3, 4)
+			reversi.hit(3, 4)
 		}).toThrowError()
 	})
 
-	it(`addTile(2, 3)`, () => {
-		reversi.addTile(2, 3)
+	it(`hit(2, 3)`, () => {
+		reversi.hit(2, 3)
 		expect(reversi.stringify()).toStrictEqual(
 			`
 			________
@@ -56,8 +56,8 @@ describe(`Reversi 2 players`, () => {
 		)
 	})
 
-	it(`addTile(4, 2)`, () => {
-		reversi.addTile(4, 2)
+	it(`hit(4, 2)`, () => {
+		reversi.hit(4, 2)
 		expect(reversi.turn).toBe(3)
 		expect(reversi.stringify()).toStrictEqual(
 			`

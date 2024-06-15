@@ -38,7 +38,7 @@ class ReversiView extends AIReversi {
 			this.view.$setTile(x, y, sym)
 		}
 	}
-	$updateLastMove(x: number, y: number) {
+	$addHistory(x: number, y: number) {
 		this.view.$updateLastMove(x, y)
 	}
 	$tilesCounting() {
@@ -50,7 +50,7 @@ class ReversiView extends AIReversi {
 			this.view.$changeTileClassByNum(id, sym)
 		}
 	}
-	$glowchange() {
+	$turnSwitch() {
 		if (this.sym === Tile.W) {
 			this.view.$stopGlow1()
 			this.view.$startGlow2()
@@ -109,21 +109,14 @@ export class View {
 		const aiLv = parseInt(setting['aiLv'].value)
 
 		clearTimeout(this.timerID)
-		this.reversi = new ReversiView({
-			boardSize: parseInt(setting['boardSize'].value) as BoardSize,
-			initialPlacement: setting['initialPlacement'].value,
-			mode,
-			yourColor: parseInt(setting['yourColor'].value),
-			aiPlayer1LV: aiLv as AILV,
-			aiPlayer2LV: aiLv as AILV,
-		})
+		this.reversi = new ReversiView()
 		this.reversi.view = this
 
 		this.addTile = (event: Event) => {
 			const el = event.target as HTMLElement
 			const x = parseInt(el.getAttribute('x-axis')!)
 			const y = parseInt(el.getAttribute('y-axis')!)
-			this.reversi.addTile(x, y)
+			this.reversi.hit(x, y)
 
 			this.hideHandScoreDetails()
 		}
@@ -131,7 +124,14 @@ export class View {
 		this.allBoardInitialisation()
 		this.closeSettingFormContainer()
 
-		this.reversi.init()
+		this.reversi.init({
+			boardSize: parseInt(setting['boardSize'].value) as BoardSize,
+			initialPlacement: setting['initialPlacement'].value,
+			mode,
+			yourColor: parseInt(setting['yourColor'].value),
+			aiPlayer1LV: aiLv as AILV,
+			aiPlayer2LV: aiLv as AILV,
+		})
 
 		this.hideShroud()
 		this.$startGlow1()

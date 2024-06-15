@@ -1,5 +1,5 @@
 import { AIReversi } from '../src/AI.js'
-import { type Sym, Tile } from '../src/Reversi.js'
+import { Tile } from '../src/Reversi.js'
 
 export class ReversiTest extends AIReversi {
 	stringify() {
@@ -41,13 +41,8 @@ export class ReversiTest extends AIReversi {
 		}
 	}
 
-	$stopDualBotMode() {}
-	$updateLastMove(x: number, y: number) {}
-	$changeTileClassByNum(id: number, sym: Sym) {}
-	$glowchange() {}
-	$tempStopAllClicks() {}
-	$startBackAllClicks() {}
+	$addHistory(x: number, y: number) {}
+	$turnSwitch() {}
 	$playerTurn() {}
-	$removePredictionDots() {}
 	S_place() {}
 }

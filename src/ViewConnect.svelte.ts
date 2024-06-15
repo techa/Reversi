@@ -49,10 +49,12 @@ export const reversi = new (class extends AIReversi {
 
 	init(options: ReversiOptions) {
 		clearTimeout(this.timerID)
-		super.init(options)
 		states.history = []
 		states.winlose = ''
-		return this
+		return super.init(options)
+	}
+	$playerTurn() {
+		states.playerTurn = true
 	}
 	$aiTurn() {
 		clearTimeout(this.timerID)
@@ -61,9 +63,6 @@ export const reversi = new (class extends AIReversi {
 				super.$aiTurn()
 			}, 2000)
 		}
-	}
-	$stopDualBotMode() {
-		clearTimeout(this.timerID)
 	}
 	$setTile(x: number, y: number, sym: Sym) {
 		super.$setTile(x, y, sym)
@@ -79,7 +78,7 @@ export const reversi = new (class extends AIReversi {
 			states.tiles = this.tiles
 		}
 	}
-	$updateLastMove(x: number, y: number) {
+	$addHistory(x: number, y: number) {
 		states.history.push({
 			sym: this.sym,
 			x,
@@ -91,7 +90,7 @@ export const reversi = new (class extends AIReversi {
 		states.blackScore = this.blackCount
 		states.whiteScore = this.whiteCount
 	}
-	$glowchange() {
+	$turnSwitch() {
 		if (this.sym === Tile.W) {
 			states.blackTurn = false
 			states.whiteTurn = true
@@ -105,9 +104,6 @@ export const reversi = new (class extends AIReversi {
 		states.whiteTurn = false
 		states.modal = ModalType.BackOrRestart
 		return (states.winlose = super.$checkWin())
-	}
-	$playerTurn() {
-		states.playerTurn = true
 	}
 	S_invalid() {
 		console.log('Invalid Move')
