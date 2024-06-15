@@ -14,13 +14,9 @@
 		title_colorFlg = !title_colorFlg
 	}
 
-	// modal menu
-	let showModal = $state(false)
-
-	// // game start
-	let started = $state(false)
+	// game start
 	function start(_mode: Mode) {
-		started = true
+		states.started = true
 		options.mode = _mode
 		reversi.init(options)
 	}
@@ -32,7 +28,7 @@
 		onmouseenter={title_hover}
 		onmouseleave={title_hover}
 		onclick={() => {
-			showModal = true
+			states.showModal = true
 		}}
 	>
 		{#each title as char, i}
@@ -43,9 +39,9 @@
 	</button>
 </div>
 
-<Modal bind:showModal bind:started></Modal>
+<Modal></Modal>
 
-{#if !started}
+{#if !states.started}
 	<div class="settings-from-container">
 		<form name="setting">
 			<label>
@@ -131,7 +127,7 @@
 {/if}
 
 <div class="main-container">
-	{#if started}
+	{#if states.started}
 		<Board></Board>
 	{:else}
 		<div class="main-page-container">

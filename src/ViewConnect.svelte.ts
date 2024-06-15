@@ -20,6 +20,15 @@ export const states = $state({
 	blackScore: 2,
 	whiteScore: 2,
 	aiLv: AILVMAX,
+
+	started: false,
+	showModal: false,
+	winlose: '',
+
+	mute: false,
+	aiWait: 2000,
+	// 棋譜履歴の非表示化
+	historyHide: false,
 })
 
 export const reversi = new (class extends AIReversi {
@@ -30,6 +39,7 @@ export const reversi = new (class extends AIReversi {
 		clearTimeout(this.timerID)
 		super.init(options)
 		states.history = []
+		states.winlose = ''
 		return this
 	}
 	$aiTurn() {
@@ -76,9 +86,10 @@ export const reversi = new (class extends AIReversi {
 		}
 	}
 	$checkWin() {
-		const message = super.$checkWin()
-		// this.view.$checkWin(message)
-		return message
+		states.blackTurn = false
+		states.whiteTurn = false
+		states.showModal = true
+		return (states.winlose = super.$checkWin())
 	}
 	$playerTurn() {
 		states.playerTurn = true

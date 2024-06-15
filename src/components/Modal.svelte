@@ -1,26 +1,25 @@
 <script lang="ts">
 	import { type Snippet } from "svelte"
-	import { reversi, options } from '../ViewConnect.svelte.js'
+	import { reversi, options, states } from '../ViewConnect.svelte.js'
 
 	let {
-		showModal = $bindable(),
-		started = $bindable(),
 		children,
-	}:{
-		showModal: boolean
-		started: boolean
+	}: {
 		children?: Snippet
 	} = $props()
 
 	let dialog: HTMLDialogElement
 
-	function close() {
+	function close(_e: Event, btn = false) {
+		if (states.winlose && !btn) {
+			return
+		}
 		dialog.close()
-		showModal = false
+		states.showModal = false
 	}
 
 	$effect(() => {
-		if (dialog && showModal) {
+		if (dialog && states.showModal) {
 			dialog.showModal()
 		}
 	})
@@ -33,13 +32,17 @@
 	onclose={close}
 	onclick={close}
 >
-	<div class="win-lose-draw">You Win!</div>
-	<div class="result-container">
+	{#if states.winlose}
+		<div class="win-lose-draw">{states.winlose}</div>
+	{/if}
+
+	<!-- svelte-ignore a11y_no_static_element_interactions -->
+	<div class="result-container" onclick={(e)=>{e.stopPropagation()}}>
 		<button
 			class="name result-selections"
-			onclick={()=> {
-				started = false
-				close()
+			onclick={(e)=> {
+				close(e, true)
+				states.started = false
 			}}
 		>
 			Back to Top
@@ -47,8 +50,8 @@
 
 		<button
 			class="name result-selections"
-			onclick={()=> {
-				close()
+			onclick={(e)=> {
+				close(e, true)
 				reversi.init(options)
 			}}
 		>
