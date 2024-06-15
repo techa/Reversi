@@ -1,6 +1,11 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
-	import { reversi, states, Constants } from '../ViewConnect.svelte.js'
+	import {
+		reversi,
+		states,
+		Constants,
+		options,
+	} from '../ViewConnect.svelte.js'
 
 	const { boardSize } = reversi
 
@@ -88,16 +93,20 @@
 	</div>
 </div>
 
-<div class="history-container" style:width={boardWidth + 'px'}>
-	{#each states.history as data}
-		<div class="last-move-slot">
-			<div class="last-move-tile-{reversi.getSymColor(data.sym)}"></div>
-			<div class="last-move-number">
-				{String.fromCharCode(65 + data.x) + (data.y + 1)}
+{#if options.mode === '2' || import.meta.env.DEV}
+	<div class="history-container" style:width={boardWidth + 'px'}>
+		{#each states.history as data}
+			<div class="last-move-slot">
+				<div
+					class="last-move-tile-{reversi.getSymColor(data.sym)}"
+				></div>
+				<div class="last-move-number">
+					{String.fromCharCode(65 + data.x) + (data.y + 1)}
+				</div>
 			</div>
-		</div>
-	{/each}
-</div>
+		{/each}
+	</div>
+{/if}
 
 <div
 	class="score-container"
