@@ -78,9 +78,9 @@
 	</defs>
 </svg>
 
-<div class="header-wrapper">
-	<div class="header" style="max-width: {Constants.BoardWidthMax}px;">
-		<div class="btn"></div>
+<div class="header-wrapper" style="max-width: {Constants.BoardWidthMax}px;">
+	<div class="btn"></div>
+	<div class="header">
 		<button
 			class="title"
 			onmouseenter={titlehover}
@@ -98,17 +98,17 @@
 				>
 			{/each}
 		</button>
-		<div class="btn">
-			<button
-				onclick={() => {
-					states.modal = ModalType.Config
-				}}
-			>
-				<svg class="icon config" stroke="white">
-					<use href="#config"></use>
-				</svg>
-			</button>
-		</div>
+	</div>
+	<div class="btn">
+		<button
+			onclick={() => {
+				states.modal = ModalType.Config
+			}}
+		>
+			<svg class="icon config" stroke="white">
+				<use href="#config"></use>
+			</svg>
+		</button>
 	</div>
 </div>
 
@@ -300,6 +300,7 @@
 		flex-direction: row;
 		align-items: center;
 		justify-content: center;
+		margin: auto;
 	}
 	.header {
 		position: relative;
@@ -318,7 +319,7 @@
 		color: yellow;
 		letter-spacing: 2px;
 		text-align: center;
-		width: 100%;
+		cursor: pointer;
 	}
 	.btn {
 		/* position: absolute; */
