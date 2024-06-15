@@ -97,21 +97,12 @@ body {
 	width: 100%;
 	padding: 0;
 	margin: 0;
-	position: fixed;
+	/* position: fixed; */
 	font-family: 'Archivo Black', sans-serif;
 }
 
 button {
 	font-family: 'DM Serif Display', serif;
-}
-
-.header {
-	font-family: 'Archivo Black', sans-serif;
-	font-size: 77px;
-	margin-bottom: 10px;
-	color: yellow;
-	letter-spacing: 2px;
-	text-align: center;
 }
 
 .score-container {

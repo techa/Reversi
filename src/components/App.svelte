@@ -26,20 +26,22 @@
 	}
 </script>
 
-<button
-	class="header"
-	onmouseenter={title_hover}
-	onmouseleave={title_hover}
-	onclick={() => {
-		showModal = true
-	}}
->
-	{#each title as char, i}
-		<span class="{(i + +title_colorFlg) % 2 ? 'black' : 'white'}-letter"
-			>{char}</span
-		>
-	{/each}
-</button>
+<div class="header">
+	<button
+		class="title"
+		onmouseenter={title_hover}
+		onmouseleave={title_hover}
+		onclick={() => {
+			showModal = true
+		}}
+	>
+		{#each title as char, i}
+			<span class="{(i + +title_colorFlg) % 2 ? 'black' : 'white'}-letter"
+				>{char}</span
+			>
+		{/each}
+	</button>
+</div>
 
 <Modal bind:showModal bind:started></Modal>
 
@@ -148,10 +150,19 @@
 
 <style>
 	.header {
+		display: flex;
+		justify-content: center;
+	}
+	.title {
 		background-color: transparent;
 		display: block;
 		border: none;
-		width: 100%;
+		font-family: 'Archivo Black', sans-serif;
+		font-size: 77px;
+		margin-bottom: 10px;
+		color: yellow;
+		letter-spacing: 2px;
+		text-align: center;
 	}
 	.main-container {
 		flex-direction: column;
