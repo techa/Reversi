@@ -92,8 +92,7 @@
 
 body {
 	background-color: darkslategray;
-	background-size: cover;
-	min-width: 650px;
+	/* min-width: 640px; */
 	width: 100%;
 	padding: 0;
 	margin: 0;
@@ -111,7 +110,6 @@ button {
 	height: 175px;
 
 	margin-top: 10px;
-	min-width: 650px;
 	visibility: hidden;
 
 	justify-content: center;
@@ -230,7 +228,7 @@ button {
 	height: 100%;
 	border: 1px solid black;
 	width: 100px;
-	margin: 0 auto;
+	/* margin: 0 auto; */
 	position: relative;
 	border-radius: 50%;
 	background: linear-gradient(#14ffe9, #ffeb3b, #ff00e0);
@@ -273,6 +271,8 @@ button {
 .tile-container {
 	position: relative;
 	height: 100px;
+	display: flex;
+	justify-content: center;
 }
 
 #glow-2 {
@@ -291,25 +291,6 @@ button {
 	/* height: 420px; */
 	display: flex;
 	justify-content: center;
-}
-
-:root {
-	--board-width: 640px;
-	--board-frame: 30px;
-	--markers-width: calc(var(--board-width) - 2 * var(--board-frame));
-}
-
-.board-frame {
-	width: var(--board-width);
-	height: var(--board-width);
-	padding: var(--board-frame);
-	box-sizing: border-box;
-	background: black;
-	box-shadow: 1px 1px 18px;
-	border-radius: 15px;
-	position: relative;
-	border-bottom: 5px solid black;
-	border-right: 5px solid black;
 }
 
 #bot-name {
@@ -513,67 +494,6 @@ button {
 	border-radius: 50%;
 	cursor: pointer;
 }
-
-.h-markers-container {
-	line-height: var(--board-frame);
-	position: absolute;
-	display: flex;
-	width: var(--markers-width);
-	box-sizing: border-box;
-	height: var(--board-frame);
-	top: 0;
-	flex-wrap: nowrap;
-}
-
-.h-markers {
-	height: 100%;
-
-	box-sizing: border-box;
-	width: 100%;
-	color: white;
-	text-align: center;
-}
-
-.v-markers-container {
-	position: absolute;
-	display: flex;
-	width: 32px;
-	box-sizing: border-box;
-	height: var(--markers-width);
-	top: 29px;
-	left: -1px;
-	flex-direction: column;
-	flex-wrap: nowrap;
-}
-
-.v-markers {
-	height: 100%;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-
-	box-sizing: border-box;
-	width: 100%;
-	color: white;
-	text-align: center;
-}
-
-/*
-.last-move-display-container {
-	width: 154px;
-	margin-left: 20px;
-	box-sizing: border-box;
-	background: linear-gradient(to bottom, #9b9a9a, #9b9a9a);
-	border: none;
-	border-radius: 15px;
-	position: relative;
-	box-shadow: 4px 4px 4px black;
-	display: inline-block;
-	padding: 10px;
-	border-bottom: 2px solid #414141;
-	border-right: 3px solid #414141;
-	overflow: hidden;
-} */
 
 .last-move-slot {
 	width: 120px;

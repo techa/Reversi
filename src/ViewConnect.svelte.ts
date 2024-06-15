@@ -17,6 +17,10 @@ export const enum ModalType {
 	Config,
 }
 
+export const enum Constants {
+	BoardWidthMax = 800,
+}
+
 export const states = $state({
 	tiles: [] as Tile[],
 	history: [] as { sym: Sym; x: number; y: number }[],

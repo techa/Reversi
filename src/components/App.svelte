@@ -10,6 +10,7 @@
 		options,
 		reversi,
 		states,
+		Constants,
 	} from '../ViewConnect.svelte.js'
 
 	// Title
@@ -58,11 +59,28 @@
 			<path d="M22 18h-5.9c-1.3 0-2.6-.7-3.3-1.8l-.5-.8" />
 			<path d="m18 14 4 4-4 4" />
 		</symbol>
+
+		<symbol id="volume-mute" viewBox="0 0 24 24" class="volume-mute">
+			<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+			<line x1="22" x2="16" y1="9" y2="15" /><line
+				x1="16"
+				x2="22"
+				y1="9"
+				y2="15"
+			/>
+		</symbol>
+		<symbol id="volume" viewBox="0 0 24 24" class="volume-mute">
+			<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+			<path d="M15.54 8.46a5 5 0 0 1 0 7.07" /><path
+				d="M19.07 4.93a10 10 0 0 1 0 14.14"
+			/>
+		</symbol>
 	</defs>
 </svg>
 
 <div class="header-wrapper">
-	<div class="header">
+	<div class="header" style="max-width: {Constants.BoardWidthMax}px;">
+		<div class="btn"></div>
 		<button
 			class="title"
 			onmouseenter={titlehover}
@@ -80,7 +98,7 @@
 				>
 			{/each}
 		</button>
-		<div class="btns">
+		<div class="btn">
 			<button
 				onclick={() => {
 					states.modal = ModalType.Config
@@ -271,36 +289,51 @@
 {/if}
 
 <style>
+	.header-wrapper,
+	.settings-from-container,
+	.main-container {
+		/* max-width: 640px; */
+		width: 100%;
+	}
 	.header-wrapper {
 		display: flex;
-		flex-direction: column;
+		flex-direction: row;
 		align-items: center;
+		justify-content: center;
 	}
 	.header {
-		width: 640px;
+		position: relative;
+		width: 100%;
 		display: flex;
 		justify-content: center;
-		position: relative;
+		align-items: stretch;
 	}
 	.title {
 		background-color: transparent;
 		display: block;
 		border: none;
 		font-family: 'Archivo Black', sans-serif;
-		font-size: 77px;
+		font-size: 52px;
 		margin-bottom: 10px;
 		color: yellow;
 		letter-spacing: 2px;
 		text-align: center;
+		width: 100%;
 	}
-	.btns {
-		position: absolute;
+	.btn {
+		/* position: absolute; */
 		right: 0;
 		display: flex;
+		justify-content: center;
 		align-items: center;
-		height: 100%;
 		width: 64px;
 	}
+	.btn button {
+		background: transparent;
+		border: none;
+		color: gainsboro;
+	}
+
 	form {
 		text-align: center;
 	}
