@@ -91,19 +91,23 @@ export const reversi = new (class extends AIReversi {
 		states.history = states.history.slice(index)
 	}
 	$addHistory(x: number, y: number) {
-		states.history.unshift({
-			sym: this.sym,
-			x,
-			y,
-			tiles: $state.snapshot(this.tiles),
-			turn: $state.snapshot(this.turn),
-		})
+		if (!this.thinking) {
+			states.history.unshift({
+				sym: this.sym,
+				x,
+				y,
+				tiles: $state.snapshot(this.tiles),
+				turn: $state.snapshot(this.turn),
+			})
+		}
 	}
 	$tilesCounting() {
-		super.$tilesCounting()
-		states.blackScore = this.blackCount
-		states.whiteScore = this.whiteCount
-		states.turn = this.turn
+		if (!this.thinking) {
+			super.$tilesCounting()
+			states.blackScore = this.blackCount
+			states.whiteScore = this.whiteCount
+			states.turn = this.turn
+		}
 	}
 	$turnSwitch() {
 		if (this.sym === Tile.W) {
