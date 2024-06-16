@@ -29,24 +29,8 @@
 	}
 </script>
 
-<svg
-	xmlns="http://www.w3.org/2000/svg"
-	width="24"
-	height="24"
-	viewBox="0 0 24 24"
-	style="display: none;"
->
+<svg style="display: none;">
 	<defs>
-		<symbol id="config" viewBox="0 0 24 24">
-			<path
-				d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
-			/><circle cx="12" cy="12" r="3" />
-		</symbol>
-		<symbol id="menu" viewBox="0 0 24 24">
-			<line x1="4" x2="20" y1="12" y2="12" />
-			<line x1="4" x2="20" y1="6" y2="6" />
-			<line x1="4" x2="20" y1="18" y2="18" />
-		</symbol>
 		<symbol id="random" viewBox="0 0 24 24">
 			<path
 				stroke="black"
@@ -57,30 +41,13 @@
 			<path d="M2 6h1.9c1.5 0 2.9.9 3.6 2.2" stroke="white" />
 			<path d="M22 18h-5.9c-1.3 0-2.6-.7-3.3-1.8l-.5-.8" stroke="white" />
 		</symbol>
-
-		<symbol id="black-tile" viewBox="0 0 24 24">
-			<circle cx="12" cy="12" r="10" fill="black"></circle>
-		</symbol>
-		<symbol id="white-tile" viewBox="0 0 24 24">
-			<circle cx="12" cy="12" r="10" fill="white"></circle>
-		</symbol>
-
-		<symbol id="volume-mute" viewBox="0 0 24 24" class="volume">
-			<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-			<line x1="22" x2="16" y1="9" y2="15" /><line
-				x1="16"
-				x2="22"
-				y1="9"
-				y2="15"
-			/>
-		</symbol>
-		<symbol id="volume" viewBox="0 0 24 24" class="volume">
-			<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-			<path d="M15.54 8.46a5 5 0 0 1 0 7.07" /><path
-				d="M19.07 4.93a10 10 0 0 1 0 14.14"
-			/>
-		</symbol>
 	</defs>
+	<symbol id="black-tile" viewBox="0 0 24 24">
+		<circle cx="12" cy="12" r="10" fill="black"></circle>
+	</symbol>
+	<symbol id="white-tile" viewBox="0 0 24 24">
+		<circle cx="12" cy="12" r="10" fill="white"></circle>
+	</symbol>
 </svg>
 
 <div class="header-wrapper" style="max-width: {Constants.BoardWidthMax}px;">
@@ -110,7 +77,9 @@
 			}}
 		>
 			<svg class="icon config" stroke="white">
-				<use href="#config"></use>
+				<path
+					d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+				/><circle cx="12" cy="12" r="3" />
 			</svg>
 		</button>
 	</div>
@@ -152,11 +121,11 @@
 	{/if}
 </div>
 
-{#if states.hand && states.handPosition}
+{#if import.meta.env.DEV && states.hand && states.handPosition}
 	<div
 		class="score-details"
-		style="top: {states.handPosition[1] + 10}px;left: {states
-			.handPosition[0] + 10}px;"
+		style:top="{states.handPosition[1] + 10}px"
+		style:left="{states.handPosition[0] + 10}px"
 	>
 		{#each Object.entries(states.hand.scores) as [key, score]}
 			{#if score}
