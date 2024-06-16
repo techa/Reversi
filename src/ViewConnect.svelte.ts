@@ -59,14 +59,20 @@ export const reversi = new (class extends AIReversi {
 		return this
 	}
 	$playerTurn() {
-		states.playerTurn = true
+		if (!this.thinking) {
+			states.playerTurn = true
+		}
 	}
 	$aiTurn() {
-		clearTimeout(this.timerID)
-		if (states.started) {
-			this.timerID = setTimeout(() => {
-				super.$aiTurn()
-			}, 2000)
+		if (this.thinking) {
+			super.$aiTurn()
+		} else {
+			clearTimeout(this.timerID)
+			if (states.started && !this.thinking) {
+				this.timerID = setTimeout(() => {
+					super.$aiTurn()
+				}, 2000)
+			}
 		}
 	}
 	$setTile(x: number, y: number, sym: Sym) {
@@ -110,28 +116,40 @@ export const reversi = new (class extends AIReversi {
 		}
 	}
 	$turnSwitch() {
-		if (this.sym === Tile.W) {
-			states.blackTurn = false
-			states.whiteTurn = true
-		} else {
-			states.blackTurn = true
-			states.whiteTurn = false
+		if (!this.thinking) {
+			if (this.sym === Tile.W) {
+				states.blackTurn = false
+				states.whiteTurn = true
+			} else {
+				states.blackTurn = true
+				states.whiteTurn = false
+			}
+			states.activePlayerName =
+				this.sym === Tile.B
+					? this.blackPlayerName
+					: this.whitePlayerName
 		}
-		states.activePlayerName =
-			this.sym === Tile.B ? this.blackPlayerName : this.whitePlayerName
 	}
 	$checkWin() {
-		states.blackTurn = false
-		states.whiteTurn = false
-		states.modal = ModalType.BackOrRestart
-		return (states.winlose = super.$checkWin())
+		const message = super.$checkWin()
+		if (!this.thinking) {
+			states.blackTurn = false
+			states.whiteTurn = false
+			states.modal = ModalType.BackOrRestart
+			states.winlose = message
+		}
+		return message
 	}
 	S_invalid() {
-		console.log('Invalid Move')
-		this.sounds.sePlay(SoundID.Invalid)
+		if (!this.thinking) {
+			console.log('Invalid Move')
+			this.sounds.sePlay(SoundID.Invalid)
+		}
 	}
 	S_place() {
-		this.sounds.sePlay(SoundID.Place)
+		if (!this.thinking) {
+			this.sounds.sePlay(SoundID.Place)
+		}
 	}
 
 	getSymColor(tile: Tile = this.sym) {
