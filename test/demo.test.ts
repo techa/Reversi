@@ -74,6 +74,8 @@ const AIBattle = (options: Partial<ReversiOptions>) => {
 ;(async () => {
 	for (let i = 0; i < AIsettings.length; i++) {
 		const wins = AIBattle({
+			yourColor: 0,
+			initialPlacement: 'random',
 			aiPlayer1LV: i as AILV,
 		})
 		// console.log(`B-${i}, W-1`, wins)

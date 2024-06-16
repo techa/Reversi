@@ -97,8 +97,13 @@ export abstract class Reversi {
 			this.initialPlacement = this.random() > 0.5 ? 'cross' : 'parallel'
 		}
 
+		const yc = options.yourColor
 		this.yourColor =
-			options.yourColor || this.yourColor || this.random() > 0.5
+			yc == null
+				? this.yourColor
+				: yc > 0
+				? (yc as Sym)
+				: this.random() > 0.5
 				? Tile.B
 				: Tile.W
 	}

@@ -3,6 +3,7 @@
 import { describe, it, expect } from 'vitest'
 import { ReversiTest } from './TestingClass.js'
 import { Tile } from '../src/Reversi.js'
+import { ParkMiller } from './ParkMiller.js'
 
 describe(`AI`, () => {
 	const reversi = new ReversiTest().init()
@@ -120,6 +121,104 @@ describe(`AI`, () => {
 	it(`get outside`, () => {
 		expect(reversi.getTile(0, 8)).toBe(-1)
 		expect(reversi.getTile(8, 0)).toBe(-1)
+	})
+})
+
+describe(`AI single you=black`, () => {
+	const random = new ParkMiller(2)
+	const reversi = new ReversiTest().init({
+		mode: 'single',
+		yourColor: Tile.B,
+		boardSize: 4,
+		random: () => random.float(),
+	})
+	it(`initial state`, () => {
+		expect(reversi.sym).toBe(Tile.B)
+		expect(reversi.turn).toBe(1)
+		expect(reversi.yourColor).toBe(Tile.B)
+		expect(reversi.stringify()).toBe(
+			`
+			____
+			_WB_
+			_BW_
+			____
+			`.replace(/\t/g, '')
+		)
+	})
+
+	it(`hit(2, 3)`, () => {
+		reversi.hit(2, 3)
+		// ____
+		// _WB_
+		// _BB_
+		// __B_
+		expect(reversi.stringify()).toBe(
+			`
+			____
+			_WWW
+			_BB_
+			__B_
+			`.replace(/\t/g, '')
+		)
+	})
+
+	it(`hit(2, 0)`, () => {
+		reversi.hit(2, 0)
+		// __B_
+		// _WBW
+		// _BB_
+		// __B_
+		expect(reversi.stringify()).toBe(
+			`
+			__B_
+			_WBW
+			_WW_
+			_WB_
+			`.replace(/\t/g, '')
+		)
+	})
+
+	// it(`hit(2, 0)`, () => {})
+})
+
+describe(`AI single you=white`, () => {
+	const random = new ParkMiller(2)
+	const reversi = new ReversiTest().init({
+		mode: 'single',
+		yourColor: Tile.W,
+		boardSize: 4,
+		random: () => random.float(),
+	})
+
+	it(`initial state`, () => {
+		expect(reversi.turn).toBe(2)
+		expect(reversi.yourColor).toBe(Tile.W)
+		expect(reversi.demo).toBe(false)
+		expect(reversi.sym).toBe(Tile.W)
+		expect(reversi.stringify()).toBe(
+			`
+			_B__
+			_BB_
+			_BW_
+			____
+			`.replace(/\t/g, '')
+		)
+	})
+
+	it(`hit(0,2)`, () => {
+		reversi.hit(0, 2)
+		// _B__
+		// _BB_
+		// WWW_
+		// ____
+		expect(reversi.stringify()).toBe(
+			`
+			_B__
+			_BB_
+			WBW_
+			_B__
+			`.replace(/\t/g, '')
+		)
 	})
 })
 
