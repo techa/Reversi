@@ -131,7 +131,7 @@
 {#if options.mode === '2' || import.meta.env.DEV}
 	<div class="history-container" style:width={boardWidth + 'px'}>
 		{#each states.history as data, i (data)}
-			<div class="">
+			<div>
 				<div class="last-move-turn">
 					Turn: {data.turn}
 				</div>
@@ -158,6 +158,19 @@
 				</div>
 			</div>
 		{/each}
+		<div>
+			<div class="last-move-turn">Turn: 0</div>
+			<div
+				class="last-move-slot"
+				role="presentation"
+				onclick={() => {
+					historyIndex = -1
+					reversi.init(options)
+				}}
+			>
+				<div class="last-move-number">Initial</div>
+			</div>
+		</div>
 	</div>
 {/if}
 
