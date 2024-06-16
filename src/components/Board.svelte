@@ -72,8 +72,7 @@
 									states.handPosition = null
 								}}
 							>
-								{#if options.mode !== 'demo' && states.aiLv}
-									{@const g = historyIndex}
+								{#if import.meta.env.DEV && options.mode !== 'demo' && states.aiLv}
 									{_hand.scores.total.toFixed(1) || ''}
 								{:else}
 									<div class="predictor"></div>
