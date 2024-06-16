@@ -4,6 +4,7 @@
 		options,
 		states,
 		ModalType,
+		PageType,
 	} from '../ViewConnect.svelte.js'
 
 	let dialog: HTMLDialogElement
@@ -42,7 +43,7 @@
 				class="selections"
 				onclick={(e) => {
 					close(e, true)
-					states.started = false
+					states.page = PageType.Top
 					reversi.init(options)
 				}}
 			>

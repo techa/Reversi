@@ -1,22 +1,32 @@
 <script lang="ts">
 	import { AILVMAX } from '../AI.js'
 	import { Tile } from '../Reversi.js'
-	import { options, states } from '../ViewConnect.svelte.js'
+	import {
+		PageType,
+		options,
+		reversi,
+		states,
+	} from '../ViewConnect.svelte.js'
 	import { capitarize } from '../utils.js'
 </script>
 
 <div class="settings-from-container">
-	<form name="setting">
-		<h4>Board Size: <span class="number">{options.boardSize}</span></h4>
-		<label>
-			<input
-				type="range"
-				name="boardSize"
-				bind:value={options.boardSize}
-				min="4"
-				max="12"
-			/>
-		</label>
+	{#if states.page === PageType.Top}
+		<div>
+			<h4>
+				Board Size:
+				<span class="number">{options.boardSize}</span>
+			</h4>
+			<label>
+				<input
+					type="range"
+					name="boardSize"
+					bind:value={options.boardSize}
+					min="4"
+					max="12"
+				/>
+			</label>
+		</div>
 		<div>
 			<h4>
 				Initial Placement: <span
@@ -108,27 +118,45 @@
 				</svg>
 			</label>
 		</div>
-		<div>
-			<h4>AI LV: <span class="number">{states.aiLv}</span></h4>
+	{:else}
+		<h4>
+			AI{options.mode === 'demo' ? '(Black)' : ''} LV:
+			<span class="number">{options.aiPlayer1LV}</span>
+		</h4>
+		<label>
+			<input
+				type="range"
+				name="aiLv1"
+				bind:value={options.aiPlayer1LV}
+				min="0"
+				max={AILVMAX}
+			/>
+		</label>
+		{#if options.mode === 'demo'}
+			<h4>
+				AI(White) LV:
+				<span class="number">{options.aiPlayer2LV}</span>
+			</h4>
 			<label>
 				<input
 					type="range"
-					name="aiLv"
-					bind:value={states.aiLv}
+					name="aiLv2"
+					bind:value={options.aiPlayer2LV}
 					min="0"
 					max={AILVMAX}
 				/>
 			</label>
-		</div>
-	</form>
+		{/if}
+	{/if}
 </div>
 
 <style>
 	.settings-from-container {
 		width: 100%;
-	}
-	form {
 		text-align: center;
+		display: flex;
+		justify-content: center;
+		flex-direction: column;
 	}
 	h4 {
 		margin: 1rem 0 0.5rem;
@@ -140,11 +168,11 @@
 	h4 span.number {
 		width: 2rem;
 	}
-	form label {
+	label {
 		margin: 0 0.5rem;
 		cursor: pointer;
 	}
-	form input[type='radio'] {
+	input[type='radio'] {
 		display: none;
 	}
 	:global(svg.icon) {
@@ -156,10 +184,10 @@
 		stroke-linecap: round;
 		stroke-linejoin: round;
 	}
-	form input[type='radio'] + .icon {
+	input[type='radio'] + .icon {
 		opacity: 0.5;
 	}
-	form input[type='radio']:checked + .icon {
+	input[type='radio']:checked + .icon {
 		opacity: 1;
 	}
 </style>

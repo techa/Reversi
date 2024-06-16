@@ -6,6 +6,7 @@
 
 	import {
 		ModalType,
+		PageType,
 		options,
 		reversi,
 		states,
@@ -23,10 +24,27 @@
 
 	// game start
 	function start(_mode: Mode) {
-		states.started = true
 		options.mode = _mode
-		reversi.init(options)
+		if (_mode === '2') {
+			states.page = PageType.Game
+			reversi.init(options)
+		} else {
+			states.page = PageType.AILVSelect
+		}
 	}
+	// $effect(() => {
+	// 	const data = {
+	// 		boardSize: options.boardSize,
+	// 		initialPlacement: options.initialPlacement,
+	// 		yourColor: options.yourColor,
+	// 		aiLv: states.aiLv,
+
+	// 		mute: states.mute,
+	// 		aiWait: states.aiWait,
+	// 	}
+	// 	console.log('data', data)
+	// 	localStorage.setItem(`Reversi()`, JSON.stringify(data))
+	// })
 </script>
 
 <svg style="display: none;">
@@ -58,15 +76,21 @@
 			onmouseenter={titlehover}
 			onmouseleave={titlehover}
 			onclick={() => {
-				if (states.started) {
-					states.modal = ModalType.BackOrRestart
+				switch (states.page) {
+					case PageType.Game:
+						states.modal = ModalType.BackOrRestart
+						break
+
+					case PageType.AILVSelect:
+						states.page = PageType.Top
+						break
 				}
 			}}
 		>
 			{#each title as char, i}
-				<span class="{blackOrWhite((i + +title_hover) % 2)}-letter"
-					>{char}</span
-				>
+				<span class="{blackOrWhite((i + +title_hover) % 2)}-letter">
+					{char}
+				</span>
 			{/each}
 		</button>
 	</div>
@@ -88,8 +112,29 @@
 <Modal></Modal>
 
 <div class="main-container">
-	{#if states.started}
+	{#if states.page === PageType.Game}
 		<Board></Board>
+	{:else if states.page === PageType.AILVSelect}
+		<Settings></Settings>
+		<div class="main-page-container">
+			<button
+				class="selections"
+				onclick={() => {
+					states.page = PageType.Game
+					reversi.init(options)
+				}}
+			>
+				Game Start
+			</button>
+			<button
+				class="selections"
+				onclick={(e) => {
+					states.page = PageType.Top
+				}}
+			>
+				Back to Top
+			</button>
+		</div>
 	{:else}
 		<Settings></Settings>
 		<div class="main-page-container">

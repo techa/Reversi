@@ -18,6 +18,12 @@ export const enum ModalType {
 	Config,
 }
 
+export const enum PageType {
+	Top,
+	AILVSelect,
+	Game,
+}
+
 export const enum Constants {
 	BoardWidthMax = 800,
 }
@@ -31,10 +37,9 @@ export const states = $state({
 	whiteTurn: false,
 	blackScore: 2,
 	whiteScore: 2,
-	aiLv: AILVMAX,
-
 	turn: 0,
-	started: false,
+
+	page: PageType.Top,
 	modal: ModalType.Hide,
 	winlose: '',
 	hand: null as null | Hand,
@@ -67,7 +72,7 @@ export const reversi = new (class extends AIReversi {
 			super.$aiTurn()
 		} else {
 			clearTimeout(this.timerID)
-			if (states.started && !this.thinking) {
+			if (states.page === PageType.Game) {
 				this.timerID = setTimeout(() => {
 					super.$aiTurn()
 				}, clamp(states.aiWait, 500, 4000))

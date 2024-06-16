@@ -109,9 +109,19 @@ export abstract class AIReversi extends Reversi {
 	hiScore: number
 
 	boardLog: BoardLog[] = []
+	/**
+	 * If this is true, it is the thinking stage of AI
+	 */
 	thinking = false
 
+	/**
+	 * * vs 'single' player
+	 * * black player when 'demo'
+	 */
 	aiPlayer1LV: AILV
+	/**
+	 * * white player when 'demo'
+	 */
 	aiPlayer2LV: AILV
 
 	private _corner_clue(x: number, y: number, dx: number, dy: number) {
@@ -285,7 +295,12 @@ export abstract class AIReversi extends Reversi {
 	}
 
 	ai_nextHand() {
-		const lv = this.sym === Tile.B ? this.aiPlayer1LV : this.aiPlayer2LV
+		const lv =
+			this.mode === 'single'
+				? this.aiPlayer1LV
+				: this.sym === Tile.B
+				? this.aiPlayer1LV
+				: this.aiPlayer2LV
 
 		return this.pick(this.getHands(lv), AIsettings[lv].blur)
 	}
