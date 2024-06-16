@@ -35,6 +35,14 @@ export const directionXYs: [number, number][] = [
 	[1, 1], // bottom-right
 ]
 
+export interface HistoryData {
+	sym: Sym
+	x: number
+	y: number
+	tiles: Tile[]
+	turn: number
+}
+
 export abstract class Reversi {
 	boardSize: BoardSize = 8
 	initialPlacement: InitialPlacement = 'cross'
@@ -100,14 +108,14 @@ export abstract class Reversi {
 		this.turn = 1
 		this.sym = Tile.B
 		this.initBoardArray()
-		this.initialPieces(this.initialPlacement)
+		this.initialPieces()
 
 		this.demo = this.mode === 'demo'
 		const single = this.mode === 'single'
 		this.singlePlayerMode = single
 		this.botMode = single || this.demo
 
-		if (this.demo || this.yourColor !== this.sym) {
+		if (this.demo || (single && this.yourColor === Tile.W)) {
 			this.$aiTurn()
 		} else {
 			this.$playerTurn()
@@ -133,7 +141,7 @@ export abstract class Reversi {
 	 * ____      ____
 	 * ```
 	 */
-	initialPieces(type: InitialPlacement) {
+	initialPieces(type = this.initialPlacement) {
 		const center = ((this.boardSize / 2) | 0) - 1
 		for (let i = 0; i < 4; i++) {
 			let x = center
@@ -185,7 +193,9 @@ export abstract class Reversi {
 	$aiTurn() {
 		if (this.botMode) {
 			const tile = this.ai_nextHand()
-			this._doTheMove(tile.x, tile.y, true)
+			this._doTheMove(this.addTile(tile.x, tile.y), true)
+		} else {
+			throw new Error(`$aiTurn() is invaild`)
 		}
 	}
 
@@ -246,34 +256,59 @@ export abstract class Reversi {
 		return false
 	}
 
+	isAiTurn() {
+		return this.mode === '2'
+			? false
+			: this.mode === 'demo'
+			? true
+			: this.yourColor === Tile.B
+			? !!(this.turn % 2)
+			: !(this.turn % 2)
+	}
+
+	$insert(data: HistoryData, index?: number) {
+		this.tiles = data.tiles
+		this.sym = data.sym
+		this.turn = data.turn
+
+		this.nextTurn()
+		this.$tilesCounting()
+		this._doTheMove(this._checkSlots(), this.isAiTurn())
+	}
+
 	/**
 	 * * Classの外から操作するためのトリガーメソッド
 	 */
 	hit(x: number, y: number) {
 		if (this.checkOKtoPlace(x, y)) {
-			this._doTheMove(x, y)
+			this._doTheMove(this.addTile(x, y))
 		} else {
 			this.S_invalid()
 		}
 	}
 
 	addTile(x: number, y: number) {
+		this.S_place()
 		this.$setTile(x, y, this.sym)
 		this.$tilesUpdate(x, y)
+		this.$addHistory(x, y)
 		this.nextTurn()
+		this.$tilesCounting()
 
 		return this._checkSlots()
 	}
 
-	_doTheMove(x: number, y: number, aiTurn = false) {
-		this.S_place()
-		this.$addHistory(x, y)
-
+	_doTheMove(
+		slots: {
+			empty: number
+			movable: number
+		},
+		aiTurn = false
+	) {
 		/////////Check anymore playable empty square
 		//check any move left///////////////////////////
 		// console.log(this.sym + ' turn')
-		const slots = this.addTile(x, y)
-		this.$tilesCounting()
+		// const slots = this.addTile(x, y)
 
 		if (slots.empty > 0) {
 			if (slots.movable > 0) {

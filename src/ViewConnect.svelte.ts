@@ -1,5 +1,5 @@
 import { AIReversi, type ReversiOptions, AILVMAX, type Hand } from './AI.js'
-import { type Sym, Tile } from './Reversi.js'
+import { type Sym, Tile, HistoryData } from './Reversi.js'
 import { SoundID, Sounds } from './Sounds.js'
 
 export const options: ReversiOptions = $state({
@@ -23,7 +23,7 @@ export const enum Constants {
 
 export const states = $state({
 	tiles: [] as Tile[],
-	history: [] as { sym: Sym; x: number; y: number }[],
+	history: [] as HistoryData[],
 	playerTurn: false,
 	blackTurn: true,
 	whiteTurn: false,
@@ -31,6 +31,7 @@ export const states = $state({
 	whiteScore: 2,
 	aiLv: AILVMAX,
 
+	turn: 0,
 	started: false,
 	modal: ModalType.Hide,
 	winlose: '',
@@ -51,6 +52,7 @@ export const reversi = new (class extends AIReversi {
 		clearTimeout(this.timerID)
 		states.history = []
 		states.winlose = ''
+		states.turn = this.turn
 		return super.init(options)
 	}
 	$playerTurn() {
@@ -78,17 +80,27 @@ export const reversi = new (class extends AIReversi {
 			states.tiles = this.tiles
 		}
 	}
+	$insert(data: HistoryData, index: number) {
+		states.playerTurn = false
+		super.$insert(data)
+		states.tiles = data.tiles
+		states.turn = data.turn
+		states.history = states.history.slice(index)
+	}
 	$addHistory(x: number, y: number) {
-		states.history.push({
+		states.history.unshift({
 			sym: this.sym,
 			x,
 			y,
+			tiles: $state.snapshot(this.tiles),
+			turn: $state.snapshot(this.turn),
 		})
 	}
 	$tilesCounting() {
 		super.$tilesCounting()
 		states.blackScore = this.blackCount
 		states.whiteScore = this.whiteCount
+		states.turn = this.turn
 	}
 	$turnSwitch() {
 		if (this.sym === Tile.W) {

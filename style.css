@@ -514,6 +514,7 @@ button {
 	opacity: 0;
 	animation: fadein 1s forwards;
 
+	cursor: pointer;
 	--tile-size: 32px;
 }
 

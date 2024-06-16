@@ -12,6 +12,8 @@
 	const boardWidth_border = Constants.BoardWidthMax
 	let boardWidth = $state(640)
 
+	let historyIndex = $state(-1)
+
 	let board_markers_index = Array(boardSize)
 		.fill(0)
 		.map((_, i) => i)
@@ -31,7 +33,11 @@
 		{#each board_markers_index as _, y}
 			<div class="row" style:height={100 / boardSize + '%'}>
 				{#each board_markers_index as _, x}
-					{@const tile = states.tiles[y * boardSize + x]}
+					{@const tiles =
+						historyIndex > -1
+							? states.history[historyIndex].tiles
+							: states.tiles}
+					{@const tile = tiles[y * boardSize + x]}
 					<div
 						class="col square"
 						class:itimatsu={(y + x) % 2}
@@ -47,7 +53,7 @@
 							<div
 								class="{reversi.getSymColor(tile)}-tiles"
 							></div>
-						{:else if states.playerTurn && reversi.checkOKtoPlace(x, y)}
+						{:else if historyIndex < 0 && states.playerTurn && reversi.checkOKtoPlace(x, y)}
 							{@const _hand = reversi.getHand(x, y, states.aiLv)}
 							<div
 								class="can-hit"
@@ -65,6 +71,7 @@
 								}}
 							>
 								{#if options.mode !== 'demo' && states.aiLv}
+									{@const g = historyIndex}
 									{_hand.scores.total.toFixed(1) || ''}
 								{:else}
 									<div class="predictor"></div>
@@ -91,17 +98,38 @@
 			</div>
 		{/each}
 	</div>
+	<div class="footer h-markers-container">
+		Turn: {states.turn}
+	</div>
 </div>
 
 {#if options.mode === '2' || import.meta.env.DEV}
 	<div class="history-container" style:width={boardWidth + 'px'}>
-		{#each states.history as data}
-			<div class="last-move-slot">
+		{#each states.history as data, i (data)}
+			<div class="">
+				<div class="last-move-turn">
+					Turn: {data.turn}
+				</div>
 				<div
-					class="last-move-tile-{reversi.getSymColor(data.sym)}"
-				></div>
-				<div class="last-move-number">
-					{String.fromCharCode(65 + data.x) + (data.y + 1)}
+					class="last-move-slot"
+					role="presentation"
+					onmouseenter={() => {
+						historyIndex = i
+					}}
+					onmouseleave={() => {
+						historyIndex = -1
+					}}
+					onclick={() => {
+						historyIndex = -1
+						reversi.$insert(data, i)
+					}}
+				>
+					<div
+						class="last-move-tile-{reversi.getSymColor(data.sym)}"
+					></div>
+					<div class="last-move-number">
+						{String.fromCharCode(65 + data.x) + (data.y + 1)}
+					</div>
 				</div>
 			</div>
 		{/each}
@@ -182,6 +210,15 @@
 		flex-wrap: nowrap;
 	}
 
+	.footer.h-markers-container {
+		top: auto;
+		bottom: 0;
+
+		color: aliceblue;
+		padding: 4px;
+		box-sizing: border-box;
+	}
+
 	.h-markers {
 		height: 100%;
 
@@ -220,7 +257,7 @@
 	}
 	.history-container {
 		width: 100%;
-		height: 100px;
+		height: 108px;
 		margin-top: 12px;
 
 		box-sizing: border-box;
@@ -231,10 +268,14 @@
 		box-shadow: 4px 4px 4px black;
 		display: flex;
 		flex-direction: row;
-		padding: 10px;
+		padding: 2px 10px;
 		border-bottom: 2px solid #414141;
 		border-right: 3px solid #414141;
 		overflow-y: hidden;
 		overflow-x: scroll;
+	}
+	.last-move-turn {
+		color: aliceblue;
+		text-align: center;
 	}
 </style>
