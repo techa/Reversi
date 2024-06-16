@@ -12,6 +12,7 @@
 		states,
 		Constants,
 	} from '../ViewConnect.svelte.js'
+	import { blackOrWhite, capitarize } from '../utils.js'
 
 	// Title
 	const title = 'REVERSI'
@@ -25,9 +26,6 @@
 		states.started = true
 		options.mode = _mode
 		reversi.init(options)
-	}
-	function cap(str: string) {
-		return str[0].toUpperCase() + str.slice(1).toLowerCase()
 	}
 </script>
 
@@ -75,6 +73,13 @@
 				d="M19.07 4.93a10 10 0 0 1 0 14.14"
 			/>
 		</symbol>
+
+		<symbol id="black-tile" viewBox="0 0 24 24">
+			<circle cx="12" cy="12" r="10" fill="black"></circle>
+		</symbol>
+		<symbol id="white-tile" viewBox="0 0 24 24">
+			<circle cx="12" cy="12" r="10" fill="white"></circle>
+		</symbol>
 	</defs>
 </svg>
 
@@ -92,8 +97,7 @@
 			}}
 		>
 			{#each title as char, i}
-				<span
-					class="{(i + +title_hover) % 2 ? 'black' : 'white'}-letter"
+				<span class="{blackOrWhite((i + +title_hover) % 2)}-letter"
 					>{char}</span
 				>
 			{/each}
@@ -130,7 +134,7 @@
 			<div>
 				<h4>
 					Initial Placement: <span
-						>{cap(options.initialPlacement)}</span
+						>{capitarize(options.initialPlacement)}</span
 					>
 				</h4>
 				<label title="cross">
@@ -191,8 +195,8 @@
 						bind:group={options.yourColor}
 						checked
 					/>
-					<svg viewBox="0 0 24 24" class="icon yc-black">
-						<circle cx="12" cy="12" r="10" fill="black"></circle>
+					<svg class="icon yc-black">
+						<use href="#black-tile"></use>
 					</svg>
 				</label>
 				<label title="white">
@@ -202,8 +206,8 @@
 						value={Tile.W}
 						bind:group={options.yourColor}
 					/>
-					<svg viewBox="0 0 24 24" class="icon yc-white">
-						<circle cx="12" cy="12" r="10" fill="white"></circle>
+					<svg class="icon yc-white">
+						<use href="#white-tile"></use>
 					</svg>
 				</label>
 				<label title="random">
@@ -354,7 +358,7 @@
 	form input[type='radio'] {
 		display: none;
 	}
-	svg.icon {
+	:global(svg.icon) {
 		width: 32px;
 		height: 32px;
 		fill: none;
