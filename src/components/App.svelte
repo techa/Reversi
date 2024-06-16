@@ -53,12 +53,19 @@
 				d="M2 18h1.4c1.3 0 2.5-.6 3.3-1.7l6.1-8.6c.7-1.1 2-1.7 3.3-1.7H22"
 			/>
 			<path d="m18 2 4 4-4 4" stroke="black" />
-			<path d="M2 6h1.9c1.5 0 2.9.9 3.6 2.2" />
-			<path d="M22 18h-5.9c-1.3 0-2.6-.7-3.3-1.8l-.5-.8" />
-			<path d="m18 14 4 4-4 4" />
+			<path d="m18 14 4 4-4 4" stroke="white" />
+			<path d="M2 6h1.9c1.5 0 2.9.9 3.6 2.2" stroke="white" />
+			<path d="M22 18h-5.9c-1.3 0-2.6-.7-3.3-1.8l-.5-.8" stroke="white" />
 		</symbol>
 
-		<symbol id="volume-mute" viewBox="0 0 24 24" class="volume-mute">
+		<symbol id="black-tile" viewBox="0 0 24 24">
+			<circle cx="12" cy="12" r="10" fill="black"></circle>
+		</symbol>
+		<symbol id="white-tile" viewBox="0 0 24 24">
+			<circle cx="12" cy="12" r="10" fill="white"></circle>
+		</symbol>
+
+		<symbol id="volume-mute" viewBox="0 0 24 24" class="volume">
 			<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
 			<line x1="22" x2="16" y1="9" y2="15" /><line
 				x1="16"
@@ -67,18 +74,11 @@
 				y2="15"
 			/>
 		</symbol>
-		<symbol id="volume" viewBox="0 0 24 24" class="volume-mute">
+		<symbol id="volume" viewBox="0 0 24 24" class="volume">
 			<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
 			<path d="M15.54 8.46a5 5 0 0 1 0 7.07" /><path
 				d="M19.07 4.93a10 10 0 0 1 0 14.14"
 			/>
-		</symbol>
-
-		<symbol id="black-tile" viewBox="0 0 24 24">
-			<circle cx="12" cy="12" r="10" fill="black"></circle>
-		</symbol>
-		<symbol id="white-tile" viewBox="0 0 24 24">
-			<circle cx="12" cy="12" r="10" fill="white"></circle>
 		</symbol>
 	</defs>
 </svg>

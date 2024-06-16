@@ -1,6 +1,7 @@
 import { AIReversi, type ReversiOptions, AILVMAX, type Hand } from './AI.js'
 import { type Sym, Tile, HistoryData } from './Reversi.js'
 import { SoundID, Sounds } from './Sounds.js'
+import { clamp } from './utils.js'
 
 export const options: ReversiOptions = $state({
 	boardSize: 8,
@@ -41,8 +42,6 @@ export const states = $state({
 
 	mute: false,
 	aiWait: 2000,
-	// 棋譜履歴の非表示化
-	historyHide: false,
 })
 
 export const reversi = new (class extends AIReversi {
@@ -71,7 +70,7 @@ export const reversi = new (class extends AIReversi {
 			if (states.started && !this.thinking) {
 				this.timerID = setTimeout(() => {
 					super.$aiTurn()
-				}, 2000)
+				}, clamp(states.aiWait, 500, 4000))
 			}
 		}
 	}
@@ -143,12 +142,12 @@ export const reversi = new (class extends AIReversi {
 	S_invalid() {
 		if (!this.thinking) {
 			console.log('Invalid Move')
-			this.sounds.sePlay(SoundID.Invalid)
+			this.sounds.play(SoundID.Invalid)
 		}
 	}
 	S_place() {
 		if (!this.thinking) {
-			this.sounds.sePlay(SoundID.Place)
+			this.sounds.play(SoundID.Place)
 		}
 	}
 

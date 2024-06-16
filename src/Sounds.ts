@@ -10,19 +10,14 @@ export const enum SoundID {
 
 export class Sounds {
 	mute = false
-	sounds = {
-		[SoundID.Beep]: new Audio(),
-		[SoundID.Invalid]: new Audio(),
-		[SoundID.Place]: new Audio(),
+	sources = {
+		[SoundID.Beep]: Beep,
+		[SoundID.Invalid]: Invalid,
+		[SoundID.Place]: Place,
 	}
-	constructor() {
-		this.sounds[SoundID.Beep].src = Beep
-		this.sounds[SoundID.Invalid].src = Invalid
-		this.sounds[SoundID.Place].src = Place
-	}
-	sePlay(id: keyof typeof this.sounds) {
+	play(id: keyof typeof this.sources) {
 		if (!this.mute) {
-			this.sounds[id].play()
+			new Audio(this.sources[id]).play()
 		}
 	}
 }

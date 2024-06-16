@@ -59,7 +59,27 @@
 				Restart
 			</button>
 		{:else if states.modal === ModalType.Config}
-			<!--  -->
+			<button
+				onclick={() => {
+					states.mute = !states.mute
+					reversi.sounds.mute = states.mute
+				}}
+			>
+				<svg class="icon volume" stroke="white">
+					<use href="#volume{states.mute ? '-mute' : ''}"></use>
+				</svg>
+			</button>
+
+			<div>
+				<h4>AI wait: <span>{states.aiWait}</span></h4>
+				<input
+					type="range"
+					bind:value={states.aiWait}
+					max="4000"
+					min="500"
+					step="100"
+				/>
+			</div>
 		{/if}
 	</div>
 </dialog>
@@ -101,5 +121,9 @@
 	}
 	button {
 		display: block;
+	}
+	h4 {
+		margin: 1rem 0 0.5rem;
+		color: aliceblue;
 	}
 </style>
