@@ -55,29 +55,35 @@
 							<div
 								class="{reversi.getSymColor(tile)}-tiles"
 							></div>
-						{:else if historyIndex < 0 && states.playerTurn && reversi.checkOKtoPlace(x, y)}
-							{@const _hand = reversi.getHand(x, y, states.aiLv)}
-							<div
-								class="can-hit"
-								role="presentation"
-								onmouseenter={(event) => {
-									states.hand = _hand
-									states.handPosition = [
-										event.clientX,
-										event.clientY,
-									]
-								}}
-								onmouseleave={() => {
-									states.hand = null
-									states.handPosition = null
-								}}
-							>
-								{#if import.meta.env.DEV && options.mode !== 'demo' && states.aiLv}
+						{:else if states.playerTurn && historyIndex < 0 && reversi.checkOKtoPlace(x, y)}
+							{#if import.meta.env.DEV && options.aiPlayer1LV}
+								{@const _hand = reversi.getHand(
+									x,
+									y,
+									options.aiPlayer1LV,
+								)}
+								<div
+									class="can-hit"
+									role="presentation"
+									onmouseenter={(event) => {
+										states.hand = _hand
+										states.handPosition = [
+											event.clientX,
+											event.clientY,
+										]
+									}}
+									onmouseleave={() => {
+										states.hand = null
+										states.handPosition = null
+									}}
+								>
 									{_hand.scores.total.toFixed(1) || ''}
-								{:else}
+								</div>
+							{:else}
+								<div class="can-hit">
 									<div class="predictor"></div>
-								{/if}
-							</div>
+								</div>
+							{/if}
 						{/if}
 					</div>
 				{/each}
