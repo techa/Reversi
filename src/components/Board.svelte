@@ -156,53 +156,6 @@
 	</div>
 {/if}
 
-<!--
-<div
-	class="score-container"
-	style:visibility="visible"
-	style:width={boardWidth + 'px'}
->
-	<div class="score-inner-container">
-		<div class="name" id="player-name">{reversi.blackPlayerName}</div>
-		<div class="tile-container">
-			<div
-				class="glow"
-				style:visibility={states.blackTurn ? 'visible' : 'hidden'}
-			>
-				<span></span>
-				<span></span>
-				<span></span>
-				<span></span>
-			</div>
-			<div class="score-tile score-black">
-				<div class="score" id="black-score">
-					{states.blackScore}
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="score-inner-container">
-		<div class="name" id="bot-name">{reversi.whitePlayerName}</div>
-		<div class="tile-container">
-			<div
-				class="glow"
-				style:visibility={states.whiteTurn ? 'visible' : 'hidden'}
-			>
-				<span></span>
-				<span></span>
-				<span></span>
-				<span></span>
-			</div>
-			<div class="score-tile score-white">
-				<div class="score" id="white-score">
-					{states.whiteScore}
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
--->
-
 <style>
 	:root {
 		--board-frame: 30px;
