@@ -86,6 +86,7 @@ body {
 
 button {
 	font-family: 'DM Serif Display', serif;
+	cursor: pointer;
 }
 
 .settings-from-container {

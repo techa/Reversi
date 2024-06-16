@@ -323,7 +323,6 @@
 		color: yellow;
 		letter-spacing: 2px;
 		text-align: center;
-		cursor: pointer;
 	}
 	.btn {
 		/* position: absolute; */
@@ -354,6 +353,7 @@
 	}
 	form label {
 		margin: 0 0.5rem;
+		cursor: pointer;
 	}
 	form input[type='radio'] {
 		display: none;
