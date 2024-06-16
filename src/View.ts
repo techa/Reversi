@@ -489,8 +489,8 @@ export class View {
 		getEl('.score-container').style.visibility = 'visible'
 
 		// Score Name
-		getEl('#player-name').innerHTML = this.reversi.player1Name
-		getEl('#bot-name').innerHTML = this.reversi.player2Name
+		getEl('#player-name').innerHTML = this.reversi.blackPlayerName
+		getEl('#bot-name').innerHTML = this.reversi.whitePlayerName
 	}
 
 	showSettingsButton() {

@@ -6,6 +6,7 @@
 		Constants,
 		options,
 	} from '../ViewConnect.svelte.js'
+	import { blackOrWhite } from '../utils.js'
 
 	const { boardSize } = reversi
 
@@ -20,9 +21,8 @@
 
 	onMount(onresize)
 	function onresize() {
-		console.log('boardWidth', boardWidth)
-		const val = document.body.clientWidth
-		boardWidth = (val > boardWidth_border ? boardWidth_border : val) - 24
+		const w = document.body.clientWidth
+		boardWidth = (w > boardWidth_border ? boardWidth_border : w) - 24
 	}
 </script>
 
@@ -101,7 +101,25 @@
 		{/each}
 	</div>
 	<div class="footer h-markers-container">
-		Turn: {states.turn}
+		<div class="icon-wrapper">
+			<svg class="icon black_white">
+				<use href="#{blackOrWhite(states.blackTurn)}-tile"></use>
+			</svg>
+			Turn: {states.turn}
+		</div>
+
+		<div class="name-wrapper">{states.activePlayerName}</div>
+
+		<div class="score-wrapper">
+			<svg class="icon black_white black_score">
+				<use href="#black-tile"></use>
+			</svg>
+			{states.blackScore}
+			<svg class="icon black_white white_score">
+				<use href="#white-tile"></use>
+			</svg>
+			{states.whiteScore}
+		</div>
 	</div>
 </div>
 
@@ -138,13 +156,14 @@
 	</div>
 {/if}
 
+<!--
 <div
 	class="score-container"
 	style:visibility="visible"
 	style:width={boardWidth + 'px'}
 >
 	<div class="score-inner-container">
-		<div class="name" id="player-name">{reversi.player1Name}</div>
+		<div class="name" id="player-name">{reversi.blackPlayerName}</div>
 		<div class="tile-container">
 			<div
 				class="glow"
@@ -163,7 +182,7 @@
 		</div>
 	</div>
 	<div class="score-inner-container">
-		<div class="name" id="bot-name">{reversi.player2Name}</div>
+		<div class="name" id="bot-name">{reversi.whitePlayerName}</div>
 		<div class="tile-container">
 			<div
 				class="glow"
@@ -182,6 +201,7 @@
 		</div>
 	</div>
 </div>
+-->
 
 <style>
 	:root {
@@ -204,21 +224,41 @@
 	.h-markers-container {
 		line-height: var(--board-frame);
 		position: absolute;
-		display: flex;
 		width: calc(100% - 2 * var(--board-frame));
 		box-sizing: border-box;
 		height: var(--board-frame);
 		top: 0;
+
+		display: flex;
 		flex-wrap: nowrap;
 	}
 
 	.footer.h-markers-container {
 		top: auto;
-		bottom: 0;
+		bottom: -2px;
 
 		color: aliceblue;
-		padding: 4px;
-		box-sizing: border-box;
+
+		align-items: center;
+		justify-content: space-between;
+	}
+	.icon-wrapper {
+		height: 34px;
+		display: flex;
+		align-items: center;
+		margin: 0 4px;
+	}
+	.icon.black_white {
+		width: 20px;
+		height: 20px;
+		display: inline-flex;
+		margin: 4px;
+	}
+	.score-wrapper {
+		height: 34px;
+		display: flex;
+		align-items: center;
+		margin: 0 4px;
 	}
 
 	.h-markers {

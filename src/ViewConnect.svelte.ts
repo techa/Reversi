@@ -25,6 +25,7 @@ export const states = $state({
 	tiles: [] as Tile[],
 	history: [] as HistoryData[],
 	playerTurn: false,
+	activePlayerName: '',
 	blackTurn: true,
 	whiteTurn: false,
 	blackScore: 2,
@@ -53,7 +54,9 @@ export const reversi = new (class extends AIReversi {
 		states.history = []
 		states.winlose = ''
 		states.turn = this.turn
-		return super.init(options)
+		super.init(options)
+		this.$turnSwitch()
+		return this
 	}
 	$playerTurn() {
 		states.playerTurn = true
@@ -110,6 +113,8 @@ export const reversi = new (class extends AIReversi {
 			states.blackTurn = true
 			states.whiteTurn = false
 		}
+		states.activePlayerName =
+			this.sym === Tile.B ? this.blackPlayerName : this.whitePlayerName
 	}
 	$checkWin() {
 		states.blackTurn = false

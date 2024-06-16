@@ -21,7 +21,7 @@ describe(`demo 1`, () => {
 			WWWW
 			`.replace(/\t/g, '')
 		)
-		expect(reversi.$checkWin()).toBe('AI - White Win!')
+		expect(reversi.$checkWin()).toBe('AI-2 Win!')
 	})
 })
 
@@ -41,7 +41,7 @@ describe(`demo 2`, () => {
 			BBBW
 			`.replace(/\t/g, '')
 		)
-		expect(reversi.$checkWin()).toBe('AI - White Win!')
+		expect(reversi.$checkWin()).toBe('AI-2 Win!')
 	})
 })
 

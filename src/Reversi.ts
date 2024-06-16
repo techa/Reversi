@@ -63,21 +63,23 @@ export abstract class Reversi {
 	demo = false
 	singlePlayerMode = false
 
-	get player1Name() {
+	get blackPlayerName() {
 		const mode = this.mode
 		return mode === '2'
 			? 'Player 1'
 			: mode === 'single' && this.yourColor === Tile.B
 			? 'You'
-			: 'AI - Black'
+			: 'AI-1'
 	}
-	get player2Name() {
+	get whitePlayerName() {
 		const mode = this.mode
 		return mode === '2'
 			? 'Player 2'
+			: mode === 'demo'
+			? 'AI-2'
 			: mode === 'single' && this.yourColor === Tile.W
 			? 'You'
-			: 'AI - White'
+			: 'AI-1'
 	}
 
 	whiteCount = 0
@@ -430,9 +432,9 @@ export abstract class Reversi {
 	 */
 	$checkWin() {
 		return this.blackCount > this.whiteCount
-			? `${this.player1Name} Win!`
+			? `${this.blackPlayerName} Win!`
 			: this.blackCount < this.whiteCount
-			? `${this.player2Name} Win!`
+			? `${this.whitePlayerName} Win!`
 			: 'It is a Draw!!'
 	}
 
