@@ -46,7 +46,9 @@
 						data-x-axis={x}
 						data-y-axis={y}
 						onclick={() => {
-							reversi.hit(x, y)
+							if (states.playerTurn) {
+								reversi.hit(x, y)
+							}
 						}}
 					>
 						{#if tile > 0}
