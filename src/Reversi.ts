@@ -65,21 +65,19 @@ export abstract class Reversi {
 
 	get blackPlayerName() {
 		const mode = this.mode
-		return mode === '2'
-			? 'Player 1'
+		return mode === '2' || mode === 'demo'
+			? 'Black'
 			: mode === 'single' && this.yourColor === Tile.B
 			? 'You'
-			: 'AI-1'
+			: 'AI'
 	}
 	get whitePlayerName() {
 		const mode = this.mode
-		return mode === '2'
-			? 'Player 2'
-			: mode === 'demo'
-			? 'AI-2'
+		return mode === '2' || mode === 'demo'
+			? 'White'
 			: mode === 'single' && this.yourColor === Tile.W
 			? 'You'
-			: 'AI-1'
+			: 'AI'
 	}
 
 	whiteCount = 0
