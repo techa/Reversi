@@ -305,16 +305,12 @@ export abstract class Reversi {
 
 	_doTheMove(
 		slots: {
-			empty: number
-			movable: number
+			empty: number //check anymore playable empty square
+			movable: number //check any move left
 		},
 		aiTurn = false
-	) {
-		/////////Check anymore playable empty square
-		//check any move left///////////////////////////
+	): void {
 		// console.log(this.sym + ' turn')
-		// const slots = this.addTile(x, y)
-
 		if (slots.empty > 0) {
 			if (slots.movable > 0) {
 				// console.log(this.sym + ' still can')
@@ -437,7 +433,7 @@ export abstract class Reversi {
 	}
 
 	S_invalid() {
-		throw new Error(`addTile: invalid position x or y`)
+		throw new Error(`hit: invalid position x or y`)
 	}
 	abstract S_place(): void
 }
