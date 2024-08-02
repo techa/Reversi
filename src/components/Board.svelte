@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte'
 	import {
 		reversi,
 		states,
@@ -19,11 +18,11 @@
 		.fill(0)
 		.map((_, i) => i)
 
-	onMount(onresize)
 	function onresize() {
 		const w = document.body.clientWidth
 		boardWidth = (w > boardWidth_border ? boardWidth_border : w) - 24
 	}
+	onresize()
 </script>
 
 <svelte:window {onresize} />
