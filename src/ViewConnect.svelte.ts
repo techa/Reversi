@@ -93,12 +93,12 @@ export const reversi = new (class extends AIReversi {
 			states.tiles = this.tiles
 		}
 	}
-	$insert(data: HistoryData, index: number) {
+	$insert(data: HistoryData) {
 		states.playerTurn = false
 		super.$insert(data)
 		states.tiles = data.tiles
 		states.turn = data.turn
-		states.history = states.history.slice(index)
+		states.history = states.history.slice(-data.turn)
 	}
 	$addHistory(x: number, y: number) {
 		if (!this.thinking) {

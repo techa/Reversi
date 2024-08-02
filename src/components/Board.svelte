@@ -146,7 +146,7 @@
 					}}
 					onclick={() => {
 						historyIndex = -1
-						reversi.$insert(data, i)
+						reversi.$insert(data)
 					}}
 				>
 					<div

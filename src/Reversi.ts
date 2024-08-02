@@ -271,7 +271,7 @@ export abstract class Reversi {
 			: !(this.turn % 2)
 	}
 
-	$insert(data: HistoryData, index?: number) {
+	$insert(data: HistoryData) {
 		this.tiles = data.tiles
 		this.sym = data.sym
 		this.turn = data.turn
