@@ -98,17 +98,25 @@ export const reversi = new (class extends AIReversi {
 		super.$insert(data)
 		states.tiles = data.tiles
 		states.turn = data.turn
-		states.history = states.history.slice(-data.turn)
 	}
 	$addHistory(x: number, y: number) {
 		if (!this.thinking) {
-			states.history.unshift({
-				sym: this.sym,
-				x,
-				y,
-				tiles: $state.snapshot(this.tiles),
-				turn: $state.snapshot(this.turn),
-			})
+			const oldHand = states.history[states.history.length - this.turn]
+			const isNewHand = oldHand && (oldHand.x != x || oldHand.y !== y)
+
+			if (states.history.length > this.turn && isNewHand) {
+				states.history = states.history.slice(-this.turn + 1)
+			}
+
+			if (!oldHand || isNewHand) {
+				states.history.unshift({
+					sym: this.sym,
+					x,
+					y,
+					tiles: $state.snapshot(this.tiles),
+					turn: $state.snapshot(this.turn),
+				})
+			}
 		}
 	}
 	$tilesCounting() {
