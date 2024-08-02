@@ -32,6 +32,19 @@
 			states.page = PageType.AILVSelect
 		}
 	}
+
+	function back2top() {
+		switch (states.page) {
+			case PageType.Game:
+				states.modal = ModalType.BackOrRestart
+				break
+
+			case PageType.AILVSelect:
+				states.page = PageType.Top
+				break
+		}
+	}
+
 	// $effect(() => {
 	// 	const data = {
 	// 		boardSize: options.boardSize,
@@ -69,23 +82,22 @@
 </svg>
 
 <div class="header-wrapper" style="max-width: {Constants.BoardWidthMax}px;">
-	<div class="btn"></div>
+	<div class="btn">
+		{#if states.page}
+			<button onclick={back2top}>
+				<svg class="icon config" stroke="white">
+					<path d="m12 19-7-7 7-7" />
+					<path d="M19 12H5" />
+				</svg>
+			</button>
+		{/if}
+	</div>
 	<div class="header">
 		<button
 			class="title"
 			onmouseenter={titlehover}
 			onmouseleave={titlehover}
-			onclick={() => {
-				switch (states.page) {
-					case PageType.Game:
-						states.modal = ModalType.BackOrRestart
-						break
-
-					case PageType.AILVSelect:
-						states.page = PageType.Top
-						break
-				}
-			}}
+			onclick={back2top}
 		>
 			{#each title as char, i}
 				<span class="{blackOrWhite((i + +title_hover) % 2)}-letter">
