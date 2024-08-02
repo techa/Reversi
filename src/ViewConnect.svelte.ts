@@ -55,10 +55,18 @@ export const reversi = new (class extends AIReversi {
 
 	init(options: ReversiOptions) {
 		clearTimeout(this.timerID)
-		states.history = []
 		states.winlose = ''
 		states.turn = this.turn
 		super.init(options)
+		states.history = [
+			{
+				sym: this.sym,
+				x: -1,
+				y: -1,
+				tiles: $state.snapshot(this.tiles),
+				turn: 0,
+			},
+		]
 		this.$turnSwitch()
 		return this
 	}
@@ -105,7 +113,7 @@ export const reversi = new (class extends AIReversi {
 			const isNewHand = oldHand && (oldHand.x != x || oldHand.y !== y)
 
 			if (states.history.length > this.turn && isNewHand) {
-				states.history = states.history.slice(-this.turn + 1)
+				states.history = states.history.slice(-this.turn)
 			}
 
 			if (!oldHand || isNewHand) {

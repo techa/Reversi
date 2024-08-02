@@ -262,6 +262,11 @@ button {
 	--tile-size: 32px;
 }
 
+.last-move-slot.active,
+.last-move-slot:hover {
+	background: linear-gradient(#bfbab6, #928e8b);
+}
+
 .last-move-tile-black {
 	border-radius: 50%;
 	width: var(--tile-size);

@@ -137,6 +137,7 @@
 				</div>
 				<div
 					class="last-move-slot"
+					class:active={states.turn === data.turn}
 					role="presentation"
 					onmouseenter={() => {
 						historyIndex = i
@@ -149,28 +150,21 @@
 						reversi.$insert(data)
 					}}
 				>
-					<div
-						class="last-move-tile-{reversi.getSymColor(data.sym)}"
-					></div>
-					<div class="last-move-number">
-						{String.fromCharCode(65 + data.x) + (data.y + 1)}
-					</div>
+					{#if data.turn}
+						<div
+							class="last-move-tile-{reversi.getSymColor(
+								data.sym,
+							)}"
+						></div>
+						<div class="last-move-number">
+							{String.fromCharCode(65 + data.x) + (data.y + 1)}
+						</div>
+					{:else}
+						<div class="last-move-number">Initial</div>
+					{/if}
 				</div>
 			</div>
 		{/each}
-		<div>
-			<div class="last-move-turn">Turn: 0</div>
-			<div
-				class="last-move-slot"
-				role="presentation"
-				onclick={() => {
-					historyIndex = -1
-					reversi.init(options)
-				}}
-			>
-				<div class="last-move-number">Initial</div>
-			</div>
-		</div>
 	</div>
 {/if}
 
