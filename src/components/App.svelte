@@ -125,7 +125,7 @@
 
 <div class="main-container">
 	{#if states.page === PageType.Game}
-		<Board></Board>
+		<Board {back2top}></Board>
 	{:else if states.page === PageType.AILVSelect}
 		<Settings></Settings>
 		<div class="main-page-container">

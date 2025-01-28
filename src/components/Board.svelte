@@ -7,6 +7,8 @@
 	} from '../ViewConnect.svelte.js'
 	import { blackOrWhite } from '../utils.js'
 
+	const { back2top } = $props()
+
 	const { boardSize } = reversi
 
 	const boardWidth_border = Constants.BoardWidthMax
@@ -23,9 +25,15 @@
 		boardWidth = (w > boardWidth_border ? boardWidth_border : w) - 24
 	}
 	onresize()
+
+	const onkeydown = (e: KeyboardEvent) => {
+		if (e.key === 'Backspace') {
+			back2top()
+		}
+	}
 </script>
 
-<svelte:window {onresize} />
+<svelte:window {onresize} {onkeydown} />
 
 <div class="board-frame" style:--board-width={boardWidth + 'px'}>
 	<div class="main-board">
