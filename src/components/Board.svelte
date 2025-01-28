@@ -1,11 +1,11 @@
 <script lang="ts">
+	import { ModalType, viewState } from '../View.svelte.js'
 	import {
 		reversi,
 		states,
 		Constants,
 		options,
 	} from '../ViewConnect.svelte.js'
-	import { blackOrWhite } from '../utils.js'
 
 	const { back2top } = $props()
 
@@ -13,8 +13,6 @@
 
 	const boardWidth_border = Constants.BoardWidthMax
 	let boardWidth = $state(640)
-
-	let historyIndex = $state(-1)
 
 	let board_markers_index = Array(boardSize)
 		.fill(0)
@@ -31,6 +29,12 @@
 			back2top()
 		}
 	}
+
+	$effect(() => {
+		if (states.winlose) {
+			viewState.modal = ModalType.BackOrRestart
+		}
+	})
 </script>
 
 <svelte:window {onresize} {onkeydown} />
@@ -41,8 +45,8 @@
 			<div class="row" style:height={100 / boardSize + '%'}>
 				{#each board_markers_index as _, x}
 					{@const tiles =
-						historyIndex > -1
-							? states.history[historyIndex].tiles
+						states.historyIndex > -1
+							? states.history[states.historyIndex].tiles
 							: states.tiles}
 					{@const tile = tiles[y * boardSize + x]}
 					<div
@@ -55,6 +59,7 @@
 						onclick={() => {
 							if (states.playerTurn) {
 								reversi.hit(x, y)
+								viewState.hand = null
 							}
 						}}
 					>
@@ -62,7 +67,7 @@
 							<div
 								class="{reversi.getSymColor(tile)}-tiles"
 							></div>
-						{:else if states.playerTurn && historyIndex < 0 && reversi.checkOKtoPlace(x, y)}
+						{:else if states.playerTurn && states.historyIndex < 0 && reversi.checkOKtoPlace(x, y)}
 							{#if import.meta.env.DEV && options.aiPlayer1LV}
 								{@const _hand = reversi.getHand(
 									x,
@@ -73,15 +78,15 @@
 									class="can-hit"
 									role="presentation"
 									onmouseenter={(event) => {
-										states.hand = _hand
-										states.handPosition = [
+										viewState.hand = _hand
+										viewState.handPosition = [
 											event.clientX,
 											event.clientY,
 										]
 									}}
 									onmouseleave={() => {
-										states.hand = null
-										states.handPosition = null
+										viewState.hand = null
+										viewState.handPosition = null
 									}}
 								>
 									{_hand.scores.total.toFixed(1) || ''}
@@ -114,13 +119,15 @@
 	</div>
 	<div class="footer h-markers-container">
 		<div class="icon-wrapper">
-			<svg class="icon black_white">
-				<use href="#{blackOrWhite(states.blackTurn)}-tile"></use>
-			</svg>
 			Turn: {states.turn}
 		</div>
 
-		<div class="name-wrapper">{states.activePlayerName}</div>
+		<div class="icon-wrapper">
+			<svg class="icon black_white">
+				<use href="#{reversi.getSymColor()}-tile"></use>
+			</svg>
+			{states.activePlayerName}
+		</div>
 
 		<div class="score-wrapper">
 			<svg class="icon black_white black_score">
@@ -147,13 +154,13 @@
 					class:active={states.turn === data.turn}
 					role="presentation"
 					onmouseenter={() => {
-						historyIndex = i
+						states.historyIndex = i
 					}}
 					onmouseleave={() => {
-						historyIndex = -1
+						states.historyIndex = -1
 					}}
 					onclick={() => {
-						historyIndex = -1
+						states.historyIndex = -1
 						reversi.$insert(data)
 					}}
 				>

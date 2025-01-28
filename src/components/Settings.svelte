@@ -1,17 +1,13 @@
 <script lang="ts">
 	import { AILVMAX } from '../AI.js'
 	import { Tile } from '../Reversi.js'
-	import {
-		PageType,
-		options,
-		reversi,
-		states,
-	} from '../ViewConnect.svelte.js'
+	import { options } from '../ViewConnect.svelte.js'
 	import { capitarize } from '../utils.js'
+	import { PageType, viewState } from '../View.svelte.js'
 </script>
 
 <div class="settings-from-container">
-	{#if states.page === PageType.Top}
+	{#if viewState.page === PageType.Top}
 		<div>
 			<h4>
 				Board Size:

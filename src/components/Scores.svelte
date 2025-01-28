@@ -19,7 +19,7 @@
 		<div class="tile-container">
 			<div
 				class="glow"
-				style:visibility={states.blackTurn ? 'visible' : 'hidden'}
+				style:visibility={states.sym - 1 ? 'visible' : 'hidden'}
 			>
 				<span></span>
 				<span></span>
@@ -38,7 +38,7 @@
 		<div class="tile-container">
 			<div
 				class="glow"
-				style:visibility={states.whiteTurn ? 'visible' : 'hidden'}
+				style:visibility={states.sym - 1 ? 'hidden' : 'visible'}
 			>
 				<span></span>
 				<span></span>

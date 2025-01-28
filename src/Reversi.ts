@@ -46,6 +46,45 @@ export interface HistoryData {
 	turn: number
 }
 
+export interface ReversiStates {
+	tiles: Tile[]
+	history: HistoryData[]
+	historyIndex: number
+	playerTurn: boolean
+	activePlayerName: string
+
+	sym: Sym
+	blackScore: number
+	whiteScore: number
+	turn: number
+
+	winlose: string
+
+	mute: boolean
+	/**
+	 * ms. default:2000, min: 500
+	 */
+	aiWait: number
+}
+
+export const ReversiStatesDefault: ReversiStates = {
+	tiles: [],
+	history: [],
+	historyIndex: -1,
+	playerTurn: false,
+	activePlayerName: '',
+
+	sym: Tile.B,
+	blackScore: 2,
+	whiteScore: 2,
+	turn: 0,
+
+	winlose: '',
+
+	mute: false,
+	aiWait: 2000,
+}
+
 export abstract class Reversi {
 	boardSize: BoardSize = 8
 	initialPlacement: InitialPlacement = 'cross'

@@ -1,5 +1,10 @@
-import { AIReversi, type AIReversiOptions, AILVMAX, type Hand } from './AI.js'
-import { type Sym, Tile, type HistoryData } from './Reversi.js'
+import { AIReversi, type AIReversiOptions, AILVMAX } from './AI.js'
+import {
+	type Sym,
+	Tile,
+	type HistoryData,
+	ReversiStatesDefault,
+} from './Reversi.js'
 import { SoundID, Sounds } from './Sounds.js'
 import { clamp } from './utils.js'
 
@@ -12,46 +17,20 @@ export const options: AIReversiOptions = $state({
 	aiPlayer2LV: AILVMAX,
 })
 
-export const enum ModalType {
-	Hide,
-	BackOrRestart,
-	Config,
-}
-
-export const enum PageType {
-	Top,
-	AILVSelect,
-	Game,
-}
-
 export const enum Constants {
 	BoardWidthMax = 800,
 }
 
-export const states = $state({
-	tiles: [] as Tile[],
-	history: [] as HistoryData[],
-	playerTurn: false,
-	activePlayerName: '',
-	blackTurn: true,
-	whiteTurn: false,
-	blackScore: 2,
-	whiteScore: 2,
-	turn: 0,
-
-	page: PageType.Top,
-	modal: ModalType.Hide,
-	winlose: '',
-	hand: null as null | Hand,
-	handPosition: null as null | [number, number],
-
-	mute: false,
-	aiWait: 2000,
-})
+export const states = $state(ReversiStatesDefault)
 
 export const reversi = new (class extends AIReversi {
 	sounds = new Sounds()
 	timerID: number
+
+	nextTurn(): void {
+		super.nextTurn()
+		states.sym = this.sym
+	}
 
 	init(options: AIReversiOptions) {
 		clearTimeout(this.timerID)
@@ -80,11 +59,9 @@ export const reversi = new (class extends AIReversi {
 			super.$aiTurn()
 		} else {
 			clearTimeout(this.timerID)
-			if (states.page === PageType.Game) {
-				this.timerID = setTimeout(() => {
-					super.$aiTurn()
-				}, clamp(states.aiWait, 500, 4000))
-			}
+			this.timerID = setTimeout(() => {
+				super.$aiTurn()
+			}, clamp(states.aiWait, 500, 4000))
 		}
 	}
 	$setTile(x: number, y: number, sym: Sym) {
@@ -92,7 +69,6 @@ export const reversi = new (class extends AIReversi {
 		if (!this.thinking) {
 			states.tiles = this.tiles
 			states.playerTurn = false
-			states.hand = null
 		}
 	}
 	$tilesUpdate(x: number, y: number) {
@@ -137,13 +113,8 @@ export const reversi = new (class extends AIReversi {
 	}
 	$turnSwitch() {
 		if (!this.thinking) {
-			if (this.sym === Tile.W) {
-				states.blackTurn = false
-				states.whiteTurn = true
-			} else {
-				states.blackTurn = true
-				states.whiteTurn = false
-			}
+			states.sym = this.sym
+
 			states.activePlayerName =
 				this.sym === Tile.B
 					? this.blackPlayerName
@@ -153,9 +124,6 @@ export const reversi = new (class extends AIReversi {
 	$checkWin() {
 		const message = super.$checkWin()
 		if (!this.thinking) {
-			states.blackTurn = false
-			states.whiteTurn = false
-			states.modal = ModalType.BackOrRestart
 			states.winlose = message
 		}
 		return message

@@ -4,14 +4,8 @@
 	import Board from './Board.svelte'
 	import Modal from './Modal.svelte'
 
-	import {
-		ModalType,
-		PageType,
-		options,
-		reversi,
-		states,
-		Constants,
-	} from '../ViewConnect.svelte.js'
+	import { options, reversi, Constants } from '../ViewConnect.svelte.js'
+	import { ModalType, PageType, viewState } from '../View.svelte.js'
 	import { blackOrWhite } from '../utils.js'
 	import Settings from './Settings.svelte'
 
@@ -26,21 +20,21 @@
 	function start(_mode: Mode) {
 		options.mode = _mode
 		if (_mode === '2') {
-			states.page = PageType.Game
+			viewState.page = PageType.Game
 			reversi.init(options)
 		} else {
-			states.page = PageType.AILVSelect
+			viewState.page = PageType.AILVSelect
 		}
 	}
 
 	function back2top() {
-		switch (states.page) {
+		switch (viewState.page) {
 			case PageType.Game:
-				states.modal = ModalType.BackOrRestart
+				viewState.modal = ModalType.BackOrRestart
 				break
 
 			case PageType.AILVSelect:
-				states.page = PageType.Top
+				viewState.page = PageType.Top
 				break
 		}
 	}
@@ -83,7 +77,7 @@
 
 <div class="header-wrapper" style="max-width: {Constants.BoardWidthMax}px;">
 	<div class="btn">
-		{#if states.page}
+		{#if viewState.page}
 			<button onclick={back2top}>
 				<svg class="icon config" stroke="white">
 					<path d="m12 19-7-7 7-7" />
@@ -109,7 +103,7 @@
 	<div class="btn">
 		<button
 			onclick={() => {
-				states.modal = ModalType.Config
+				viewState.modal = ModalType.Config
 			}}
 		>
 			<svg class="icon config" stroke="white">
@@ -124,15 +118,15 @@
 <Modal></Modal>
 
 <div class="main-container">
-	{#if states.page === PageType.Game}
+	{#if viewState.page === PageType.Game}
 		<Board {back2top}></Board>
-	{:else if states.page === PageType.AILVSelect}
+	{:else if viewState.page === PageType.AILVSelect}
 		<Settings></Settings>
 		<div class="main-page-container">
 			<button
 				class="selections"
 				onclick={() => {
-					states.page = PageType.Game
+					viewState.page = PageType.Game
 					reversi.init(options)
 				}}
 			>
@@ -141,7 +135,7 @@
 			<button
 				class="selections"
 				onclick={(e) => {
-					states.page = PageType.Top
+					viewState.page = PageType.Top
 				}}
 			>
 				Back to Top
@@ -178,15 +172,15 @@
 	{/if}
 </div>
 
-{#if import.meta.env.DEV && states.hand && states.handPosition}
+{#if import.meta.env.DEV && viewState.hand && viewState.handPosition}
 	<div
 		class="score-details"
-		style:top="{states.handPosition[1] + 10}px"
-		style:left="{states.handPosition[0] + 10}px"
+		style:top="{viewState.handPosition[1] + 10}px"
+		style:left="{viewState.handPosition[0] + 10}px"
 	>
-		{#each Object.entries(states.hand.scores) as [key, score]}
+		{#each Object.entries(viewState.hand.scores) as [key, score]}
 			{#if score}
-				{@const value = states.hand[key]}
+				{@const value = viewState.hand[key]}
 				<div class="score-details-item">
 					{`${key}: ${
 						typeof score === 'number'

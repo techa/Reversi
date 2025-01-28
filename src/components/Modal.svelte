@@ -1,11 +1,6 @@
 <script lang="ts">
-	import {
-		reversi,
-		options,
-		states,
-		ModalType,
-		PageType,
-	} from '../ViewConnect.svelte.js'
+	import { reversi, options, states } from '../ViewConnect.svelte.js'
+	import { viewState, ModalType, PageType } from '../View.svelte.js'
 
 	let dialog: HTMLDialogElement
 
@@ -14,11 +9,11 @@
 			return
 		}
 		dialog.close()
-		states.modal = ModalType.Hide
+		viewState.modal = ModalType.Hide
 	}
 
 	$effect(() => {
-		if (dialog && states.modal) {
+		if (dialog && viewState.modal) {
 			dialog.showModal()
 		}
 	})
@@ -38,12 +33,12 @@
 			e.stopPropagation()
 		}}
 	>
-		{#if states.modal === ModalType.BackOrRestart}
+		{#if viewState.modal === ModalType.BackOrRestart}
 			<button
 				class="selections"
 				onclick={(e) => {
 					close(e, true)
-					states.page = PageType.Top
+					viewState.page = PageType.Top
 					reversi.init(options)
 				}}
 			>
@@ -59,7 +54,7 @@
 			>
 				Restart
 			</button>
-		{:else if states.modal === ModalType.Config}
+		{:else if viewState.modal === ModalType.Config}
 			<button
 				onclick={() => {
 					states.mute = !states.mute
