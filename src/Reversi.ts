@@ -422,14 +422,25 @@ export abstract class Reversi {
 	abstract $turnSwitch(): void
 
 	/**
-	 * @returns winner name
+	 * @returns win or lose message
 	 */
 	$checkWin() {
+		if (this.mode === 'single') {
+			if (
+				(this.yourColor === Tile.B &&
+					this.blackCount > this.whiteCount) ||
+				(this.yourColor === Tile.W && this.whiteCount > this.blackCount)
+			) {
+				return 'You Win!'
+			} else {
+				return 'You Lose...'
+			}
+		}
 		return this.blackCount > this.whiteCount
 			? `${this.blackPlayerName} Win!`
 			: this.blackCount < this.whiteCount
 			? `${this.whitePlayerName} Win!`
-			: 'It is a Draw!!'
+			: 'Draw!!'
 	}
 
 	S_invalid() {
