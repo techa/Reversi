@@ -15,7 +15,7 @@
 	style:width={boardWidth + 'px'}
 >
 	<div class="score-inner-container">
-		<div class="name" id="player-name">{reversi.blackPlayerName}</div>
+		<div class="name" id="player-name">{reversi.getName(1)}</div>
 		<div class="tile-container">
 			<div
 				class="glow"
@@ -34,7 +34,7 @@
 		</div>
 	</div>
 	<div class="score-inner-container">
-		<div class="name" id="bot-name">{reversi.whitePlayerName}</div>
+		<div class="name" id="bot-name">{reversi.getName(2)}</div>
 		<div class="tile-container">
 			<div
 				class="glow"

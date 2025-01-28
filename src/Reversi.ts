@@ -105,19 +105,11 @@ export abstract class Reversi {
 	demo = false
 	singlePlayerMode = false
 
-	get blackPlayerName() {
+	getName(sym = this.sym) {
 		const mode = this.mode
 		return mode === '2' || mode === 'demo'
-			? 'Black'
-			: mode === 'single' && this.yourColor === Tile.B
-			? 'You'
-			: 'AI'
-	}
-	get whitePlayerName() {
-		const mode = this.mode
-		return mode === '2' || mode === 'demo'
-			? 'White'
-			: mode === 'single' && this.yourColor === Tile.W
+			? ['Black', 'White'][sym - 1]
+			: mode === 'single' && this.yourColor === sym
 			? 'You'
 			: 'AI'
 	}
@@ -325,6 +317,19 @@ export abstract class Reversi {
 
 	/**
 	 * * Classの外から操作するためのトリガーメソッド
+	 * ```
+	 * hit >
+	 * 	checkOKtoPlace > isTileEmpty
+	 * 	addTile
+	 * 		S_place()
+	 * 		$setTile(x, y, this.sym)
+	 * 		$tilesUpdate(x, y)
+	 * 		$addHistory(x, y)
+	 * 		nextTurn()
+	 * 		$tilesCounting()
+	 * 		_checkSlots()
+	 * 	_doTheMove
+	 * ```
 	 */
 	hit(x: number, y: number) {
 		if (this.checkOKtoPlace(x, y)) {
@@ -376,6 +381,7 @@ export abstract class Reversi {
 					}
 				}
 			} else {
+				/* slots.movable === 0 */
 				// console.log(this.sym + ' no place to move, pass')
 				this.nextTurn()
 				// console.log(this.sym + ' turn')
@@ -483,11 +489,7 @@ export abstract class Reversi {
 				return 'You Lose...'
 			}
 		}
-		return this.blackScore > this.whiteScore
-			? `${this.blackPlayerName} Win!`
-			: this.blackScore < this.whiteScore
-			? `${this.whitePlayerName} Win!`
-			: 'Draw!!'
+		return `${this.getName(1 + +(this.blackScore < this.whiteScore))} Win!`
 	}
 
 	S_invalid() {

@@ -27,11 +27,6 @@ export const reversi = new (class extends AIReversi {
 	sounds = new Sounds()
 	timerID: number
 
-	nextTurn(): void {
-		super.nextTurn()
-		states.sym = this.sym
-	}
-
 	init(options: AIReversiOptions) {
 		clearTimeout(this.timerID)
 		states.winlose = ''
@@ -115,10 +110,7 @@ export const reversi = new (class extends AIReversi {
 		if (!this.thinking) {
 			states.sym = this.sym
 
-			states.activePlayerName =
-				this.sym === Tile.B
-					? this.blackPlayerName
-					: this.whitePlayerName
+			states.activePlayerName = this.getName()
 		}
 	}
 	$checkWin() {
