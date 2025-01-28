@@ -1,4 +1,5 @@
 <script lang="ts">
+	import History from './History.svelte'
 	import { ModalType, viewState } from '../View.svelte.js'
 	import {
 		reversi,
@@ -118,18 +119,18 @@
 		{/each}
 	</div>
 	<div class="footer h-markers-container">
-		<div class="icon-wrapper">
+		<div class="footer_text">
 			Turn: {states.turn}
 		</div>
 
-		<div class="icon-wrapper">
+		<div class="footer_text">
 			<svg class="icon black_white">
-				<use href="#{reversi.getSymColor()}-tile"></use>
+				<use href="#{reversi.getSymColor(states.sym)}-tile"></use>
 			</svg>
 			{states.activePlayerName}
 		</div>
 
-		<div class="score-wrapper">
+		<div class="footer_text">
 			<svg class="icon black_white black_score">
 				<use href="#black-tile"></use>
 			</svg>
@@ -143,43 +144,7 @@
 </div>
 
 {#if options.mode === '2' || import.meta.env.DEV}
-	<div class="history-container" style:width={boardWidth + 'px'}>
-		{#each states.history as data, i (data)}
-			<div>
-				<div class="last-move-turn">
-					Turn: {data.turn}
-				</div>
-				<div
-					class="last-move-slot"
-					class:active={states.turn === data.turn}
-					role="presentation"
-					onmouseenter={() => {
-						states.historyIndex = i
-					}}
-					onmouseleave={() => {
-						states.historyIndex = -1
-					}}
-					onclick={() => {
-						states.historyIndex = -1
-						reversi.$insert(data)
-					}}
-				>
-					{#if data.turn}
-						<div
-							class="last-move-tile-{reversi.getSymColor(
-								data.sym,
-							)}"
-						></div>
-						<div class="last-move-number">
-							{String.fromCharCode(65 + data.x) + (data.y + 1)}
-						</div>
-					{:else}
-						<div class="last-move-number">Initial</div>
-					{/if}
-				</div>
-			</div>
-		{/each}
-	</div>
+	<History {boardWidth}></History>
 {/if}
 
 <style>
@@ -221,7 +186,8 @@
 		align-items: center;
 		justify-content: space-between;
 	}
-	.icon-wrapper {
+
+	.footer_text {
 		height: 34px;
 		display: flex;
 		align-items: center;
@@ -232,12 +198,6 @@
 		height: 20px;
 		display: inline-flex;
 		margin: 4px;
-	}
-	.score-wrapper {
-		height: 34px;
-		display: flex;
-		align-items: center;
-		margin: 0 4px;
 	}
 
 	.h-markers {
@@ -273,30 +233,8 @@
 		color: white;
 		text-align: center;
 	}
+
 	.itimatsu {
 		background-color: #86b50f;
-	}
-	.history-container {
-		width: 100%;
-		height: 108px;
-		margin-top: 12px;
-
-		box-sizing: border-box;
-		background-color: #343434;
-		border: none;
-		border-radius: 15px;
-		position: relative;
-		box-shadow: 4px 4px 4px black;
-		display: flex;
-		flex-direction: row;
-		padding: 2px 10px;
-		border-bottom: 2px solid #414141;
-		border-right: 3px solid #414141;
-		overflow-y: hidden;
-		overflow-x: scroll;
-	}
-	.last-move-turn {
-		color: aliceblue;
-		text-align: center;
 	}
 </style>
