@@ -4,6 +4,10 @@
 		"module": "es2020",
 		"moduleResolution": "Node",
 		"target": "ES2015",
+        "lib": [
+            "ESNext",
+            "dom"
+        ],
 		"jsx": "react",
 		// "declaration": true,
 		// "emitDeclarationOnly": true,
