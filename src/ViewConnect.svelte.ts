@@ -106,8 +106,8 @@ export const reversi = new (class extends AIReversi {
 	$tilesCounting() {
 		if (!this.thinking) {
 			super.$tilesCounting()
-			states.blackScore = this.blackCount
-			states.whiteScore = this.whiteCount
+			states.blackScore = this.blackScore
+			states.whiteScore = this.whiteScore
 			states.turn = this.turn
 		}
 	}

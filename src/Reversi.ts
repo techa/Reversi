@@ -122,8 +122,8 @@ export abstract class Reversi {
 			: 'AI'
 	}
 
-	whiteCount = 0
-	blackCount = 0
+	whiteScore = 0
+	blackScore = 0
 
 	random: () => number
 
@@ -418,11 +418,11 @@ export abstract class Reversi {
 	abstract $addHistory(x: number, y: number): void
 
 	$tilesCounting() {
-		this.whiteCount = 0
-		this.blackCount = 0
+		this.whiteScore = 0
+		this.blackScore = 0
 		for (const val of this.tiles) {
-			if (val === Tile.W) this.whiteCount += 1
-			if (val === Tile.B) this.blackCount += 1
+			if (val === Tile.W) this.whiteScore += 1
+			if (val === Tile.B) this.blackScore += 1
 		}
 	}
 
@@ -472,17 +472,17 @@ export abstract class Reversi {
 		if (this.mode === 'single') {
 			if (
 				(this.yourColor === Tile.B &&
-					this.blackCount > this.whiteCount) ||
-				(this.yourColor === Tile.W && this.whiteCount > this.blackCount)
+					this.blackScore > this.whiteScore) ||
+				(this.yourColor === Tile.W && this.whiteScore > this.blackScore)
 			) {
 				return 'You Win!'
 			} else {
 				return 'You Lose...'
 			}
 		}
-		return this.blackCount > this.whiteCount
+		return this.blackScore > this.whiteScore
 			? `${this.blackPlayerName} Win!`
-			: this.blackCount < this.whiteCount
+			: this.blackScore < this.whiteScore
 			? `${this.whitePlayerName} Win!`
 			: 'Draw!!'
 	}
