@@ -469,6 +469,9 @@ export abstract class Reversi {
 	 * @returns win or lose message
 	 */
 	$checkWin() {
+		if (this.blackScore === this.whiteScore) {
+			return 'Draw!!'
+		}
 		if (this.mode === 'single') {
 			if (
 				(this.yourColor === Tile.B &&
