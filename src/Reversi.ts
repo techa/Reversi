@@ -47,16 +47,17 @@ export interface HistoryData {
 }
 
 export interface ReversiStates {
+	turn: number
+	sym: Sym
 	tiles: Tile[]
+
 	history: HistoryData[]
 	historyIndex: number
 	playerTurn: boolean
 	activePlayerName: string
 
-	sym: Sym
 	blackScore: number
 	whiteScore: number
-	turn: number
 
 	winlose: string
 
@@ -68,16 +69,17 @@ export interface ReversiStates {
 }
 
 export const ReversiStatesDefault: ReversiStates = {
+	turn: 0,
+	sym: Tile.B,
 	tiles: [],
+
 	history: [],
 	historyIndex: -1,
 	playerTurn: false,
 	activePlayerName: '',
 
-	sym: Tile.B,
 	blackScore: 2,
 	whiteScore: 2,
-	turn: 0,
 
 	winlose: '',
 
@@ -99,9 +101,7 @@ export abstract class Reversi {
 	}
 
 	tiles: Tile[] = []
-	opens: number[] = []
 
-	botMode = false
 	demo = false
 	singlePlayerMode = false
 
@@ -151,9 +151,7 @@ export abstract class Reversi {
 		this.initialPieces()
 
 		this.demo = this.mode === 'demo'
-		const single = this.mode === 'single'
-		this.singlePlayerMode = single
-		this.botMode = single || this.demo
+		const single = (this.singlePlayerMode = this.mode === 'single')
 
 		if (this.demo || (single && this.yourColor === Tile.W)) {
 			this.$aiTurn()
@@ -230,8 +228,15 @@ export abstract class Reversi {
 	 * @abstract ViewConnect
 	 */
 	abstract $playerTurn(): void
+
+	/**
+	 * single demoで使用。
+	 *
+	 * single はAIのターンしか使わないように思うが、
+	 * AI先読みなどで擬似的にplayerのターンもAIで打たせる
+	 */
 	$aiTurn() {
-		if (this.botMode) {
+		if (this.singlePlayerMode || this.demo) {
 			const tile = this.ai_nextHand()
 			this._doTheMove(this.addTile(tile.x, tile.y), true)
 		} else {
@@ -363,6 +368,10 @@ export abstract class Reversi {
 					if (!this.singlePlayerMode) {
 						this.$playerTurn()
 					} else {
+						/**
+						 * aiTurn=falseなのにthis.$aiTurn()必要なの？と思うかもしれんが
+						 * AI先読みなどで擬似的にplayerのターンもAIで打たせるので必要
+						 */
 						this.$aiTurn()
 					}
 				}
@@ -380,13 +389,11 @@ export abstract class Reversi {
 					}
 				} else {
 					// console.log(this.sym + ' also cannot, end game')
-					this.botMode = false
 					this.$checkWin()
 				}
 			}
 		} else {
 			// console.log(this.sym + ' cannot d')
-			this.botMode = false
 			this.$checkWin()
 		}
 	}
