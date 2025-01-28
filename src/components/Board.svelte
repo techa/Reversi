@@ -69,7 +69,7 @@
 								class="{reversi.getSymColor(tile)}-tiles"
 							></div>
 						{:else if states.playerTurn && viewState.historyIndex < 0 && reversi.checkOKtoPlace(x, y)}
-							{#if import.meta.env.DEV && options.aiPlayer1LV}
+							{#if viewState.dev && options.aiPlayer1LV}
 								{@const _hand = reversi.getHand(
 									x,
 									y,
@@ -143,7 +143,7 @@
 	</div>
 </div>
 
-{#if options.mode === '2' || import.meta.env.DEV}
+{#if options.mode === '2' || viewState.dev}
 	<History {boardWidth}></History>
 {/if}
 

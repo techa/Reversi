@@ -52,7 +52,16 @@
 	// 	console.log('data', data)
 	// 	localStorage.setItem(`Reversi()`, JSON.stringify(data))
 	// })
+	const onkeydown = (e: KeyboardEvent) => {
+		if (e.ctrlKey) {
+			if (e.key === 'd') {
+				viewState.dev = !viewState.dev
+			}
+		}
+	}
 </script>
+
+<svelte:window {onkeydown} />
 
 <svg style="display: none;">
 	<defs>
@@ -172,7 +181,7 @@
 	{/if}
 </div>
 
-{#if import.meta.env.DEV && viewState.hand && viewState.handPosition}
+{#if viewState.dev && viewState.hand && viewState.handPosition}
 	<div
 		class="score-details"
 		style:top="{viewState.handPosition[1] + 10}px"

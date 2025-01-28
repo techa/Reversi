@@ -30,4 +30,6 @@ export const viewState = $state({
 
 	history: [] as HistoryData[],
 	historyIndex: -1,
+
+	dev: import.meta.env.DEV,
 })
