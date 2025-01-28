@@ -204,13 +204,13 @@
 	.main-container {
 		/* max-width: 640px; */
 		width: 100%;
+		margin: auto;
 	}
 	.header-wrapper {
 		display: flex;
 		flex-direction: row;
 		align-items: center;
 		justify-content: center;
-		margin: auto;
 	}
 	.header {
 		position: relative;
