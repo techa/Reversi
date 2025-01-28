@@ -1,24 +1,25 @@
 <script lang="ts">
+	import { viewState } from '../View.svelte.js'
 	import { reversi, states } from '../ViewConnect.svelte.js'
 
 	const { boardWidth }: { boardWidth: number } = $props()
 
 	const undo = () => {
 		console.log('undo')
-		if (states.history.length - 1 > states.historyIndex) {
-			states.historyIndex++
+		if (viewState.history.length - 1 > viewState.historyIndex) {
+			viewState.historyIndex++
 		}
 
-		reversi.$insert(states.history[states.historyIndex])
-		states.historyIndex = -1
+		reversi.$insert(viewState.history[viewState.historyIndex])
+		viewState.historyIndex = -1
 	}
 	const redo = () => {
 		console.log('redo')
-		if (states.historyIndex > 0) {
-			states.historyIndex--
+		if (viewState.historyIndex > 0) {
+			viewState.historyIndex--
 		}
-		reversi.$insert(states.history[states.historyIndex])
-		states.historyIndex = -1
+		reversi.$insert(viewState.history[viewState.historyIndex])
+		viewState.historyIndex = -1
 	}
 	const onkeydown = (e: KeyboardEvent) => {
 		if (e.ctrlKey) {
@@ -38,7 +39,7 @@
 <svelte:window {onkeydown} />
 
 <div class="history-container" style:width={boardWidth + 'px'}>
-	{#each states.history as data, i (data)}
+	{#each viewState.history as data, i (data)}
 		<div>
 			<div class="last-move-turn">
 				Turn: {data.turn}
@@ -48,13 +49,13 @@
 				class:active={states.turn === data.turn}
 				role="presentation"
 				onmouseenter={() => {
-					states.historyIndex = i
+					viewState.historyIndex = i
 				}}
 				onmouseleave={() => {
-					states.historyIndex = -1
+					viewState.historyIndex = -1
 				}}
 				onclick={() => {
-					states.historyIndex = -1
+					viewState.historyIndex = -1
 					reversi.$insert(data)
 				}}
 			>

@@ -1,3 +1,5 @@
+import { HistoryData } from './View.svelte.js'
+
 export const enum Tile {
 	OutSide = -1,
 	Null = 0,
@@ -38,21 +40,11 @@ export const directionXYs: [number, number][] = [
 	[1, 1], // bottom-right
 ]
 
-export interface HistoryData {
-	sym: Sym
-	x: number
-	y: number
-	tiles: Tile[]
-	turn: number
-}
-
 export interface ReversiStates {
 	turn: number
 	sym: Sym
 	tiles: Tile[]
 
-	history: HistoryData[]
-	historyIndex: number
 	playerTurn: boolean
 
 	blackScore: number
@@ -72,8 +64,6 @@ export const ReversiStatesDefault: ReversiStates = {
 	sym: Tile.B,
 	tiles: [],
 
-	history: [],
-	historyIndex: -1,
 	playerTurn: false,
 
 	blackScore: 2,

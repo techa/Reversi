@@ -1,12 +1,8 @@
 import { AIReversi, type AIReversiOptions, AILVMAX } from './AI.js'
-import {
-	type Sym,
-	Tile,
-	type HistoryData,
-	ReversiStatesDefault,
-} from './Reversi.js'
+import { type Sym, Tile, ReversiStatesDefault } from './Reversi.js'
 import { SoundID, Sounds } from './Sounds.js'
 import { clamp } from './utils.js'
+import { HistoryData, viewState } from './View.svelte.js'
 
 export const options: AIReversiOptions = $state({
 	boardSize: 8,
@@ -32,7 +28,7 @@ export const reversi = new (class extends AIReversi {
 		states.winlose = ''
 		states.turn = this.turn
 		super.init(options)
-		states.history = [
+		viewState.history = [
 			{
 				sym: this.sym,
 				x: -1,
@@ -80,15 +76,16 @@ export const reversi = new (class extends AIReversi {
 	}
 	$addHistory(x: number, y: number) {
 		if (!this.thinking) {
-			const oldHand = states.history[states.history.length - this.turn]
+			const oldHand =
+				viewState.history[viewState.history.length - this.turn]
 			const isNewHand = oldHand && (oldHand.x != x || oldHand.y !== y)
 
-			if (states.history.length > this.turn && isNewHand) {
-				states.history = states.history.slice(-this.turn)
+			if (viewState.history.length > this.turn && isNewHand) {
+				viewState.history = viewState.history.slice(-this.turn)
 			}
 
 			if (!oldHand || isNewHand) {
-				states.history.unshift({
+				viewState.history.unshift({
 					sym: this.sym,
 					x,
 					y,

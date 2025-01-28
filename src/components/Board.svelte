@@ -46,8 +46,8 @@
 			<div class="row" style:height={100 / boardSize + '%'}>
 				{#each board_markers_index as _, x}
 					{@const tiles =
-						states.historyIndex > -1
-							? states.history[states.historyIndex].tiles
+						viewState.historyIndex > -1
+							? viewState.history[viewState.historyIndex].tiles
 							: states.tiles}
 					{@const tile = tiles[y * boardSize + x]}
 					<div
@@ -68,7 +68,7 @@
 							<div
 								class="{reversi.getSymColor(tile)}-tiles"
 							></div>
-						{:else if states.playerTurn && states.historyIndex < 0 && reversi.checkOKtoPlace(x, y)}
+						{:else if states.playerTurn && viewState.historyIndex < 0 && reversi.checkOKtoPlace(x, y)}
 							{#if import.meta.env.DEV && options.aiPlayer1LV}
 								{@const _hand = reversi.getHand(
 									x,
