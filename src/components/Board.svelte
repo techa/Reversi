@@ -127,7 +127,7 @@
 			<svg class="icon black_white">
 				<use href="#{reversi.getSymColor(states.sym)}-tile"></use>
 			</svg>
-			{states.activePlayerName}
+			{reversi.getName(states.sym)}
 		</div>
 
 		<div class="footer_text">

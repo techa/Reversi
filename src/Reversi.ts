@@ -54,7 +54,6 @@ export interface ReversiStates {
 	history: HistoryData[]
 	historyIndex: number
 	playerTurn: boolean
-	activePlayerName: string
 
 	blackScore: number
 	whiteScore: number
@@ -76,7 +75,6 @@ export const ReversiStatesDefault: ReversiStates = {
 	history: [],
 	historyIndex: -1,
 	playerTurn: false,
-	activePlayerName: '',
 
 	blackScore: 2,
 	whiteScore: 2,

@@ -109,8 +109,6 @@ export const reversi = new (class extends AIReversi {
 	$turnSwitch() {
 		if (!this.thinking) {
 			states.sym = this.sym
-
-			states.activePlayerName = this.getName()
 		}
 	}
 	$checkWin() {
