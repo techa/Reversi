@@ -38,7 +38,19 @@
 
 <svelte:window {onkeydown} />
 
-<div class="history-container" style:width={boardWidth + 'px'}>
+<div
+	class="history-container"
+	style:width={boardWidth + 'px'}
+	onwheel={(e) => {
+		if (e.deltaX === 0) {
+			const reg = 1.5
+
+			e.currentTarget.scrollLeft += e.deltaY * reg
+		}
+		e.preventDefault()
+		e.stopPropagation()
+	}}
+>
 	{#each viewState.history as data, i (data)}
 		<div>
 			<div class="last-move-turn">
