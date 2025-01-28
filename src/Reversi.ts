@@ -215,9 +215,11 @@ export abstract class Reversi {
 	 * * 八方向の内、一つでもひっくり返せるなら true
 	 */
 	checkOKtoPlace(x: number, y: number): boolean {
-		for (const dir of directionXYs) {
-			if (this.checkDirection(x, y, dir)) {
-				return true
+		if (this.isTileEmpty(x, y)) {
+			for (const dir of directionXYs) {
+				if (this.checkDirection(x, y, dir)) {
+					return true
+				}
 			}
 		}
 		return false

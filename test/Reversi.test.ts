@@ -2,6 +2,7 @@
 // https://jestjs.io/docs/expect
 import { describe, it, expect } from 'vitest'
 import { ReversiTest } from './TestingClass.js'
+import { Tile } from '../src/Reversi.js'
 
 describe(`Reversi 2 players`, () => {
 	const reversi = new ReversiTest().init()
@@ -71,5 +72,61 @@ describe(`Reversi 2 players`, () => {
 			________
 			`.replace(/\t/g, '')
 		)
+	})
+
+	it(`hit(5, 2)`, () => {
+		reversi.hit(5, 2)
+		expect(reversi.turn).toBe(4)
+		expect(reversi.stringify()).toStrictEqual(
+			`
+			________
+			________
+			____WB__
+			__BBB___
+			___BW___
+			________
+			________
+			________
+			`.replace(/\t/g, '')
+		)
+	})
+
+	it(`hit(2, 2)`, () => {
+		reversi.hit(2, 2)
+		expect(reversi.turn).toBe(5)
+		expect(reversi.stringify()).toStrictEqual(
+			`
+			________
+			________
+			__W_WB__
+			__BWB___
+			___BW___
+			________
+			________
+			________
+			`.replace(/\t/g, '')
+		)
+	})
+
+	it(`hit(3, 2)`, () => {
+		expect(reversi.sym).toBe(Tile.B)
+		reversi.hit(3, 2)
+		expect(reversi.turn).toBe(6)
+		expect(reversi.stringify()).toStrictEqual(
+			`
+			________
+			________
+			__WBBB__
+			__BBB___
+			___BW___
+			________
+			________
+			________
+			`.replace(/\t/g, '')
+		)
+	})
+	it(`hit(4, 2)`, () => {
+		expect(reversi.sym).toBe(Tile.W)
+		expect(() => reversi.hit(4, 2)).toThrow()
 	})
 })
