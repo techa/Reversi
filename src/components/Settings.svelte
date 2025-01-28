@@ -77,47 +77,6 @@
 				<!-- <span>Random</span> -->
 			</label>
 		</div>
-		<div>
-			<h4>
-				Your Color: <span>
-					{['Random', 'Black', 'White'][options.yourColor]}</span
-				>
-			</h4>
-			<label title="black">
-				<input
-					type="radio"
-					name="yourColor"
-					value={Tile.B}
-					bind:group={options.yourColor}
-					checked
-				/>
-				<svg class="icon yc-black">
-					<use href="#black-tile"></use>
-				</svg>
-			</label>
-			<label title="white">
-				<input
-					type="radio"
-					name="yourColor"
-					value={Tile.W}
-					bind:group={options.yourColor}
-				/>
-				<svg class="icon yc-white">
-					<use href="#white-tile"></use>
-				</svg>
-			</label>
-			<label title="random">
-				<input
-					type="radio"
-					name="yourColor"
-					value={Tile.Null}
-					bind:group={options.yourColor}
-				/>
-				<svg class="icon yc-random">
-					<use href="#random"></use>
-				</svg>
-			</label>
-		</div>
 	{:else}
 		<h4>
 			AI{options.mode === 'demo' ? '(Black)' : ''} LV:
@@ -132,7 +91,52 @@
 				max={AILVMAX}
 			/>
 		</label>
-		{#if options.mode === 'demo'}
+
+		{#if options.mode === 'single'}
+			<div>
+				<h4>
+					Your Color: <span>
+						{['Random', 'Black(First)', 'White(Second)'][
+							options.yourColor
+						]}</span
+					>
+				</h4>
+				<label title="black">
+					<input
+						type="radio"
+						name="yourColor"
+						value={Tile.B}
+						bind:group={options.yourColor}
+						checked
+					/>
+					<svg class="icon yc-black">
+						<use href="#black-tile"></use>
+					</svg>
+				</label>
+				<label title="white">
+					<input
+						type="radio"
+						name="yourColor"
+						value={Tile.W}
+						bind:group={options.yourColor}
+					/>
+					<svg class="icon yc-white">
+						<use href="#white-tile"></use>
+					</svg>
+				</label>
+				<label title="random">
+					<input
+						type="radio"
+						name="yourColor"
+						value={Tile.Null}
+						bind:group={options.yourColor}
+					/>
+					<svg class="icon yc-random">
+						<use href="#random"></use>
+					</svg>
+				</label>
+			</div>
+		{:else if options.mode === 'demo'}
 			<h4>
 				AI(White) LV:
 				<span class="number">{options.aiPlayer2LV}</span>
