@@ -17,8 +17,11 @@ export interface ReversiOptions {
 	boardSize: BoardSize
 	initialPlacement: InitialPlacement
 	mode: Mode
-	yourColor: Tile
-	random: () => number
+	/**
+	 * Tile.Null = 0: Random
+	 */
+	yourColor: Tile.Null | Tile.B | Tile.W
+	random?: () => number
 }
 
 export const directionXYs: [number, number][] = [
@@ -97,15 +100,8 @@ export abstract class Reversi {
 			this.initialPlacement = this.random() > 0.5 ? 'cross' : 'parallel'
 		}
 
-		const yc = options.yourColor
 		this.yourColor =
-			yc == null
-				? this.yourColor
-				: yc > 0
-				? (yc as Sym)
-				: this.random() > 0.5
-				? Tile.B
-				: Tile.W
+			options.yourColor || (this.random() > 0.5 ? Tile.B : Tile.W)
 	}
 
 	init(options: Partial<ReversiOptions> = {}) {

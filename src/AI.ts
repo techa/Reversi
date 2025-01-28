@@ -4,22 +4,17 @@ import {
 	BoardSize,
 	InitialPlacement,
 	Mode,
+	ReversiOptions,
 	directionXYs,
 	Reversi,
 } from './Reversi.js'
 
 export type AILV = 0 | 1 | 2 | 3 | 4 | 5
 
-export interface ReversiOptions {
-	/**
-	 * range: 4-12
-	 * default: 8
-	 */
-	boardSize: BoardSize
-	initialPlacement: InitialPlacement
-	mode: Mode
-	yourColor: Tile
-	random?: () => number
+// export interface ReversiOptions {
+// }
+
+export type AIReversiOptions = ReversiOptions & {
 	aiPlayer1LV: AILV
 	aiPlayer2LV: AILV
 }
@@ -260,7 +255,7 @@ export abstract class AIReversi extends Reversi {
 		}
 	}
 
-	init(options: Partial<ReversiOptions> = {}) {
+	init(options: Partial<AIReversiOptions> = {}) {
 		this.aiPlayer1LV = options.aiPlayer1LV ?? 1
 		this.aiPlayer2LV = options.aiPlayer2LV ?? 1
 		return super.init(options)

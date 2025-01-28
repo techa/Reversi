@@ -3,21 +3,23 @@
 import { describe, it, expect } from 'vitest'
 import { ReversiTest } from './TestingClass.js'
 import { ParkMiller } from './ParkMiller.js'
-import { AILV, ReversiOptions, AIsettings } from '../src/AI.js'
+import { AILV, AIReversiOptions, AIsettings } from '../src/AI.js'
+import { Tile } from '../src/Reversi.js'
 
 describe(`demo 1`, () => {
-	const random = new ParkMiller(7)
+	const random = new ParkMiller(0)
 	const reversi = new ReversiTest().init({
 		boardSize: 4,
 		mode: 'demo',
 		random: () => random.float(),
 	})
 	it(`result`, () => {
+		expect(reversi.yourColor).toBe(Tile.B)
 		expect(reversi.stringify()).toBe(
 			`
-			WBBB
 			WWWW
-			WBWW
+			WWWW
+			BBWB
 			WWWW
 			`.replace(/\t/g, '')
 		)
@@ -33,11 +35,12 @@ describe(`demo 2`, () => {
 		random: () => random.float(),
 	})
 	it(`result`, () => {
+		expect(reversi.yourColor).toBe(Tile.W)
 		expect(reversi.stringify()).toBe(
 			`
-			WWWB
 			WWWW
-			WWWW
+			BWBW
+			BBWW
 			BBBW
 			`.replace(/\t/g, '')
 		)
@@ -45,7 +48,7 @@ describe(`demo 2`, () => {
 	})
 })
 
-const AIBattle = (options: Partial<ReversiOptions>) => {
+const AIBattle = (options: Partial<AIReversiOptions>) => {
 	const wins = {
 		black: 0,
 		white: 0,

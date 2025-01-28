@@ -1,12 +1,12 @@
-import { AIReversi, type ReversiOptions, AILVMAX, type Hand } from './AI.js'
-import { type Sym, Tile, HistoryData } from './Reversi.js'
+import { AIReversi, type AIReversiOptions, AILVMAX, type Hand } from './AI.js'
+import { type Sym, Tile, type HistoryData } from './Reversi.js'
 import { SoundID, Sounds } from './Sounds.js'
 import { clamp } from './utils.js'
 
-export const options: ReversiOptions = $state({
+export const options: AIReversiOptions = $state({
 	boardSize: 8,
 	initialPlacement: 'cross',
-	yourColor: Tile.B,
+	yourColor: Tile.Null, // Random
 	mode: '2',
 	aiPlayer1LV: AILVMAX,
 	aiPlayer2LV: AILVMAX,
@@ -53,7 +53,7 @@ export const reversi = new (class extends AIReversi {
 	sounds = new Sounds()
 	timerID: number
 
-	init(options: ReversiOptions) {
+	init(options: AIReversiOptions) {
 		clearTimeout(this.timerID)
 		states.winlose = ''
 		states.turn = this.turn
