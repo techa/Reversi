@@ -53,6 +53,7 @@ export interface ReversiStates {
 	winlose: string
 
 	mute: boolean
+	volume: number
 	/**
 	 * ms. default:2000, min: 500
 	 */
@@ -72,6 +73,7 @@ export const ReversiStatesDefault: ReversiStates = {
 	winlose: '',
 
 	mute: false,
+	volume: 1,
 	aiWait: 2000,
 }
 

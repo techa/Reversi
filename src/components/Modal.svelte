@@ -74,6 +74,21 @@
 			</button>
 
 			<div>
+				<h4>SE volume: <span>{states.volume}</span></h4>
+				<input
+					type="range"
+					bind:value={states.volume}
+					max="2"
+					min="0"
+					step="0.1"
+					oninput={(e) => {
+						console.log('states.volume', states.volume)
+						reversi.sounds.volume(states.volume)
+					}}
+				/>
+			</div>
+
+			<div>
 				<h4>AI wait: <span>{states.aiWait}</span></h4>
 				<input
 					type="range"
