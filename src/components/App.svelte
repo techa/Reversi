@@ -53,10 +53,10 @@
 	// 	localStorage.setItem(`Reversi()`, JSON.stringify(data))
 	// })
 	const onkeydown = (e: KeyboardEvent) => {
-		if (e.ctrlKey) {
-			if (e.key === 'd') {
+		switch (e.key) {
+			case 'd':
 				viewState.dev = !viewState.dev
-			}
+				break
 		}
 	}
 </script>
