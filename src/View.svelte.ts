@@ -33,3 +33,17 @@ export const viewState = $state({
 
 	dev: import.meta.env.DEV,
 })
+
+export const config = $state({
+	mute: false,
+	/**
+	 * * 0=mute
+	 * * 1=等倍
+	 * * 2=２倍
+	 */
+	volume: 1,
+	/**
+	 * ms. default:1000, min: 500, max: 2000
+	 */
+	aiWait: 1000,
+})

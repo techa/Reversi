@@ -51,13 +51,6 @@ export interface ReversiStates {
 	whiteScore: number
 
 	winlose: string
-
-	mute: boolean
-	volume: number
-	/**
-	 * ms. default:2000, min: 500
-	 */
-	aiWait: number
 }
 
 export const ReversiStatesDefault: ReversiStates = {
@@ -71,10 +64,6 @@ export const ReversiStatesDefault: ReversiStates = {
 	whiteScore: 2,
 
 	winlose: '',
-
-	mute: false,
-	volume: 1,
-	aiWait: 2000,
 }
 
 export abstract class Reversi {

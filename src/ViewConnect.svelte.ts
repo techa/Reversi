@@ -2,7 +2,7 @@ import { AIReversi, type AIReversiOptions, AILVMAX } from './AI.js'
 import { type Sym, Tile, ReversiStatesDefault } from './Reversi.js'
 import { SoundID, Sounds } from './Sounds.js'
 import { clamp } from './utils.js'
-import { HistoryData, viewState } from './View.svelte.js'
+import { HistoryData, viewState, config } from './View.svelte.js'
 
 export const options: AIReversiOptions = $state({
 	boardSize: 8,
@@ -52,7 +52,7 @@ export const reversi = new (class extends AIReversi {
 			clearTimeout(this.timerID)
 			this.timerID = setTimeout(() => {
 				super.$aiTurn()
-			}, clamp(states.aiWait, 500, 4000))
+			}, clamp(config.aiWait, 500, 2000))
 		}
 	}
 	$setTile(x: number, y: number, sym: Sym) {

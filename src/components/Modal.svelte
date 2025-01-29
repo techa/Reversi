@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { reversi, options, states } from '../ViewConnect.svelte.js'
-	import { viewState, ModalType, PageType } from '../View.svelte.js'
+	import { viewState, ModalType, PageType, config } from '../View.svelte.js'
 
 	let dialog: HTMLDialogElement
 
@@ -57,13 +57,13 @@
 		{:else if viewState.modal === ModalType.Config}
 			<button
 				onclick={() => {
-					states.mute = !states.mute
-					reversi.sounds.mute = states.mute
+					config.mute = !config.mute
+					reversi.sounds.mute = config.mute
 				}}
 			>
 				<svg class="icon volume" stroke="white">
 					<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-					{#if states.mute}
+					{#if config.mute}
 						<line x1="22" x2="16" y1="9" y2="15" />
 						<line x1="16" x2="22" y1="9" y2="15" />
 					{:else}
@@ -74,26 +74,25 @@
 			</button>
 
 			<div>
-				<h4>SE volume: <span>{states.volume}</span></h4>
+				<h4>SE volume: <span>{config.volume}</span></h4>
 				<input
 					type="range"
-					bind:value={states.volume}
+					bind:value={config.volume}
 					max="2"
 					min="0"
 					step="0.1"
-					oninput={(e) => {
-						console.log('states.volume', states.volume)
-						reversi.sounds.volume(states.volume)
+					oninput={() => {
+						reversi.sounds.volume(config.volume)
 					}}
 				/>
 			</div>
 
 			<div>
-				<h4>AI wait: <span>{states.aiWait}</span></h4>
+				<h4>AI wait: <span>{config.aiWait}</span></h4>
 				<input
 					type="range"
-					bind:value={states.aiWait}
-					max="4000"
+					bind:value={config.aiWait}
+					max="2000"
 					min="500"
 					step="100"
 				/>
