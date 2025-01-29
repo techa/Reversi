@@ -63,9 +63,9 @@ const AIBattle = (options: Partial<AIReversiOptions>) => {
 			aiPlayer2LV: (i % 6) as AILV,
 		})
 
-		if (reversi.blackCount > reversi.whiteCount) {
+		if (reversi.blackScore > reversi.whiteScore) {
 			wins.black++
-		} else if (reversi.whiteCount > reversi.blackCount) {
+		} else if (reversi.whiteScore > reversi.blackScore) {
 			wins.white++
 		} else {
 			wins.draw++
