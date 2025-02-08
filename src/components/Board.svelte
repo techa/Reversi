@@ -15,9 +15,9 @@
 	const boardWidth_border = Constants.BoardWidthMax
 	let boardWidth = $state(640)
 
-	let board_markers_index = Array(boardSize)
-		.fill(0)
-		.map((_, i) => i)
+	// let board_markers_index = Array(boardSize)
+	// 	.fill(0)
+	// 	.map((_, i) => i)
 
 	function onresize() {
 		const w = document.body.clientWidth
@@ -42,77 +42,74 @@
 
 <div class="board-frame" style:--board-width={boardWidth + 'px'}>
 	<div class="main-board">
-		{#each board_markers_index as _, y}
-			<div class="row" style:height={100 / boardSize + '%'}>
-				{#each board_markers_index as _, x}
-					{@const tiles =
-						viewState.historyIndex > -1
-							? viewState.history[viewState.historyIndex].tiles
-							: states.tiles}
-					{@const tile = tiles[y * boardSize + x]}
-					<div
-						class="col square"
-						class:itimatsu={(y + x) % 2}
-						style:width={100 / boardSize + '%'}
-						role="presentation"
-						data-x-axis={x}
-						data-y-axis={y}
-						onclick={() => {
-							if (states.playerTurn) {
-								reversi.hit(x, y)
-								viewState.hand = null
-							}
-						}}
-					>
-						{#if tile > 0}
+		{#each { length: boardSize } as _, y}
+			{#each { length: boardSize } as _, x}
+				{@const tiles =
+					viewState.historyIndex > -1
+						? viewState.history[viewState.historyIndex].tiles
+						: states.tiles}
+				{@const tile = tiles[y * boardSize + x]}
+				<div
+					class="square"
+					class:itimatsu={(y + x) % 2}
+					style:width={100 / boardSize + '%'}
+					style:height={100 / boardSize + '%'}
+					role="presentation"
+					data-x-axis={x}
+					data-y-axis={y}
+					onclick={() => {
+						if (states.playerTurn) {
+							reversi.hit(x, y)
+							viewState.hand = null
+						}
+					}}
+				>
+					{#if tile > 0}
+						<div class="{reversi.getSymColor(tile)}-stone"></div>
+					{:else if states.playerTurn && viewState.historyIndex < 0 && reversi.checkOKtoPlace(x, y)}
+						{#if viewState.dev && options.aiPlayer1LV}
+							{@const _hand = reversi.getHand(
+								x,
+								y,
+								options.aiPlayer1LV,
+							)}
 							<div
-								class="{reversi.getSymColor(tile)}-tiles"
-							></div>
-						{:else if states.playerTurn && viewState.historyIndex < 0 && reversi.checkOKtoPlace(x, y)}
-							{#if viewState.dev && options.aiPlayer1LV}
-								{@const _hand = reversi.getHand(
-									x,
-									y,
-									options.aiPlayer1LV,
-								)}
-								<div
-									class="can-hit"
-									role="presentation"
-									onmouseenter={(event) => {
-										viewState.hand = _hand
-										viewState.handPosition = [
-											event.clientX,
-											event.clientY,
-										]
-									}}
-									onmouseleave={() => {
-										viewState.hand = null
-										viewState.handPosition = null
-									}}
-								>
-									{_hand.scores.total.toFixed(1) || ''}
-								</div>
-							{:else}
-								<div class="can-hit">
-									<div class="predictor"></div>
-								</div>
-							{/if}
+								class="can-hit"
+								role="presentation"
+								onmouseenter={(event) => {
+									viewState.hand = _hand
+									viewState.handPosition = [
+										event.clientX,
+										event.clientY,
+									]
+								}}
+								onmouseleave={() => {
+									viewState.hand = null
+									viewState.handPosition = null
+								}}
+							>
+								{_hand.scores.total.toFixed(1) || ''}
+							</div>
+						{:else}
+							<div class="can-hit">
+								<div class="predictor"></div>
+							</div>
 						{/if}
-					</div>
-				{/each}
-			</div>
+					{/if}
+				</div>
+			{/each}
 		{/each}
 	</div>
 
 	<div class="h-markers-container">
-		{#each board_markers_index as index}
+		{#each { length: boardSize } as _, index}
 			<div class="h-markers" style:width={100 / boardSize + '%'}>
 				{String.fromCharCode(65 + index)}
 			</div>
 		{/each}
 	</div>
 	<div class="v-markers-container">
-		{#each board_markers_index as index}
+		{#each { length: boardSize } as _, index}
 			<div class="v-markers" style:height={100 / boardSize + '%'}>
 				{1 + index}
 			</div>
@@ -177,29 +174,6 @@
 		flex-wrap: nowrap;
 	}
 
-	.footer.h-markers-container {
-		top: auto;
-		bottom: -2px;
-
-		color: aliceblue;
-
-		align-items: center;
-		justify-content: space-between;
-	}
-
-	.footer_text {
-		height: 34px;
-		display: flex;
-		align-items: center;
-		margin: 0 4px;
-	}
-	.icon.black_white {
-		width: 20px;
-		height: 20px;
-		display: inline-flex;
-		margin: 4px;
-	}
-
 	.h-markers {
 		height: 100%;
 
@@ -234,7 +208,116 @@
 		text-align: center;
 	}
 
+	.main-board {
+		display: flex;
+		flex-flow: row wrap;
+		width: 100%;
+		height: 100%;
+
+		margin: 0 auto;
+		box-sizing: border-box;
+	}
+
+	.square {
+		width: 12.5%;
+		height: 100%;
+		border: 1px solid white;
+		background-color: #6e9e00;
+		position: relative;
+		box-sizing: border-box;
+	}
+
 	.itimatsu {
 		background-color: #86b50f;
+	}
+	/*
+	.square > .can-hit > .predictor
+	*/
+	.can-hit {
+		width: 100%;
+		height: 100%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+
+		cursor: pointer;
+	}
+
+	.black-stone {
+		border-radius: 50%;
+		width: 70%;
+		padding-bottom: 70%;
+		position: absolute;
+		margin: 0 auto;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		background: linear-gradient(to bottom right, black, #565656);
+		box-shadow: 1px 1px 6px;
+	}
+	.black-stone::after {
+		content: '';
+		position: absolute;
+		top: 2px;
+		border-radius: 50%;
+		left: 2px;
+		width: 56%;
+		height: 35%;
+		background: linear-gradient(
+			rgba(255, 255, 255, 0.3),
+			rgba(255, 255, 255, 0)
+		);
+		transform: rotate(-32deg);
+	}
+
+	.white-stone {
+		border-radius: 50%;
+		width: 70%;
+		padding-bottom: 70%;
+		position: absolute;
+		margin: 0 auto;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		background: linear-gradient(to bottom right, #bababa, white);
+		box-shadow: 1px 1px 14px;
+	}
+
+	.white-stone::after {
+		content: '';
+		position: absolute;
+		top: 2px;
+		border-radius: 50%;
+		left: 2px;
+		width: 56%;
+		height: 35%;
+		background: linear-gradient(
+			rgba(255, 255, 255, 1),
+			rgba(255, 255, 255, 0)
+		);
+		transform: rotate(-32deg);
+	}
+
+	.footer.h-markers-container {
+		top: auto;
+		bottom: -2px;
+
+		color: aliceblue;
+
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	.footer_text {
+		height: 34px;
+		display: flex;
+		align-items: center;
+		margin: 0 4px;
+	}
+	.icon.black_white {
+		width: 20px;
+		height: 20px;
+		display: inline-flex;
+		margin: 4px;
 	}
 </style>
