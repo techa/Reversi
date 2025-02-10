@@ -2,7 +2,7 @@
 // https://jestjs.io/docs/expect
 import { describe, it, expect } from 'vitest'
 import { ReversiTest } from './TestingClass.js'
-import { Tile } from '../src/Reversi.js'
+import { Mode, Tile } from '../src/Reversi.js'
 
 describe(`Reversi 2 players`, () => {
 	const reversi = new ReversiTest().init()
@@ -20,7 +20,7 @@ describe(`Reversi 2 players`, () => {
 			`.replace(/\t/g, '')
 		)
 
-		expect(reversi.mode).toBe('2')
+		expect(reversi.mode).toBe(Mode.Practice)
 	})
 
 	it(`error position [0, 0]`, () => {

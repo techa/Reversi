@@ -1,14 +1,20 @@
 import { AIReversi, type AIReversiOptions, AILVMAX } from './AI.js'
-import { type Sym, Tile, ReversiStatesDefault } from './Reversi.js'
+import {
+	type Sym,
+	Tile,
+	ReversiStatesDefault,
+	InitialPlacement,
+	Mode,
+} from './Reversi.js'
 import { SoundID, Sounds } from './Sounds.js'
 import { clamp } from './utils.js'
 import { HistoryData, viewState, config } from './View.svelte.js'
 
 export const options: AIReversiOptions = $state({
 	boardSize: 8,
-	initialPlacement: 'cross',
+	initialPlacement: InitialPlacement.Cross,
 	yourColor: Tile.Null, // Random
-	mode: '2',
+	mode: Mode.Practice,
 	aiPlayer1LV: AILVMAX,
 	aiPlayer2LV: AILVMAX,
 })

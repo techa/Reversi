@@ -2,7 +2,7 @@
 // https://jestjs.io/docs/expect
 import { describe, it, expect } from 'vitest'
 import { ReversiTest } from './TestingClass.js'
-import { Tile } from '../src/Reversi.js'
+import { Mode, Tile } from '../src/Reversi.js'
 import { ParkMiller } from './ParkMiller.js'
 
 describe(`AI`, () => {
@@ -127,7 +127,7 @@ describe(`AI`, () => {
 describe(`AI single you=black`, () => {
 	const random = new ParkMiller(2)
 	const reversi = new ReversiTest().init({
-		mode: 'single',
+		mode: Mode.Single,
 		yourColor: Tile.B,
 		boardSize: 4,
 		random: () => random.float(),
@@ -184,7 +184,7 @@ describe(`AI single you=black`, () => {
 describe(`AI single you=white`, () => {
 	const random = new ParkMiller(2)
 	const reversi = new ReversiTest().init({
-		mode: 'single',
+		mode: Mode.Single,
 		yourColor: Tile.W,
 		boardSize: 4,
 		random: () => random.float(),

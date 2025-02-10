@@ -4,13 +4,13 @@ import { describe, it, expect } from 'vitest'
 import { ReversiTest } from './TestingClass.js'
 import { ParkMiller } from './ParkMiller.js'
 import { AILV, AIReversiOptions, AIsettings } from '../src/AI.js'
-import { Tile } from '../src/Reversi.js'
+import { InitialPlacement, Mode, Tile } from '../src/Reversi.js'
 
 describe(`demo 1`, () => {
 	const random = new ParkMiller(0)
 	const reversi = new ReversiTest().init({
 		boardSize: 4,
-		mode: 'demo',
+		mode: Mode.Demo,
 		random: () => random.float(),
 	})
 	it(`result`, () => {
@@ -31,7 +31,7 @@ describe(`demo 2`, () => {
 	const random = new ParkMiller(2)
 	const reversi = new ReversiTest().init({
 		boardSize: 4,
-		mode: 'demo',
+		mode: Mode.Demo,
 		random: () => random.float(),
 	})
 	it(`result`, () => {
@@ -59,7 +59,7 @@ const AIBattle = (options: Partial<AIReversiOptions>) => {
 	for (let i = 0; i < wins.total; i++) {
 		const reversi = new ReversiTest().init({
 			...options,
-			mode: 'demo',
+			mode: Mode.Demo,
 			aiPlayer2LV: (i % 6) as AILV,
 		})
 
@@ -78,7 +78,7 @@ const AIBattle = (options: Partial<AIReversiOptions>) => {
 	for (let i = 0; i < AIsettings.length; i++) {
 		const wins = AIBattle({
 			yourColor: 0,
-			initialPlacement: 'random',
+			initialPlacement: InitialPlacement.Random,
 			aiPlayer1LV: i as AILV,
 		})
 		// console.log(`B-${i}, W-1`, wins)

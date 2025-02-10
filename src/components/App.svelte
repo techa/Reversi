@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { type Mode } from '../Reversi.js'
+	import { Mode } from '../Reversi.js'
 
 	import Board from './Board.svelte'
 	import Modal from './Modal.svelte'
@@ -18,12 +18,18 @@
 
 	// game start
 	function start(_mode: Mode) {
-		options.mode = _mode
-		if (_mode === '2') {
-			viewState.page = PageType.Game
-			reversi.init(options)
-		} else {
-			viewState.page = PageType.AILVSelect
+		return (
+			_event: MouseEvent & {
+				currentTarget: EventTarget & HTMLButtonElement
+			},
+		) => {
+			options.mode = _mode
+			if (_mode === Mode.Practice) {
+				viewState.page = PageType.Game
+				reversi.init(options)
+			} else {
+				viewState.page = PageType.AILVSelect
+			}
 		}
 	}
 
@@ -154,13 +160,13 @@
 	{:else}
 		<Settings></Settings>
 		<div class="main-page-container">
-			<button class="selections" onclick={() => start('single')}>
+			<button class="selections" onclick={start(Mode.Single)}>
 				Single Play
 			</button>
-			<button class="selections" onclick={() => start('2')}>
+			<button class="selections" onclick={start(Mode.Practice)}>
 				2 Players
 			</button>
-			<button class="selections" onclick={() => start('demo')}>
+			<button class="selections" onclick={start(Mode.Demo)}>
 				Demo
 			</button>
 

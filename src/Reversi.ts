@@ -8,8 +8,17 @@ export const enum Tile {
 }
 export type Sym = Tile.B | Tile.W
 export type BoardSize = 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12
-export type InitialPlacement = 'cross' | 'parallel' | 'random'
-export type Mode = 'single' | '2' | 'demo'
+export const enum InitialPlacement {
+	Random,
+	Cross,
+	Parallel,
+}
+
+export const enum Mode {
+	Demo,
+	Single,
+	Practice,
+}
 
 export interface ReversiOptions {
 	/**
@@ -68,8 +77,8 @@ export const ReversiStatesDefault: ReversiStates = {
 
 export abstract class Reversi {
 	boardSize: BoardSize = 8
-	initialPlacement: InitialPlacement = 'cross'
-	mode: Mode = '2'
+	initialPlacement = InitialPlacement.Cross
+	mode = Mode.Practice
 	yourColor: Sym = Tile.B
 
 	turn = 1
@@ -86,9 +95,9 @@ export abstract class Reversi {
 
 	getName(sym = this.sym) {
 		const mode = this.mode
-		return mode === '2' || mode === 'demo'
+		return mode === Mode.Practice || mode === Mode.Demo
 			? ['Black', 'White'][sym - 1]
-			: mode === 'single' && this.yourColor === sym
+			: mode === Mode.Single && this.yourColor === sym
 			? 'You'
 			: 'AI'
 	}
@@ -106,8 +115,11 @@ export abstract class Reversi {
 		this.mode = options.mode ?? this.mode
 		this.random = options.random ?? Math.random
 
-		if (this.initialPlacement === 'random') {
-			this.initialPlacement = this.random() > 0.5 ? 'cross' : 'parallel'
+		if (this.initialPlacement === InitialPlacement.Random) {
+			this.initialPlacement =
+				this.random() > 0.5
+					? InitialPlacement.Cross
+					: InitialPlacement.Parallel
 		}
 
 		this.yourColor =
@@ -121,8 +133,8 @@ export abstract class Reversi {
 		this.initBoardArray()
 		this.initialPieces()
 
-		this.demo = this.mode === 'demo'
-		const single = (this.singlePlayerMode = this.mode === 'single')
+		this.demo = this.mode === Mode.Demo
+		const single = (this.singlePlayerMode = this.mode === Mode.Single)
 
 		if (this.demo || (single && this.yourColor === Tile.W)) {
 			this.$aiTurn()
@@ -163,8 +175,8 @@ export abstract class Reversi {
 			}
 			let sym = Tile.B
 			if (
-				(type === 'cross' && (!i || i === 3)) ||
-				(type === 'parallel' && i < 2)
+				(type === InitialPlacement.Cross && (!i || i === 3)) ||
+				(type === InitialPlacement.Parallel && i < 2)
 			) {
 				sym = Tile.W
 			}
@@ -275,9 +287,9 @@ export abstract class Reversi {
 	}
 
 	isAiTurn() {
-		return this.mode === '2'
+		return this.mode === Mode.Practice
 			? false
-			: this.mode === 'demo'
+			: this.mode === Mode.Demo
 			? true
 			: this.yourColor === Tile.B
 			? !!(this.turn % 2)
@@ -457,7 +469,7 @@ export abstract class Reversi {
 		if (this.blackScore === this.whiteScore) {
 			return 'Draw!!'
 		}
-		if (this.mode === 'single') {
+		if (this.mode === Mode.Single) {
 			if (
 				(this.yourColor === Tile.B &&
 					this.blackScore > this.whiteScore) ||

@@ -1,8 +1,6 @@
 import {
 	Tile,
 	Sym,
-	BoardSize,
-	InitialPlacement,
 	Mode,
 	ReversiOptions,
 	directionXYs,
@@ -10,9 +8,6 @@ import {
 } from './Reversi.js'
 
 export type AILV = 0 | 1 | 2 | 3 | 4 | 5
-
-// export interface ReversiOptions {
-// }
 
 export type AIReversiOptions = ReversiOptions & {
 	aiPlayer1LV: AILV
@@ -291,7 +286,7 @@ export abstract class AIReversi extends Reversi {
 
 	ai_nextHand() {
 		const lv =
-			this.mode === 'single'
+			this.mode === Mode.Single
 				? this.aiPlayer1LV
 				: this.sym === Tile.B
 				? this.aiPlayer1LV

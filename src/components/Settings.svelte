@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { AILVMAX } from '../AI.js'
-	import { Tile } from '../Reversi.js'
+	import { InitialPlacement, Mode, Tile } from '../Reversi.js'
 	import { options } from '../ViewConnect.svelte.js'
-	import { capitarize } from '../utils.js'
 	import { PageType, viewState } from '../View.svelte.js'
+
+	const initialPlacements = ['Random', 'Cross', 'Parallel'] as const
 </script>
 
 <div class="settings-from-container">
@@ -26,14 +27,14 @@
 		<div>
 			<h4>
 				Initial Placement: <span
-					>{capitarize(options.initialPlacement)}</span
+					>{initialPlacements[options.initialPlacement]}</span
 				>
 			</h4>
 			<label title="cross">
 				<input
 					type="radio"
 					name="initialPlacement"
-					value="cross"
+					value={InitialPlacement.Cross}
 					checked
 					bind:group={options.initialPlacement}
 				/>
@@ -49,7 +50,7 @@
 				<input
 					type="radio"
 					name="initialPlacement"
-					value="parallel"
+					value={InitialPlacement.Parallel}
 					bind:group={options.initialPlacement}
 				/>
 				<svg viewBox="0 0 24 24" class="icon ip-parallel">
@@ -64,7 +65,7 @@
 				<input
 					type="radio"
 					name="initialPlacement"
-					value="random"
+					value={InitialPlacement.Random}
 					bind:group={options.initialPlacement}
 				/>
 				<svg class="icon ip-random">
@@ -75,7 +76,7 @@
 		</div>
 	{:else}
 		<h4>
-			AI{options.mode === 'demo' ? '(Black)' : ''} LV:
+			AI{options.mode === Mode.Demo ? '(Black)' : ''} LV:
 			<span class="number">{options.aiPlayer1LV}</span>
 		</h4>
 		<label>
@@ -88,7 +89,7 @@
 			/>
 		</label>
 
-		{#if options.mode === 'single'}
+		{#if options.mode === Mode.Single}
 			<div>
 				<h4>
 					Your Color: <span>
@@ -132,7 +133,7 @@
 					</svg>
 				</label>
 			</div>
-		{:else if options.mode === 'demo'}
+		{:else if options.mode === Mode.Demo}
 			<h4>
 				AI(White) LV:
 				<span class="number">{options.aiPlayer2LV}</span>

@@ -7,6 +7,7 @@
 		Constants,
 		options,
 	} from '../ViewConnect.svelte.js'
+	import { Mode } from '../Reversi.js'
 
 	const { back2top } = $props()
 
@@ -137,7 +138,7 @@
 	</div>
 </div>
 
-{#if options.mode === '2' || viewState.dev}
+{#if options.mode === Mode.Practice || viewState.dev}
 	<History {boardWidth}></History>
 {/if}
 
