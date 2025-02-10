@@ -8,11 +8,12 @@
 		options,
 	} from '../ViewConnect.svelte.js'
 	import { Mode } from '../Reversi.js'
+	import { floor } from '../utils.js'
 
 	const { back2top } = $props()
 
 	const { boardSize } = reversi
-	const boxSize = (100 / boardSize).toFixed(2) + '%'
+	const boxSize = floor(100 / boardSize, 2) + '%'
 
 	const boardWidth_border = Constants.BoardWidthMax
 	let boardWidth = $state(640)
