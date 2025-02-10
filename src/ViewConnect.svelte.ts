@@ -40,6 +40,16 @@ export const reversi = new (class extends AIReversi {
 		this.$turnSwitch()
 		return this
 	}
+
+	getViewTile(x: number, y: number) {
+		const tiles =
+			viewState.historyIndex > -1
+				? viewState.history[viewState.historyIndex].tiles
+				: states.tiles
+
+		return tiles[y * this.boardSize + x]
+	}
+
 	$playerTurn() {
 		if (!this.thinking) {
 			states.playerTurn = true

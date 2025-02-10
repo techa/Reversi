@@ -44,11 +44,7 @@
 	<div class="main-board">
 		{#each { length: boardSize } as _, y}
 			{#each { length: boardSize } as _, x}
-				{@const tiles =
-					viewState.historyIndex > -1
-						? viewState.history[viewState.historyIndex].tiles
-						: states.tiles}
-				{@const tile = tiles[y * boardSize + x]}
+				{@const tile = reversi.getViewTile(x, y)}
 				<div
 					class="square"
 					class:itimatsu={(y + x) % 2}
