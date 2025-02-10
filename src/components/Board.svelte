@@ -11,6 +11,7 @@
 	const { back2top } = $props()
 
 	const { boardSize } = reversi
+	const boxSize = (100 / boardSize).toFixed(2) + '%'
 
 	const boardWidth_border = Constants.BoardWidthMax
 	let boardWidth = $state(640)
@@ -48,8 +49,8 @@
 				<div
 					class="square"
 					class:itimatsu={(y + x) % 2}
-					style:width={100 / boardSize + '%'}
-					style:height={100 / boardSize + '%'}
+					style:width={boxSize}
+					style:height={boxSize}
 					role="presentation"
 					data-x-axis={x}
 					data-y-axis={y}
@@ -99,14 +100,14 @@
 
 	<div class="h-markers-container">
 		{#each { length: boardSize } as _, index}
-			<div class="h-markers" style:width={100 / boardSize + '%'}>
+			<div class="h-markers" style:width={boxSize}>
 				{String.fromCharCode(65 + index)}
 			</div>
 		{/each}
 	</div>
 	<div class="v-markers-container">
 		{#each { length: boardSize } as _, index}
-			<div class="v-markers" style:height={100 / boardSize + '%'}>
+			<div class="v-markers" style:height={boxSize}>
 				{1 + index}
 			</div>
 		{/each}
