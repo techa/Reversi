@@ -1,7 +1,16 @@
 import { AIReversi } from '../src/AI.js'
 import { Tile } from '../src/Reversi.js'
+import { ParkMiller } from './ParkMiller.js'
 
 export class ReversiTest extends AIReversi {
+	constructor(seed?: number) {
+		super()
+		if (seed != null) {
+			const random = new ParkMiller(seed)
+			this.random = () => random.float()
+		}
+	}
+
 	stringify() {
 		let txt = '\n'
 		let col = 0

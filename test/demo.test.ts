@@ -2,16 +2,13 @@
 // https://jestjs.io/docs/expect
 import { describe, it, expect } from 'vitest'
 import { ReversiTest } from './TestingClass.js'
-import { ParkMiller } from './ParkMiller.js'
 import { AILV, AIReversiOptions, AIsettings } from '../src/AI.js'
 import { InitialPlacement, Mode, Tile } from '../src/Reversi.js'
 
 describe(`demo 1`, () => {
-	const random = new ParkMiller(0)
-	const reversi = new ReversiTest().init({
+	const reversi = new ReversiTest(0).init({
 		boardSize: 4,
 		mode: Mode.Demo,
-		random: () => random.float(),
 	})
 	it(`result`, () => {
 		expect(reversi.yourColor).toBe(Tile.B)
@@ -28,11 +25,9 @@ describe(`demo 1`, () => {
 })
 
 describe(`demo 2`, () => {
-	const random = new ParkMiller(2)
-	const reversi = new ReversiTest().init({
+	const reversi = new ReversiTest(2).init({
 		boardSize: 4,
 		mode: Mode.Demo,
-		random: () => random.float(),
 	})
 	it(`result`, () => {
 		expect(reversi.yourColor).toBe(Tile.W)

@@ -105,7 +105,7 @@ export abstract class Reversi {
 	whiteScore = 0
 	blackScore = 0
 
-	random: () => number
+	random = Math.random
 
 	setOptions(options: Partial<ReversiOptions> = {}) {
 		this.boardSize = options.boardSize ?? this.boardSize
@@ -113,7 +113,6 @@ export abstract class Reversi {
 			options.initialPlacement ?? this.initialPlacement
 
 		this.mode = options.mode ?? this.mode
-		this.random = options.random ?? Math.random
 
 		if (this.initialPlacement === InitialPlacement.Random) {
 			this.initialPlacement =

@@ -3,7 +3,6 @@
 import { describe, it, expect } from 'vitest'
 import { ReversiTest } from './TestingClass.js'
 import { Mode, Tile } from '../src/Reversi.js'
-import { ParkMiller } from './ParkMiller.js'
 
 describe(`AI`, () => {
 	const reversi = new ReversiTest().init()
@@ -125,12 +124,10 @@ describe(`AI`, () => {
 })
 
 describe(`AI single you=black`, () => {
-	const random = new ParkMiller(2)
-	const reversi = new ReversiTest().init({
+	const reversi = new ReversiTest(2).init({
 		mode: Mode.Single,
 		yourColor: Tile.B,
 		boardSize: 4,
-		random: () => random.float(),
 	})
 	it(`initial state`, () => {
 		expect(reversi.sym).toBe(Tile.B)
@@ -182,12 +179,10 @@ describe(`AI single you=black`, () => {
 })
 
 describe(`AI single you=white`, () => {
-	const random = new ParkMiller(2)
-	const reversi = new ReversiTest().init({
+	const reversi = new ReversiTest(2).init({
 		mode: Mode.Single,
 		yourColor: Tile.W,
 		boardSize: 4,
-		random: () => random.float(),
 	})
 
 	it(`initial state`, () => {
