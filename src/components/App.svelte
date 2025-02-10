@@ -87,8 +87,8 @@
 <div class="header-wrapper" style="max-width: {Constants.BoardWidthMax}px;">
 	<div class="btn">
 		{#if viewState.page}
-			<button onclick={back2top}>
-				<svg class="icon config" stroke="white">
+			<button aria-label="back-menu-open" onclick={back2top}>
+				<svg class="icon" stroke="white">
 					<path d="m12 19-7-7 7-7" />
 					<path d="M19 12H5" />
 				</svg>
@@ -111,11 +111,12 @@
 	</div>
 	<div class="btn">
 		<button
+			aria-label="config-menu-open"
 			onclick={() => {
 				viewState.modal = ModalType.Config
 			}}
 		>
-			<svg class="icon config" stroke="white">
+			<svg class="icon" stroke="white">
 				<path
 					d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
 				/><circle cx="12" cy="12" r="3" />
@@ -154,7 +155,7 @@
 		<Settings></Settings>
 		<div class="main-page-container">
 			<button class="selections" onclick={() => start('single')}>
-				Single Player
+				Single Play
 			</button>
 			<button class="selections" onclick={() => start('2')}>
 				2 Players
