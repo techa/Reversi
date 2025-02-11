@@ -13,7 +13,7 @@
 	const { back2top } = $props()
 
 	const { boardSize } = reversi
-	const boxSize = floor(100 / boardSize, 2) + '%'
+	const boxSize = floor(100 / boardSize, 2)
 
 	const boardWidth_border = Constants.BoardWidthMax
 	let boardWidth = $state(640)
@@ -51,8 +51,8 @@
 				<div
 					class="square"
 					class:itimatsu={(y + x) % 2}
-					style:width={boxSize}
-					style:height={boxSize}
+					style:width="{boxSize}%"
+					style:height="{boxSize}%"
 					role="presentation"
 					data-x-axis={x}
 					data-y-axis={y}
@@ -98,18 +98,41 @@
 				</div>
 			{/each}
 		{/each}
+
+		{#if boardSize > 5}
+			<div
+				class="guide_dot"
+				style:top="{boxSize * 2}%"
+				style:left="{boxSize * 2}%"
+			></div>
+			<div
+				class="guide_dot"
+				style:top="{boxSize * 2}%"
+				style:right="{boxSize * 2}%"
+			></div>
+			<div
+				class="guide_dot"
+				style:bottom="{boxSize * 2}%"
+				style:left="{boxSize * 2}%"
+			></div>
+			<div
+				class="guide_dot"
+				style:bottom="{boxSize * 2}%"
+				style:right="{boxSize * 2}%"
+			></div>
+		{/if}
 	</div>
 
 	<div class="h-markers-container">
 		{#each { length: boardSize } as _, index}
-			<div class="h-markers" style:width={boxSize}>
+			<div class="h-markers" style:width="{boxSize}%">
 				{String.fromCharCode(65 + index)}
 			</div>
 		{/each}
 	</div>
 	<div class="v-markers-container">
 		{#each { length: boardSize } as _, index}
-			<div class="v-markers" style:height={boxSize}>
+			<div class="v-markers" style:height="{boxSize}%">
 				{1 + index}
 			</div>
 		{/each}
@@ -208,6 +231,7 @@
 	}
 
 	.main-board {
+		position: relative;
 		display: flex;
 		flex-flow: row wrap;
 		width: 100%;
@@ -220,15 +244,34 @@
 	.square {
 		width: 12.5%;
 		height: 100%;
-		border: 1px solid white;
+		border: 1px solid black;
 		background-color: #6e9e00;
 		position: relative;
 		box-sizing: border-box;
 	}
 
-	.itimatsu {
+	.square.itimatsu {
 		background-color: #86b50f;
 	}
+
+	.guide_dot {
+		position: absolute;
+		width: 0;
+		height: 0;
+		pointer-events: none;
+	}
+	.guide_dot::after {
+		position: absolute;
+		content: '';
+		width: 12px;
+		height: 12px;
+		border-radius: 50%;
+		top: 50%;
+		left: 50%;
+		background-color: black;
+		transform: translate(-50%, -50%);
+	}
+
 	/*
 	.square > .can-hit > .predictor
 	*/
