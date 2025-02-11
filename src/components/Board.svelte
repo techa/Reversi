@@ -64,7 +64,7 @@
 					}}
 				>
 					{#if tile > 0}
-						<div class="{reversi.getSymColor(tile)}-stone"></div>
+						<div class="stone {reversi.getSymColor(tile)}"></div>
 					{:else if states.playerTurn && viewState.historyIndex < 0 && reversi.checkOKtoPlace(x, y)}
 						{#if viewState.dev && options.aiPlayer1LV}
 							{@const _hand = reversi.getHand(
@@ -242,7 +242,7 @@
 		cursor: pointer;
 	}
 
-	.black-stone {
+	.stone {
 		border-radius: 50%;
 		width: 70%;
 		padding-bottom: 70%;
@@ -251,50 +251,36 @@
 		top: 50%;
 		left: 50%;
 		transform: translate(-50%, -50%);
+	}
+	.stone.black {
 		background: linear-gradient(to bottom right, black, #565656);
 		box-shadow: 1px 1px 6px;
 	}
-	.black-stone::after {
+	.stone.white {
+		background: linear-gradient(to bottom right, #bababa, white);
+		box-shadow: 1px 1px 14px;
+	}
+	.stone::after {
 		content: '';
 		position: absolute;
-		top: 2px;
+		top: 5%;
 		border-radius: 50%;
-		left: 2px;
+		left: 5%;
 		width: 56%;
 		height: 35%;
+		transform: rotate(-32deg);
+	}
+	.stone.black::after {
 		background: linear-gradient(
 			rgba(255, 255, 255, 0.3),
 			rgba(255, 255, 255, 0)
 		);
-		transform: rotate(-32deg);
 	}
-
-	.white-stone {
-		border-radius: 50%;
-		width: 70%;
-		padding-bottom: 70%;
-		position: absolute;
-		margin: 0 auto;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-		background: linear-gradient(to bottom right, #bababa, white);
-		box-shadow: 1px 1px 14px;
-	}
-
-	.white-stone::after {
-		content: '';
-		position: absolute;
-		top: 2px;
-		border-radius: 50%;
-		left: 2px;
-		width: 56%;
-		height: 35%;
+	.stone.white::after {
 		background: linear-gradient(
 			rgba(255, 255, 255, 1),
 			rgba(255, 255, 255, 0)
 		);
-		transform: rotate(-32deg);
 	}
 
 	.footer.h-markers-container {
