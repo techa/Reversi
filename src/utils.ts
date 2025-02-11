@@ -13,3 +13,7 @@ export function clamp(value: number, min: number, max: number) {
 export function floor(n: number, digit = 0) {
 	return Math.floor(n * 10 ** digit) / 10 ** digit
 }
+
+export function sleep(ms: number) {
+	return new Promise((resolve) => setTimeout(resolve, ms))
+}

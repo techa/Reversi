@@ -7,7 +7,7 @@ import {
 	Mode,
 } from './Reversi.js'
 import { SoundID, Sounds } from './Sounds.js'
-import { clamp } from './utils.js'
+import { clamp, sleep } from './utils.js'
 import { HistoryData, viewState, config } from './View.svelte.js'
 
 export const options: AIReversiOptions = $state({
@@ -74,16 +74,73 @@ export const reversi = new (class extends AIReversi {
 	$setTile(x: number, y: number, sym: Sym) {
 		super.$setTile(x, y, sym)
 		if (!this.thinking) {
-			states.tiles = this.tiles
+			const index = y * this.boardSize + x
+			states.tiles[index] = this.tiles[index]
 			states.playerTurn = false
 		}
 	}
 	$tilesUpdate(x: number, y: number) {
-		super.$tilesUpdate(x, y)
+		const distances: number[][] = []
 		if (!this.thinking) {
-			states.tiles = this.tiles
+			this.directionEach(x, y, (tx, ty) => {
+				const distance = this._distanceScore(x, y, tx, ty)
+				distances[distance] ||= []
+				distances[distance].push(ty * this.boardSize + tx)
+			})
+		}
+
+		super.$tilesUpdate(x, y)
+
+		// view update
+		if (!this.thinking) {
+			if (distances.length && config.reverseAnime) {
+				;(async () => {
+					for (const indexs of distances) {
+						if (!indexs) continue
+						await sleep(100)
+						for (const index of indexs) {
+							states.tiles[index] = this.tiles[index]
+						}
+						this.sounds.play(SoundID.Beep)
+					}
+				})()
+			} else {
+				states.tiles = this.tiles
+			}
 		}
 	}
+
+	/**
+	 * ```
+	 *   ,  ,  ,  , 3,  ,  ,  ,  ,
+	 *   ,  ,  , 3, 2, 3,  ,  ,  ,
+	 *   ,  , 3, 2, 1, 2, 3,  ,  ,
+	 *   , 3, 2, 1, 0, 1,2 , 3,  ,
+	 *   ,  , 3, 2, 1, 2, 3,  ,  ,
+	 *   ,  ,  , 3, 2, 3,  ,  ,  ,
+	 * ```
+	 */
+	private _distanceScore(
+		originX: number,
+		originY: number,
+		targetX: number,
+		targetY: number
+	) {
+		return Math.abs(originX - targetX) + Math.abs(originY - targetY)
+	}
+	distances(x: number, y: number) {
+		const distances: number[] = []
+		this.directionEach(x, y, (tx, ty) => {
+			distances[y * this.boardSize + x] = this._distanceScore(
+				x,
+				y,
+				tx,
+				ty
+			)
+		})
+		return distances
+	}
+
 	$insert(data: HistoryData) {
 		states.playerTurn = false
 		super.$insert(data)

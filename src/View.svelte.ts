@@ -46,4 +46,5 @@ export const config = $state({
 	 * ms. default:1000, min: 500, max: 2000
 	 */
 	aiWait: 1000,
+	reverseAnime: true,
 })

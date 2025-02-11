@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { reversi, options, states } from '../ViewConnect.svelte.js'
 	import { viewState, ModalType, PageType, config } from '../View.svelte.js'
+	import Switch from './generic/Switch.svelte'
 
 	let dialog: HTMLDialogElement
 
@@ -96,6 +97,11 @@
 					min="500"
 					step="100"
 				/>
+			</div>
+
+			<div>
+				<h4>Reverse Animation</h4>
+				<input type="checkbox" bind:checked={config.reverseAnime} />
 			</div>
 		{/if}
 	</div>
