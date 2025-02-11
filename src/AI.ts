@@ -42,7 +42,13 @@ interface BoardLog {
 
 // 考慮の重要度
 export interface AISetting {
+	/**
+	 * ひっくり返せる石の数
+	 */
 	count?: number[]
+	/**
+	 * 開放度理論：隣接する空きマスの数
+	 */
 	opens?: number[]
 	opensAll?: number[]
 	position_corner?: number
@@ -95,7 +101,7 @@ export const AIsettings: AISettings = [
 export const AILVMAX = (AIsettings.length - 1) as AILV
 
 export abstract class AIReversi extends Reversi {
-	opens: number[]
+	opens = new Set<number>()
 	hiScore: number
 
 	boardLog: BoardLog[] = []
@@ -369,28 +375,25 @@ export abstract class AIReversi extends Reversi {
 				(!curr || curr[0] !== x || curr[1] !== y) &&
 				this.isTileEmpty(x, y)
 			) {
-				const id = y * boardSize + x
-				if (this.opens.indexOf(id) === -1) {
-					this.opens.push(id)
-				}
+				this.opens.add(y * boardSize + x)
 			}
 		})
 	}
 
 	// 開放度理論
 	opened(dx: number, dy: number) {
-		this.opens = []
+		this.opens.clear()
 		this._opened(dx, dy)
-		return this.opens.length
+		return this.opens.size
 	}
 
 	openedAll(dx: number, dy: number) {
-		this.opens = []
+		this.opens.clear()
 		this.directionEach(dx, dy, (pX, pY) => {
 			this._opened(pX, pY, [dx, dy])
 		})
 		this._opened(dx, dy)
-		return this.opens.length
+		return this.opens.size
 	}
 
 	/**
