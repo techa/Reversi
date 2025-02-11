@@ -39,8 +39,7 @@
 				class="selections"
 				onclick={(e) => {
 					close(e, true)
-					viewState.page = PageType.Top
-					reversi.init(options)
+					reversi.back2top()
 				}}
 			>
 				Back to Top

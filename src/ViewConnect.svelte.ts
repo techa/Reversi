@@ -8,7 +8,7 @@ import {
 } from './Reversi.js'
 import { SoundID, Sounds } from './Sounds.js'
 import { clamp, sleep } from './utils.js'
-import { HistoryData, viewState, config } from './View.svelte.js'
+import { HistoryData, viewState, config, PageType } from './View.svelte.js'
 
 export const options: AIReversiOptions = $state({
 	boardSize: 8,
@@ -43,6 +43,7 @@ export const reversi = new (class extends AIReversi {
 				turn: 0,
 			},
 		]
+		states.tiles = this.tiles
 		this.$turnSwitch()
 		return this
 	}
@@ -188,6 +189,12 @@ export const reversi = new (class extends AIReversi {
 		}
 		return message
 	}
+
+	back2top() {
+		states.winlose = ''
+		viewState.page = PageType.Top
+	}
+
 	S_invalid() {
 		if (!this.thinking) {
 			console.log('Invalid Move')

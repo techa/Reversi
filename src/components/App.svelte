@@ -150,8 +150,8 @@
 			</button>
 			<button
 				class="selections"
-				onclick={(e) => {
-					viewState.page = PageType.Top
+				onclick={() => {
+					reversi.back2top()
 				}}
 			>
 				Back to Top
