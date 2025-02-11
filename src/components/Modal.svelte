@@ -101,7 +101,7 @@
 
 			<div>
 				<h4>Reverse Animation</h4>
-				<input type="checkbox" bind:checked={config.reverseAnime} />
+				<Switch bind:checked={config.reverseAnime}></Switch>
 			</div>
 		{/if}
 	</div>
