@@ -26,6 +26,18 @@ export interface ReversiOptions {
 	 * default: 8
 	 */
 	boardSize: BoardSize
+	/**
+	 * * 初期配置を選択
+	 * * Random は cross/parallel のどちらか
+	 *
+	 * ```
+	 * cross    parallel
+	 * ____      ____
+	 * _WB_      _WW_
+	 * _BW_      _BB_
+	 * ____      ____
+	 * ```
+	 */
 	initialPlacement: InitialPlacement
 	mode: Mode
 	/**
@@ -48,23 +60,10 @@ export const directionXYs: [number, number][] = [
 	[1, 1], // bottom-right
 ]
 
-export interface ReversiStates {
-	turn: number
-	sym: Sym
-	tiles: Tile[]
-
-	playerTurn: boolean
-
-	blackScore: number
-	whiteScore: number
-
-	winlose: string
-}
-
-export const ReversiStatesDefault: ReversiStates = {
+export const ReversiStatesDefault = {
 	turn: 0,
-	sym: Tile.B,
-	tiles: [],
+	sym: Tile.B as Sym,
+	tiles: [] as Tile[],
 
 	playerTurn: false,
 
@@ -128,7 +127,6 @@ export abstract class Reversi {
 		this.setOptions(options)
 		this.turn = 1
 		this.sym = Tile.B
-		this.initBoardArray()
 		this.initialPieces()
 
 		this.demo = this.mode === Mode.Demo
@@ -140,13 +138,6 @@ export abstract class Reversi {
 			this.$playerTurn()
 		}
 		return this
-	}
-
-	initBoardArray() {
-		this.tiles = []
-		for (let i = 0; i < this.boardSize ** 2; i++) {
-			this.tiles.push(Tile.Null)
-		}
 	}
 
 	/**
@@ -161,6 +152,13 @@ export abstract class Reversi {
 	 * ```
 	 */
 	initialPieces(type = this.initialPlacement) {
+		// 初期化
+		this.tiles = []
+		for (let i = 0; i < this.boardSize ** 2; i++) {
+			this.tiles.push(Tile.Null)
+		}
+
+		// 初期配置の駒４つを配置する
 		const center = ((this.boardSize / 2) | 0) - 1
 		for (let i = 0; i < 4; i++) {
 			let x = center
@@ -188,20 +186,19 @@ export abstract class Reversi {
 		return this.getTile(x, y) === Tile.Null
 	}
 	getTile(x: number, y: number): Tile {
-		if (x < 0 || y < 0 || x >= this.boardSize || y >= this.boardSize) {
+		const { boardSize } = this
+		if (x < 0 || y < 0 || x >= boardSize || y >= boardSize) {
 			return Tile.OutSide
 		}
-		return this.tiles[y * this.boardSize + x]
+		return this.tiles[y * boardSize + x]
 	}
 	$setTile(x: number, y: number, sym: Sym) {
 		this.tiles[y * this.boardSize + x] = sym
 	}
 	$tilesUpdate(x: number, y: number) {
-		const result: Tile[] = this.tiles.slice()
 		this.directionEach(x, y, (pX, pY) => {
-			result[pY * this.boardSize + pX] = this.sym
+			this.tiles[pY * this.boardSize + pX] = this.sym
 		})
-		this.tiles = result
 	}
 
 	/**
@@ -394,20 +391,20 @@ export abstract class Reversi {
 	}
 
 	_checkSlots() {
-		let emptyCount = 0
-		let roughtCount = 0
+		let empty = 0
+		let movable = 0
 		for (let y = 0; y < this.boardSize; y++) {
 			for (let x = 0; x < this.boardSize; x++) {
 				if (this.isTileEmpty(x, y)) {
-					emptyCount++
+					empty++
 					if (this.checkOKtoPlace(x, y)) {
-						roughtCount++
+						movable++
 					}
 				}
 			}
 		}
 
-		return { empty: emptyCount, movable: roughtCount }
+		return { empty, movable }
 	}
 
 	abstract $addHistory(x: number, y: number): void
@@ -431,24 +428,17 @@ export abstract class Reversi {
 	) {
 		for (const dir of directionXYs) {
 			if (this.checkDirection(x, y, dir)) {
-				let settle = false
-				const dX = dir[0]
-				const dY = dir[1]
+				const [dX, dY] = dir
 
-				while (!settle) {
-					if (!this.isTileEmpty(x + dX, y + dY)) {
-						let a = 1
-						let pX = x + dX * a
-						let pY = y + dY * a
-						while (this.getTile(pX, pY) !== this.sym) {
-							callback(pX, pY)
-							a++
-							pX = x + dX * a
-							pY = y + dY * a
-						}
-						settle = true
-					} else {
-						settle = true
+				if (!this.isTileEmpty(x + dX, y + dY)) {
+					let a = 1
+					let pX = x + dX * a
+					let pY = y + dY * a
+					while (this.getTile(pX, pY) !== this.sym) {
+						callback(pX, pY)
+						a++
+						pX = x + dX * a
+						pY = y + dY * a
 					}
 				}
 			}
