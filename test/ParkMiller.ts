@@ -14,7 +14,7 @@ export class ParkMiller {
 
 	private _state: number
 
-	constructor(readonly seed: number) {
+	constructor(readonly seed: number = Date.now()) {
 		this._state = seed % MAX_INT32
 
 		if (this._state <= 0) {
@@ -29,6 +29,7 @@ export class ParkMiller {
 	next() {
 		// this._count++
 		// const MINSTD = 16807 // 7^5
+		// 48271
 		this._state = (this._state * 16807) % MAX_INT32
 		return (this._state - 1) / (MAX_INT32 - 1)
 	}

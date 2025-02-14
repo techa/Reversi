@@ -291,12 +291,11 @@ export abstract class AIReversi extends Reversi {
 	}
 
 	ai_nextHand() {
-		const lv =
-			this.mode === Mode.Single
-				? this.aiPlayer1LV
-				: this.sym === Tile.B
-				? this.aiPlayer1LV
-				: this.aiPlayer2LV
+		const lv = this.singleMode
+			? this.aiPlayer1LV
+			: this.sym === Tile.B
+			? this.aiPlayer1LV
+			: this.aiPlayer2LV
 
 		return this.pick(this.getHands(lv), AIsettings[lv].blur)
 	}

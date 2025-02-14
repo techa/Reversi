@@ -32,7 +32,6 @@ export interface ReversiOptions {
 	 * Tile.Null = 0: Random
 	 */
 	yourColor: Tile.Null | Tile.B | Tile.W
-	random?: () => number
 }
 
 export const directionXYs: [number, number][] = [
@@ -91,10 +90,10 @@ export abstract class Reversi {
 	tiles: Tile[] = []
 
 	demo = false
-	singlePlayerMode = false
+	singleMode = false
 
 	getName(sym = this.sym) {
-		const mode = this.mode
+		const { mode } = this
 		return mode === Mode.Practice || mode === Mode.Demo
 			? ['Black', 'White'][sym - 1]
 			: mode === Mode.Single && this.yourColor === sym
@@ -133,7 +132,7 @@ export abstract class Reversi {
 		this.initialPieces()
 
 		this.demo = this.mode === Mode.Demo
-		const single = (this.singlePlayerMode = this.mode === Mode.Single)
+		const single = (this.singleMode = this.mode === Mode.Single)
 
 		if (this.demo || (single && this.yourColor === Tile.W)) {
 			this.$aiTurn()
@@ -218,7 +217,7 @@ export abstract class Reversi {
 	 * AI先読みなどで擬似的にplayerのターンもAIで打たせる
 	 */
 	$aiTurn() {
-		if (this.singlePlayerMode || this.demo) {
+		if (this.singleMode || this.demo) {
 			const tile = this.ai_nextHand()
 			this._doTheMove(this.addTile(tile.x, tile.y), true)
 		} else {
@@ -354,13 +353,13 @@ export abstract class Reversi {
 				this.$turnSwitch()
 
 				if (aiTurn) {
-					if (this.singlePlayerMode) {
+					if (this.singleMode) {
 						this.$playerTurn()
 					} else {
 						this.$aiTurn()
 					}
 				} else {
-					if (!this.singlePlayerMode) {
+					if (!this.singleMode) {
 						this.$playerTurn()
 					} else {
 						/**
@@ -468,7 +467,7 @@ export abstract class Reversi {
 		if (this.blackScore === this.whiteScore) {
 			return 'Draw!!'
 		}
-		if (this.mode === Mode.Single) {
+		if (this.singleMode) {
 			if (
 				(this.yourColor === Tile.B &&
 					this.blackScore > this.whiteScore) ||
