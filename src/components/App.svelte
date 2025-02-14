@@ -1,13 +1,14 @@
 <script lang="ts">
-	import { Mode } from '../Reversi.js'
+	import FAVICON from '../../assets/favicon.png'
 
 	import Board from './Board.svelte'
 	import Modal from './Modal.svelte'
+	import Settings from './Settings.svelte'
 
+	import { Mode } from '../Reversi.js'
+	import { blackOrWhite } from '../utils.js'
 	import { options, reversi, Constants } from '../ViewConnect.svelte.js'
 	import { ModalType, PageType, viewState } from '../View.svelte.js'
-	import { blackOrWhite } from '../utils.js'
-	import Settings from './Settings.svelte'
 
 	// Title
 	const title = 'REVERSI'
@@ -66,6 +67,10 @@
 		}
 	}
 </script>
+
+<svelte:head>
+	<link rel="icon" href={FAVICON} />
+</svelte:head>
 
 <svelte:window {onkeydown} />
 
