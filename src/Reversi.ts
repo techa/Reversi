@@ -20,6 +20,12 @@ export const enum Mode {
 	Practice,
 }
 
+const enum DoTheMove {
+	Player,
+	AI,
+	Result,
+}
+
 export interface ReversiOptions {
 	/**
 	 * range: 4-12
@@ -84,6 +90,7 @@ export abstract class Reversi {
 	nextTurn() {
 		this.turn++
 		this.sym = this.turn % 2 === 0 ? Tile.W : Tile.B
+		this.$turnSwitch()
 	}
 
 	tiles: Tile[] = []
@@ -216,7 +223,7 @@ export abstract class Reversi {
 	$aiTurn() {
 		if (this.singleMode || this.demo) {
 			const tile = this.ai_nextHand()
-			this._doTheMove(this.addTile(tile.x, tile.y), true)
+			this.hit(tile.x, tile.y, true)
 		} else {
 			throw new Error(`$aiTurn() is invaild`)
 		}
@@ -298,7 +305,7 @@ export abstract class Reversi {
 
 		this.nextTurn()
 		this.$tilesCounting()
-		this._doTheMove(this._checkSlots(), this.isAiTurn())
+		this._doTheNext(this._doTheMove(this._checkSlots(), this.isAiTurn()))
 	}
 
 	/**
@@ -317,9 +324,9 @@ export abstract class Reversi {
 	 * 	_doTheMove
 	 * ```
 	 */
-	hit(x: number, y: number) {
+	hit(x: number, y: number, aiTurn = false) {
 		if (this.checkOKtoPlace(x, y)) {
-			this._doTheMove(this.addTile(x, y))
+			this._doTheNext(this._doTheMove(this.addTile(x, y), aiTurn))
 		} else {
 			this.S_invalid()
 		}
@@ -342,51 +349,43 @@ export abstract class Reversi {
 			movable: number //check any move left
 		},
 		aiTurn = false
-	): void {
-		// console.log(this.sym + ' turn')
+	): DoTheMove {
 		if (slots.empty > 0) {
 			if (slots.movable > 0) {
-				// console.log(this.sym + ' still can')
-				this.$turnSwitch()
-
-				if (aiTurn) {
-					if (this.singleMode) {
-						this.$playerTurn()
-					} else {
-						this.$aiTurn()
-					}
-				} else {
-					if (!this.singleMode) {
-						this.$playerTurn()
-					} else {
-						/**
-						 * aiTurn=falseなのにthis.$aiTurn()必要なの？と思うかもしれんが
-						 * AI先読みなどで擬似的にplayerのターンもAIで打たせるので必要
-						 */
-						this.$aiTurn()
-					}
-				}
+				/**
+				 * aiTurn=falseなのにthis.$aiTurn()必要なの？と思うかもしれんが
+				 * AI先読みなどで擬似的にplayerのターンもAIで打たせるので必要
+				 */
+				return aiTurn
+					? this.singleMode
+						? DoTheMove.Player
+						: DoTheMove.AI
+					: !this.singleMode
+					? DoTheMove.Player
+					: DoTheMove.AI
 			} else {
 				/* slots.movable === 0 */
-				// console.log(this.sym + ' no place to move, pass')
 				this.nextTurn()
-				// console.log(this.sym + ' turn')
-				const slots = this._checkSlots()
-				if (slots.movable > 0) {
-					if (aiTurn) {
-						// console.log(this.sym + 'still can')
-						this.$aiTurn()
-					} else {
-						this.$playerTurn()
-					}
-				} else {
-					// console.log(this.sym + ' also cannot, end game')
-					this.$checkWin()
+				if (this._checkSlots().movable > 0) {
+					return aiTurn ? DoTheMove.AI : DoTheMove.Player
 				}
 			}
-		} else {
-			// console.log(this.sym + ' cannot d')
-			this.$checkWin()
+		}
+
+		return DoTheMove.Result
+	}
+
+	_doTheNext(dtm: DoTheMove) {
+		switch (dtm) {
+			case DoTheMove.Player:
+				this.$playerTurn()
+				break
+			case DoTheMove.AI:
+				this.$aiTurn()
+				break
+			case DoTheMove.Result:
+				this.$checkWin()
+				break
 		}
 	}
 
