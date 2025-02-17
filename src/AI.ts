@@ -19,12 +19,10 @@ export interface Hand {
 	y: number
 	count: number
 	opens: number
-	opensAll: number
 	fixed: number
 	scores: {
 		count: number
 		opens: number
-		opensAll: number
 		position_corner: number
 		position_corner_clue: number
 		position_edge: number[]
@@ -50,7 +48,6 @@ export interface AISetting {
 	 * 開放度理論：隣接する空きマスの数
 	 */
 	opens?: number[]
-	opensAll?: number[]
 	position_corner?: number
 	position_corner_clue?: number
 	position_edge?: number[]
@@ -79,7 +76,6 @@ export const AIsettings: AISettings = [
 	{
 		count: [-1, 0, 1],
 		opens: [0.5, 0.5, 0.5],
-		opensAll: [0, 1, 0.5],
 		position_corner: 1,
 		position_corner_clue: -1,
 		position_edge: [0.5, -0.5, 0.5],
@@ -89,7 +85,6 @@ export const AIsettings: AISettings = [
 	{
 		count: [-1, 0, 1],
 		opens: [0.5, 0.5, 0.5],
-		opensAll: [0, 1, 0.5],
 		position_corner: 1,
 		position_corner_clue: -1,
 		position_edge: [0.5, -0.5, 0.5],
@@ -101,7 +96,6 @@ export const AIsettings: AISettings = [
 export const AILVMAX = (AIsettings.length - 1) as AILV
 
 export abstract class AIReversi extends Reversi {
-	opens = new Set<number>()
 	hiScore: number
 
 	boardLog: BoardLog[] = []
@@ -139,7 +133,6 @@ export abstract class AIReversi extends Reversi {
 		const {
 			count,
 			opens,
-			opensAll,
 			position_corner,
 			position_corner_clue,
 			position_edge,
@@ -156,12 +149,9 @@ export abstract class AIReversi extends Reversi {
 		// 開放度理論
 		// ひっくり返した石に隣接する空きマスが少ないほど良い手
 		// どこに置くか迷ったら、なるべく多くの石に囲まれているものをひっくり返す
-		if (opensAll) {
-			scores.opensAll +=
-				(boardSize - this.openedAll(x, y) / hand.count) * opensAll[term]
-		}
 		if (opens) {
-			scores.opens += (boardSize - this.opened(x, y)) * opens[term]
+			scores.opens +=
+				(boardSize - this.opens(x, y) / hand.count) * opens[term]
 		}
 
 		// Position score
@@ -336,13 +326,11 @@ export abstract class AIReversi extends Reversi {
 			x,
 			y,
 			count: this.accumulator(x, y),
-			opens: this.opened(x, y),
-			opensAll: this.openedAll(x, y),
+			opens: this.opens(x, y),
 			fixed: this.fixedCount(x, y),
 			scores: {
 				count: 0,
 				opens: 0,
-				opensAll: 0,
 				position_corner: 0,
 				position_corner_clue: 0,
 				position_edge: [0, 0, 0],
@@ -361,38 +349,27 @@ export abstract class AIReversi extends Reversi {
 		return totalChanged
 	}
 
-	_opened(pX: number, pY: number, curr: number[] | false = false) {
-		const { boardSize } = this
-		directionXYs.forEach((dir) => {
-			const x = pX + dir[0]
-			const y = pY + dir[1]
-			if (
-				x >= 0 &&
-				x < boardSize &&
-				y >= 0 &&
-				y < boardSize &&
-				(!curr || curr[0] !== x || curr[1] !== y) &&
-				this.isTileEmpty(x, y)
-			) {
-				this.opens.add(y * boardSize + x)
-			}
-		})
-	}
-
 	// 開放度理論
-	opened(dx: number, dy: number) {
-		this.opens.clear()
-		this._opened(dx, dy)
-		return this.opens.size
-	}
-
-	openedAll(dx: number, dy: number) {
-		this.opens.clear()
-		this.directionEach(dx, dy, (pX, pY) => {
-			this._opened(pX, pY, [dx, dy])
+	opens(x: number, y: number) {
+		const { boardSize } = this
+		const opens = new Set<number>()
+		this.directionEach(x, y, (pX, pY) => {
+			directionXYs.forEach(([dx, dy]) => {
+				dx += pX
+				dy += pY
+				if (
+					dx >= 0 &&
+					dx < boardSize &&
+					dy >= 0 &&
+					dy < boardSize &&
+					this.isTileEmpty(dx, dy)
+				) {
+					opens.add(dy * boardSize + dx)
+				}
+			})
 		})
-		this._opened(dx, dy)
-		return this.opens.size
+		opens.delete(y * boardSize + x)
+		return opens.size
 	}
 
 	/**
