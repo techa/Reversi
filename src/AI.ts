@@ -1,11 +1,5 @@
-import {
-	Tile,
-	Sym,
-	Mode,
-	ReversiOptions,
-	directionXYs,
-	Reversi,
-} from './Reversi.js'
+import { Tile, Sym, ReversiOptions, directionXYs, Reversi } from './Reversi.js'
+import { HistoryData } from './View.svelte.js'
 
 export type AILV = 0 | 1 | 2 | 3 | 4 | 5
 
@@ -18,10 +12,16 @@ export interface Hand {
 	x: number
 	y: number
 	count: number
+	/**
+	 * 着手点
+	 * * 配列は自分（0）、相手（1）
+	 */
+	choices: number[]
 	opens: number
 	fixed: number
 	scores: {
 		count: number
+		choices: number
 		opens: number
 		position_corner: number
 		position_corner_clue: number
@@ -32,24 +32,40 @@ export interface Hand {
 	}
 }
 
-interface BoardLog {
-	// hand: Hand
-	tiles: Tile[]
-	counter: number
-}
-
 // 考慮の重要度
 export interface AISetting {
 	/**
 	 * ひっくり返せる石の数
+	 * * 配列は序盤（0）、中盤（1）、終盤（2）を表す
 	 */
 	count?: number[]
 	/**
+	 * 着手点
+	 * * 配列は自分（0）、相手（1）
+	 */
+	choices?: number[]
+	/**
 	 * 開放度理論：隣接する空きマスの数
+	 * * 配列は序盤（0）、中盤（1）、終盤（2）を表す
 	 */
 	opens?: number[]
 	position_corner?: number
 	position_corner_clue?: number
+
+	/**
+	 * ```
+	 * 00000000
+	 * 01111110
+	 * 01222210
+	 * 01233210
+	 * 01233210
+	 * 01222210
+	 * 01111110
+	 * 00000000
+	 * ```
+	 *
+	 * [5,6,7] の場合上の図の０を５点、１を６点、２を７点とする
+	 */
 	position_edge?: number[]
 	next_turn?: number
 	fixed?: number
@@ -75,6 +91,7 @@ export const AIsettings: AISettings = [
 	// 4
 	{
 		count: [-1, 0, 1],
+		choices: [1, 1],
 		opens: [0.5, 0.5, 0.5],
 		position_corner: 1,
 		position_corner_clue: -1,
@@ -84,6 +101,7 @@ export const AIsettings: AISettings = [
 	// 5
 	{
 		count: [-1, 0, 1],
+		choices: [0, 1],
 		opens: [0.5, 0.5, 0.5],
 		position_corner: 1,
 		position_corner_clue: -1,
@@ -98,7 +116,7 @@ export const AILVMAX = (AIsettings.length - 1) as AILV
 export abstract class AIReversi extends Reversi {
 	hiScore: number
 
-	boardLog: BoardLog[] = []
+	boardLog: HistoryData[] = []
 	/**
 	 * If this is true, it is the thinking stage of AI
 	 */
@@ -132,6 +150,7 @@ export abstract class AIReversi extends Reversi {
 		}
 		const {
 			count,
+			choices,
 			opens,
 			position_corner,
 			position_corner_clue,
@@ -143,6 +162,12 @@ export abstract class AIReversi extends Reversi {
 		if (count) {
 			// 序盤は少なく取る
 			scores.count += hand.count * count[term]
+		}
+
+		if (choices) {
+			for (let i = 0; i < 2; i++) {
+				scores.choices += hand.choices[i] * choices[i]
+			}
 		}
 
 		// 開放度が低いほど高スコア
@@ -188,7 +213,7 @@ export abstract class AIReversi extends Reversi {
 		}
 
 		if (next_turn) {
-			this.logging()
+			this.logging(x, y)
 			if (this.term === 2) {
 				const slots = this.addTile(x, y)
 				if (slots.empty) {
@@ -224,20 +249,36 @@ export abstract class AIReversi extends Reversi {
 		return hand
 	}
 
-	logging() {
+	logging(x: number, y: number) {
 		this.thinking = true
 		this.boardLog.push({
+			x,
+			y,
+			sym: this.sym,
 			tiles: this.tiles.slice(),
-			counter: this.turn,
+			turn: this.turn,
 		})
+	}
+
+	virtualHit(x: number, y: number) {
+		this.thinking = true
+		this.boardLog.push({
+			x,
+			y,
+			sym: this.sym,
+			tiles: this.tiles.slice(),
+			turn: this.turn,
+		})
+
+		return this.addTile(x, y)
 	}
 
 	reset(index = 0) {
 		const log = this.boardLog[index]
 		if (log) {
-			const { tiles, counter } = log
+			const { tiles, turn } = log
 			this.tiles = tiles
-			this.turn = counter
+			this.turn = turn
 			this.sym = this.turn % 2 === 0 ? Tile.W : Tile.B
 		}
 		this.boardLog = []
@@ -253,11 +294,11 @@ export abstract class AIReversi extends Reversi {
 	}
 
 	/**
-	 *   序        中         終
+	 *   序0       中1        終2
 	 * +----+----+----+----+----+
 	 * 0   0.2  0.4  0.6  0.8   1
 	 */
-	get term() {
+	get term(): 0 | 1 | 2 {
 		const per = this.countPer
 		if (per > 0.8) {
 			return 2
@@ -305,15 +346,13 @@ export abstract class AIReversi extends Reversi {
 
 		for (let y = 0; y < boardSize; y++) {
 			for (let x = 0; x < boardSize; x++) {
-				if (this.isTileEmpty(x, y)) {
-					if (this.checkOKtoPlace(x, y)) {
-						const hand = this.getHand(x, y, lv)
-						if (hand.scores.total > this.hiScore) {
-							this.hiScore = hand.scores.total
-						}
-						if (hand) {
-							hands.push(hand)
-						}
+				if (this.checkOKtoPlace(x, y)) {
+					const hand = this.getHand(x, y, lv)
+					if (hand.scores.total > this.hiScore) {
+						this.hiScore = hand.scores.total
+					}
+					if (hand) {
+						hands.push(hand)
 					}
 				}
 			}
@@ -326,10 +365,12 @@ export abstract class AIReversi extends Reversi {
 			x,
 			y,
 			count: this.accumulator(x, y),
+			choices: this.getChoices(x, y),
 			opens: this.opens(x, y),
 			fixed: this.fixedCount(x, y),
 			scores: {
 				count: 0,
+				choices: 0,
 				opens: 0,
 				position_corner: 0,
 				position_corner_clue: 0,
@@ -343,13 +384,53 @@ export abstract class AIReversi extends Reversi {
 		return hand
 	}
 
+	/**
+	 * いくつ石を返せるか
+	 */
 	accumulator(x: number, y: number) {
 		let totalChanged = 0
 		this.directionEach(x, y, () => totalChanged++)
 		return totalChanged
 	}
 
-	// 開放度理論
+	/**
+	 * 着手可能数（自分の打てる選択肢ー相手の打てる選択肢）
+	 *
+	 * virtualHit後に使用
+	 * * 自分の打てる選択肢を多くすると有利になる
+	 * * 相手の打てる選択肢を減らせば不利にできる
+	 */
+	getChoices(x: number, y: number) {
+		// 自分の手を打つ
+		this.virtualHit(x, y)
+
+		// 相手のターンなので相手の打てる選択肢を数える
+		const enemy = -this._getChoices()
+		// 相手の手は打たずターンだけ進めて
+		this.nextTurn()
+		// 自分の打てる選択肢を数える
+		const self = this._getChoices()
+
+		this.reset()
+
+		return [self, enemy]
+	}
+	private _getChoices() {
+		let score = 0
+		const { boardSize } = this
+		for (let y = 0; y < boardSize; y++) {
+			for (let x = 0; x < boardSize; x++) {
+				if (this.checkOKtoPlace(x, y)) {
+					score++
+				}
+			}
+		}
+		return score
+	}
+
+	/**
+	 * 開放度理論
+	 */
 	opens(x: number, y: number) {
 		const { boardSize } = this
 		const opens = new Set<number>()

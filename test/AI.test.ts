@@ -22,11 +22,13 @@ describe(`AI`, () => {
 			{
 				fixed: 0,
 				opens: 5,
+				choices: [5, -5],
 				count: 1,
 				x: 5,
 				y: 1,
 				scores: {
 					count: 1,
+					choices: 0,
 					opens: 0,
 					position_corner: 0,
 					position_edge: [0, 0, 0],
@@ -39,11 +41,13 @@ describe(`AI`, () => {
 			{
 				fixed: 0,
 				opens: 3,
+				choices: [6, -3],
 				count: 1,
 				x: 5,
 				y: 2,
 				scores: {
 					count: 1,
+					choices: 0,
 					opens: 0,
 					position_corner: 0,
 					position_edge: [0, 0, 0],
@@ -56,12 +60,15 @@ describe(`AI`, () => {
 			{
 				fixed: 0,
 				opens: 3,
+				choices: [7, -4],
 				count: 1,
 				x: 5,
 				y: 3,
 				scores: {
 					count: 1,
+					choices: 0,
 					opens: 0,
+
 					position_corner: 0,
 					position_edge: [0, 0, 0],
 					total: 1,
@@ -73,11 +80,13 @@ describe(`AI`, () => {
 			{
 				fixed: 0,
 				opens: 4,
+				choices: [5, -5],
 				count: 1,
 				x: 5,
 				y: 4,
 				scores: {
 					count: 1,
+					choices: 0,
 					opens: 0,
 					position_corner: 0,
 					position_edge: [0, 0, 0],
@@ -90,11 +99,13 @@ describe(`AI`, () => {
 			{
 				fixed: 0,
 				opens: 4,
+				choices: [4, -4],
 				count: 1,
 				x: 5,
 				y: 5,
 				scores: {
 					count: 1,
+					choices: 0,
 					opens: 0,
 					position_corner: 0,
 					position_edge: [0, 0, 0],
